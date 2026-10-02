@@ -131,3 +131,4 @@ figure { margin: 0; }
 }
 
 section[id] { scroll-margin-top: 52px; }
+@media (max-width: 520px) { .topnav .name { display: none; } .topnav .in { justify-content: space-between; } }
