@@ -1,0 +1,359 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Polina Zinziver — Portfolio</title>
+<meta name="description" content="Polina Zinziver — multimedia artist working with CGI, mediated installations and a/v performances.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<!-- Tinos / Arimo are metric-compatible fallbacks for Times New Roman / Arial on systems without them -->
+<link href="https://fonts.googleapis.com/css2?family=Arimo:ital,wght@0,400;0,700;1,400&family=Tinos:ital,wght@0,400;0,700;1,400;1,700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --title: #434343;
+    --text: #595959;
+    --ink: #000;
+    --link: #3d85c6;
+    --bg: #fff;
+    --serif: "Times New Roman", Times, Tinos, serif;
+    --sans: Arial, Arimo, Helvetica, sans-serif;
+    --w: 1180px;
+  }
+  * { box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body { margin: 0; background: var(--bg); color: var(--text); font-family: var(--sans); font-size: 17px; line-height: 1.5; -webkit-font-smoothing: antialiased; }
+  img { display: block; width: 100%; height: auto; }
+
+  .slide { max-width: var(--w); margin: 0 auto; padding: 72px 48px; }
+  .slide + .slide { border-top: 1px solid #eee; }
+
+  h1, h2 { font-family: var(--serif); font-weight: 700; color: var(--title); margin: 0; line-height: .98; letter-spacing: -.01em; }
+  h1 { font-size: clamp(44px, 7vw, 76px); }
+  h2 { font-size: clamp(40px, 5.6vw, 64px); }
+  h2.mixed { text-transform: none; }
+  .meta { font-family: var(--serif); font-style: italic; color: var(--ink); font-size: clamp(19px, 2vw, 22px); line-height: 1.2; margin: 10px 0 0 10px; }
+  .meta.inline { display: inline-block; margin: 0 0 0 22px; vertical-align: .55em; }
+  .body { margin-top: 30px; }
+  .body p { margin: 0 0 .9em; }
+  .body.loose p { line-height: 1.85; }
+  .body.justify p { text-align: justify; }
+  .label { font-weight: 700; color: var(--text); margin: 26px 0 12px; }
+
+  /* intro */
+  .intro { min-height: 78vh; display: flex; flex-direction: column; justify-content: center; }
+  .intro .bio { font-family: var(--serif); font-style: italic; color: var(--ink); font-size: clamp(19px, 2.1vw, 23px); line-height: 1.45; max-width: 820px; margin: 18px 0 0 10px; }
+  .intro .bio p { margin: 0; }
+  .index { list-style: none; margin: 56px 0 0 10px; padding: 0; display: flex; flex-wrap: wrap; gap: 6px 26px; font-family: var(--serif); font-size: 19px; }
+  .index a { color: var(--title); text-decoration: none; border-bottom: 1px solid transparent; }
+  .index a:hover { border-color: var(--title); }
+  .index span { font-style: italic; color: #999; margin-left: 6px; font-size: 16px; }
+
+  /* two columns like the slides */
+  .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 56px; align-items: start; }
+  .grid.img-left { grid-template-columns: 0.92fr 1.08fr; }
+  .stack > * + * { margin-top: 0; }
+
+  .wide { margin-top: 26px; }
+
+  /* video */
+  .video { position: relative; width: 100%; aspect-ratio: 16 / 9; background: #111 center / cover no-repeat; cursor: pointer; overflow: hidden; }
+  .video iframe { position: absolute; inset: 0; width: 100%; height: 100%; border: 0; }
+  .video button { position: absolute; inset: 0; width: 100%; height: 100%; border: 0; background: rgba(0,0,0,.18); cursor: pointer; transition: background .2s; }
+  .video button:hover { background: rgba(0,0,0,.05); }
+  .video button::after { content: ""; position: absolute; left: 50%; top: 50%; width: 84px; height: 84px; margin: -42px 0 0 -42px; border-radius: 50%; background: rgba(255,255,255,.92) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M8 5v14l11-7z' fill='%23434343'/%3E%3C/svg%3E") 56% 50% / 40px no-repeat; transition: transform .2s; }
+  .video button:hover::after { transform: scale(1.07); }
+  .video-note { font-size: 14px; margin-top: 8px; }
+  .video-note a { color: var(--link); }
+
+  .caption { font-family: var(--serif); font-style: italic; color: var(--ink); font-size: 22px; margin: 0 0 26px; }
+  .pair { display: grid; grid-template-columns: 1.13fr 1fr; gap: 56px; align-items: start; }
+
+  .glyph { font-family: "Tamil Sangam MN", "Noto Sans Tamil", var(--sans); font-weight: 700; }
+  .clip { display: block; width: 100%; background: #111; }
+  .wide-clip { aspect-ratio: 16 / 9; }
+  .clips { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin-top: 16px; }
+  .clips .clip { aspect-ratio: 9 / 16; object-fit: cover; }
+  .gallery { columns: 3; column-gap: 16px; }
+  .gallery img { margin-bottom: 16px; break-inside: avoid; cursor: zoom-in; }
+  .more { margin-top: 26px; }
+  .more summary { display: inline-flex; align-items: center; gap: 10px; cursor: pointer; list-style: none; font-weight: 700; color: var(--text); padding: 6px 0; user-select: none; }
+  .more summary::-webkit-details-marker { display: none; }
+  .more summary::after { content: "+"; font-family: var(--serif); font-weight: 400; font-size: 26px; line-height: 1; transition: transform .25s; }
+  .more[open] summary::after { transform: rotate(45deg); }
+  .more summary:hover { color: var(--title); }
+  .more .gallery { margin-top: 16px; }
+  .lightbox { position: fixed; inset: 0; background: rgba(0,0,0,.92); display: none; align-items: center; justify-content: center; z-index: 10; cursor: zoom-out; padding: 16px; }
+  .lightbox.open { display: flex; }
+  .lightbox img { max-width: 100%; max-height: 100%; width: auto; }
+
+  footer { max-width: var(--w); margin: 0 auto; padding: 40px 48px 60px; font-family: var(--serif); font-style: italic; color: #999; border-top: 1px solid #eee; }
+
+  @media (max-width: 820px) {
+    body { font-size: 16px; }
+    .slide { padding: 48px 16px; }
+    footer { padding: 32px 16px 48px; }
+    .grid, .grid.img-left, .pair { grid-template-columns: 1fr; gap: 28px; }
+    .grid.img-left > figure { order: 0; }
+    .meta.inline { display: block; margin: 10px 0 0 4px; }
+    .meta, .intro .bio, .index { margin-left: 4px; }
+    .body.justify p { text-align: left; }
+    .clips { grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 10px; }
+    .gallery { columns: 2; column-gap: 10px; }
+    .gallery img { margin-bottom: 10px; }
+    .video button::after { width: 64px; height: 64px; margin: -32px 0 0 -32px; background-size: 30px; }
+  }
+  figure { margin: 0; }
+</style>
+</head>
+<body>
+
+<section class="slide intro" id="top">
+  <h1>POLINA ZINZIVER</h1>
+  <div class="bio">
+    <p>Multimedia artist who works in various media including CGI, mediated installations and a/v performances.</p>
+    <p>Polina highlights themes of state control over bodies through media and biopolitics, creating sexuality and physicality in real and digital spaces, free from traditional ideas and standards.</p>
+    <p>Their artistic practice is aimed at finding ways of interaction through care and non-violence.</p>
+  </div>
+  <ul class="index">
+    <li><a href="#p2050">2050இ</a><span>2025</span></li>
+    <li><a href="#sacred-hyper-race">Sacred Hyper Race</a><span>2024</span></li>
+    <li><a href="#thermosphere">Thermosphere</a><span>2023</span></li>
+    <li><a href="#hold-me">Hold me, hold me, hold</a><span>2022</span></li>
+    <li><a href="#third-person-rewiring">Third Person Rewiring</a><span>2023</span></li>
+    <li><a href="#face-positivity">Face Positivity</a><span>2022</span></li>
+    <li><a href="#numbers">Numbers</a><span>2021</span></li>
+    <li><a href="#you-are-enough">You Are Enough</a><span>2021</span></li>
+    <li><a href="#inter-phase">Inter_phase</a><span>2019</span></li>
+  </ul>
+</section>
+
+<section class="slide" id="p2050">
+  <div class="grid">
+    <div>
+      <h2>2050<span class="glyph">இ</span></h2>
+      <div class="meta">a/v live/ VR performance<br>2025</div>
+      <div class="body">
+        <p>2050<span class="glyph">இ</span> is poetic a/v live, transmedia performance that weaves together real-time audiovisual composition, VR technology, and poetic embodiment to interrogate the politics of the body in the digital age. At its core, the work explores the tension and transference between physical presence and virtual image, positioning the artist not only as a performer but as a conduit—an embodied transmitter of algorithmic vision.</p>
+        <p>Through the use of a VR headset, the artist’s gestures and movement generate dynamic visual content that unfolds in real time across large-scale digital screens. This mediated choreography dissolves the boundary between creator and projection, foregrounding the artist’s body as both subject and interface—an ephemeral locus where data and desire, flesh and code converge.</p>
+        <p>Rather than illustrating a narrative, 2050<span class="glyph">இ</span> becomes a living landscape—fluid, confrontational, and intimate. By situating digital tools within a poetic and somatic framework, the performance disrupts the presumed neutrality of virtual space, transforming it into a site of vulnerability and revolt.</p>
+      </div>
+    </div>
+    <figure class="stack">
+      <img src="img/2050-1.jpg" alt="2050 — audience in an industrial hall facing large screens" loading="lazy">
+      <img src="img/2050-2.jpg" alt="2050 — performer in white in front of a black-and-white projection" loading="lazy">
+    </figure>
+  </div>
+
+  <p class="label">Videos from the performance</p>
+  <video class="clip wide-clip" src="video/2050-1.mp4" poster="video/2050-1.jpg" muted loop playsinline controls preload="none"></video>
+  <div class="clips">
+    <video class="clip" src="video/2050-2.mp4" poster="video/2050-2.jpg" muted loop playsinline controls preload="none"></video>
+    <video class="clip" src="video/2050-3.mp4" poster="video/2050-3.jpg" muted loop playsinline controls preload="none"></video>
+    <video class="clip" src="video/2050-4.mp4" poster="video/2050-4.jpg" muted loop playsinline controls preload="none"></video>
+    <video class="clip" src="video/2050-5.mp4" poster="video/2050-5.jpg" muted loop playsinline controls preload="none"></video>
+  </div>
+
+  <details class="more">
+  <summary>more photos</summary>
+  <div class="gallery">
+    <img src="img/2050/01.jpg" alt="2050 — performance photo" loading="lazy">
+    <img src="img/2050/02.jpg" alt="2050 — performance photo" loading="lazy">
+    <img src="img/2050/03.jpg" alt="2050 — performance photo" loading="lazy">
+    <img src="img/2050/04.jpg" alt="2050 — performance photo" loading="lazy">
+    <img src="img/2050/05.jpg" alt="2050 — performance photo" loading="lazy">
+    <img src="img/2050/06.jpg" alt="2050 — performance photo" loading="lazy">
+    <img src="img/2050/07.jpg" alt="2050 — performance photo" loading="lazy">
+    <img src="img/2050/08.jpg" alt="2050 — performance photo" loading="lazy">
+    <img src="img/2050/09.jpg" alt="2050 — performance photo" loading="lazy">
+    <img src="img/2050/10.jpg" alt="2050 — performance photo" loading="lazy">
+    <img src="img/2050/11.jpg" alt="2050 — performance photo" loading="lazy">
+    <img src="img/2050/12.jpg" alt="2050 — performance photo" loading="lazy">
+  </div>
+  </details>
+</section>
+
+<section class="slide" id="sacred-hyper-race">
+  <h2>SACRED HYPER RACE<span class="meta inline">game level design, 2024</span></h2>
+  <div class="body" style="color:var(--ink)">
+    <p>Inspired by South Asian music and medieval European alchemy, <em>The Race Map</em> unfolds as a surreal metaphysical journey through the subconscious. From the Sun Man’s gateway of transformation to the labyrinth of self-doubt, monstrous thresholds, and a cathartic rainforest, the course spirals through vibrant madness toward an ecstatic finish.</p>
+  </div>
+  <figure class="wide"><img src="img/sacred-hyper-race.jpg" alt="Sacred Hyper Race — violet organic game level" loading="lazy"></figure>
+  <p class="label">Game teaser</p>
+  <div class="video" data-yt="QmN_7KbTSgI" data-title="Sacred Hyper Race — map teaser"></div>
+</section>
+
+<section class="slide" id="thermosphere">
+  <div class="grid">
+    <div>
+      <h2>THERMOSPHERE</h2>
+      <div class="meta">a/v live<br>2023</div>
+      <div class="body">
+        <p>Thermosphere is an immersive audiovisual live performance, developed in collaboration with musician Symphocat, that distills the pervasive atmosphere of control and censorship in Russia, 2023. Performed on a new stage of Aleksandriyskiy Theatre, Saint-Petersburg.</p>
+        <p>Employing ai as a means of subversion, the work abstracts and reconfigures socio-cultural visual codes, circumventing imposed restrictions.</p>
+        <p>The synthesis of reactive visuals and sound mirrors granular synthesis techniques — disassembling, fragmenting, and reconstituting elements into a new, fluid landscape of resistance and transformation.</p>
+      </div>
+    </div>
+    <figure class="stack">
+      <img src="img/thermosphere-1.jpg" alt="Thermosphere — performers at the console in front of a red projection" loading="lazy">
+      <img src="img/thermosphere-2.jpg" alt="Thermosphere — audience on stage under a large projection" loading="lazy">
+    </figure>
+  </div>
+  <p class="label">Full a/v live</p>
+  <div class="video" data-yt="Q73nfH2_I9Y" data-title="Thermosphere live"></div>
+</section>
+<section class="slide" id="hold-me">
+  <div class="grid img-left">
+    <figure><img src="img/hold-me.jpg" alt="Hold me, hold me, hold — dancer in red light in front of a screen" loading="lazy"></figure>
+    <div>
+      <h2 class="mixed">Hold me, hold me, hold</h2>
+      <div class="meta">performance<br>2022</div>
+      <div class="body loose justify">
+        <p>Collaboration with choreographer Alina Belyagina.</p>
+        <p>Merging together the real and the imaginary, two dancers along with moving images and soundscape, amalgamate the electronic frequencies of the reality of a videogame with church vocals and house music to create a space for a transgressive experience that holds the potentiality for becoming imaginary, making the imaginary palpable. Bodies indefinable as either human transfigure into monstrous animalistic beasts extending into technological devices like a microphone and a fog machine.</p>
+      </div>
+    </div>
+  </div>
+  <p class="label">Full performance</p>
+  <div class="video" data-yt="-xd5_S_aTeQ" data-title="Hold me, hold me, hold — full performance"></div>
+</section>
+
+<section class="slide" id="third-person-rewiring">
+  <div class="grid">
+    <div>
+      <h2>THIRD PERSON<br>REWIRING</h2>
+      <div class="meta">mediated installation, mixed media (prototype)<br>2023</div>
+      <div class="body">
+        <p>The installation is aimed at revealing the presence of the state and other controlling structures in our lives at the physical level.</p>
+        <p>It provides viewers with both a bodily experience evoked by sitting in a chair designed to cause discomfort to the sitter, and offers the possibility of an out-of-body experience, allowing one to observe oneself from the side, similar to the out-of-body experience in the astral dimension or “third person view” in the virtual dimension. While listening to a hypnotic text that "overwrites" and convinces them that they are NPCs.</p>
+        <p>Non-Playable Character (NPC) is a term that refers to a computer game character designed to perform utilitarian functions and pre-programmed for repetitive actions.</p>
+        <p>The installation is a work in progress and exists only as a 3D visualisation at the moment.</p>
+      </div>
+    </div>
+    <figure><img src="img/third-person-rewiring.jpg" alt="Third Person Rewiring — 3D visualisation of a chair between two screens" loading="lazy"></figure>
+  </div>
+</section>
+
+<section class="slide" id="face-positivity">
+  <div class="grid">
+    <div>
+      <h2>FACE POSITIVITY</h2>
+      <div class="meta">series of 3d portraits<br>2022</div>
+      <div class="body">
+        <p>A series of video portraits dedicated to unconventional beauty in virtual spaces.</p>
+        <p>Today, not only our body, but also our faces are subject to beauty stereotypes, and digital tools are mainly used to enhance facial beauty patterns and standards to an unrealistic and unnatural degree.</p>
+        <p>“Face Positivity” is a protest and an attempt to break out of this pattern and celebrate the unique.</p>
+      </div>
+    </div>
+    <figure><img src="img/face-positivity.jpg" alt="Face Positivity — 3D portrait covered with red beads" loading="lazy"></figure>
+  </div>
+  <p class="label">Video</p>
+  <div class="video" data-yt="uNuM6bXw060" data-title="Face Positivity"></div>
+</section>
+
+<section class="slide" id="numbers">
+  <div class="grid">
+    <div>
+      <h2>NUMBERS</h2>
+      <div class="meta">a/v performance<br>2021</div>
+      <div class="body">
+        <p>Audiovisual performance in collaboration with composer Vladislav Grigoriev, the electronic duo reboot and musicians from the St. Petersburg Conservatory for a performance on the New Stage of the Alexandrinsky Theatre, St. Petersburg, as part of the Classic Electric project.</p>
+        <p>The work of figures, through musical and visual images, explores the collective unconscious we access through a state of delirium and insomnia.</p>
+        <p>The visual accompaniment was created using the “expressive VR modeling” technique.</p>
+      </div>
+    </div>
+    <figure><img src="img/numbers.jpg" alt="Numbers — figure floating under a sculpture of coils" loading="lazy"></figure>
+  </div>
+</section>
+
+<section class="slide">
+  <p class="caption">“Numbers” a/v performance, 2021</p>
+  <div class="pair">
+    <figure><img src="img/numbers-stage.jpg" alt="Numbers — performance on stage with orchestra and projection" loading="lazy"></figure>
+    <figure><img src="img/numbers-render.jpg" alt="Numbers — symmetrical render of coils" loading="lazy"></figure>
+  </div>
+  <p class="label">Video (teaser version)</p>
+  <div class="video" data-yt="YwgAX1AkGR4" data-title="Numbers — teaser"></div>
+  <p class="video-note">If the video doesn’t play here, <a href="https://youtu.be/YwgAX1AkGR4" target="_blank" rel="noopener">watch it on YouTube</a>.</p>
+</section>
+
+<section class="slide" id="you-are-enough">
+  <h2>YOU ARE ENOUGH</h2>
+  <div class="meta">video art, full-dome projection<br>2021</div>
+  <div class="body" style="margin-top:18px">
+    <p>Immersive video art with sound by Valeria Polyanskaya inspired by meditative states. Rising up beyond the planet, universe, galaxy and at the same time deep into your subconscious to connect with your higher self.</p>
+    <p>The sculpture underlying the work is made using the “expressive VR modeling” technique, inspired by the music of composers Johan Johanson and Eduard Artemyev.</p>
+  </div>
+  <figure class="wide"><img src="img/you-are-enough.jpg" alt="You Are Enough — glowing ribbons in a cosmic tunnel" loading="lazy"></figure>
+  <p class="label">Video (screen version)</p>
+  <div class="video" data-yt="510m5h9GdkU" data-title="You Are Enough — screen version"></div>
+</section>
+
+<section class="slide" id="inter-phase">
+  <div class="grid">
+    <div>
+      <h2>INTER_PHASE</h2>
+      <div class="meta">VR installation<br>2019</div>
+      <div class="body loose">
+        <p>The artwork depicts a journey to regain control of technology and information and our search for inner balance between them and the meditative self.</p>
+        <p>Inter_phase hopes to offer a solution by not escaping outwards from these negative and positive aspects, but an escape inward to find a way to embrace technology by balancing the negative and positive aspects of them into our lives as we would with our non-digital relationships.</p>
+      </div>
+    </div>
+    <figure><img src="img/inter-phase.jpg" alt="Inter_phase — red spiral tower in a desert of cables" loading="lazy"></figure>
+  </div>
+  <p class="label">360 video <span style="font-weight:400">— drag to look around</span></p>
+  <div class="video" data-yt="kh8i6BdVBH0" data-title="Inter_phase — 360 video"></div>
+</section>
+
+<footer>© Polina Zinziver</footer>
+
+<script>
+  // Lightweight YouTube embed: show the cover, load the player on click.
+  document.querySelectorAll('.video[data-yt]').forEach(function (el) {
+    var id = el.dataset.yt;
+    var hi = 'https://i.ytimg.com/vi/' + id + '/maxresdefault.jpg';
+    var lo = 'https://i.ytimg.com/vi/' + id + '/hqdefault.jpg';
+    var probe = new Image();
+    probe.onload = function () { el.style.backgroundImage = 'url(' + (probe.naturalWidth > 120 ? hi : lo) + ')'; };
+    probe.onerror = function () { el.style.backgroundImage = 'url(' + lo + ')'; };
+    probe.src = hi;
+    var btn = document.createElement('button');
+    btn.setAttribute('aria-label', 'Play: ' + (el.dataset.title || 'video'));
+    el.appendChild(btn);
+    btn.addEventListener('click', function () {
+      var f = document.createElement('iframe');
+      f.src = 'https://www.youtube-nocookie.com/embed/' + id + '?autoplay=1&rel=0&playsinline=1';
+      f.title = el.dataset.title || 'YouTube video';
+      f.allow = 'accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture; fullscreen';
+      f.allowFullscreen = true;
+      el.innerHTML = '';
+      el.appendChild(f);
+    });
+  });
+
+  // Performance clips: play silently while on screen, pause when scrolled away.
+  var clipObserver = new IntersectionObserver(function (entries) {
+    entries.forEach(function (e) {
+      var v = e.target;
+      if (e.isIntersecting) { if (v.preload === 'none') v.preload = 'auto'; v.play().catch(function () {}); }
+      else if (!v.dataset.user) v.pause();
+    });
+  }, { threshold: 0.35 });
+  document.querySelectorAll('video.clip').forEach(function (v) {
+    clipObserver.observe(v);
+    v.addEventListener('volumechange', function () { if (!v.muted) v.dataset.user = '1'; });
+  });
+
+  // Photo lightbox
+  var lb = document.createElement('div');
+  lb.className = 'lightbox';
+  lb.innerHTML = '<img alt="">';
+  document.body.appendChild(lb);
+  lb.addEventListener('click', function () { lb.classList.remove('open'); });
+  document.addEventListener('keydown', function (e) { if (e.key === 'Escape') lb.classList.remove('open'); });
+  document.querySelectorAll('.gallery img').forEach(function (img) {
+    img.addEventListener('click', function () { lb.firstChild.src = img.src; lb.firstChild.alt = img.alt; lb.classList.add('open'); });
+  });
+</script>
+</body>
+</html>
