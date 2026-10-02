@@ -132,3 +132,8 @@ figure { margin: 0; }
 
 section[id] { scroll-margin-top: 52px; }
 @media (max-width: 520px) { .topnav .name { display: none; } .topnav .in { justify-content: space-between; } }
+
+/* artist statement */
+.statement { max-width: 760px; margin: 34px 0 0 10px; font-size: 18px; line-height: 1.6; color: var(--text); }
+.statement p { margin: 0 0 .8em; }
+@media (max-width: 820px) { .statement { margin-left: 4px; font-size: 16px; } }
