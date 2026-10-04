@@ -1,6 +1,10 @@
 // Floating intro: models drift in zero gravity inside the hero, each in a poster-style frame.
-// Drag a model (or its frame) to move it, hover shows its tag, click anywhere to make them all jiggle.
-// floatScene(heroElement, [{ url, name, tag?, weight? }, ...])
+// Drag a model (or its frame) to move it, hover shows its tag, click a model to open its project,
+// click empty space to make them all jiggle.
+// floatScene(heroElement, [{ url, name, tag?, href?, weight?, pick?, tint? }, ...])
+//   pick: node names to keep from the file (to show one piece of a multi-object model)
+//   tint: { material, color } recolours one material of this copy
+//   norm: scale a full-size file down to about one unit
 import * as THREE from 'three';
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 import { RoomEnvironment } from 'three/addons/environments/RoomEnvironment.js';
@@ -98,6 +102,14 @@ export function floatScene(hero, MODELS) {
   MODELS.forEach((m, i) => {
     loader.load(m.url, (gltf) => {
       const model = gltf.scene;
+      if (m.pick) for (const c of [...model.children]) if (!m.pick.includes(c.name)) model.remove(c);
+      if (m.tint) model.traverse((o) => {
+        if (o.isMesh && o.material && o.material.name === m.tint.material) { o.material = o.material.clone(); o.material.color.set(m.tint.color); }
+      });
+      if (m.norm) {   // full-size source files: scale to about one unit like the hero copies
+        const s0 = new THREE.Box3().setFromObject(model).getSize(new THREE.Vector3());
+        model.scale.multiplyScalar(1 / Math.max(s0.x, s0.y, s0.z));
+      }
       const box = new THREE.Box3().setFromObject(model);
       const size = box.getSize(new THREE.Vector3());
       model.position.sub(box.getCenter(new THREE.Vector3()));   // pivot at the centre
@@ -113,7 +125,7 @@ export function floatScene(hero, MODELS) {
       body.velocity.set((Math.random() - 0.5) * 2, (Math.random() - 0.5) * 2, 0);
       world.addBody(body);
 
-      const it = { i, name: m.name, group, body, size, weight: 1, frame: makeFrame(i, m), rect: null, wobble: 0, seed: Math.random() * 100 };
+      const it = { i, name: m.name, href: m.href, group, body, size, weight: 1, frame: makeFrame(i, m), rect: null, wobble: 0, seed: Math.random() * 100 };
       // Flat, wide pieces (the fence ring) read better a bit larger.
       it.weight = (m.weight || 1) * THREE.MathUtils.clamp(1 / Math.sqrt(Math.max(size.x, size.y)), 1, 1.25);
       items.push(it);
@@ -153,7 +165,7 @@ export function floatScene(hero, MODELS) {
       hovered = h;
       hovered && hovered.frame.classList.add('on');
     }
-    hero.style.cursor = dragged ? 'grabbing' : hovered ? 'grab' : '';
+    hero.style.cursor = dragged ? 'grabbing' : hovered ? (hovered.href ? 'pointer' : 'grab') : '';
   });
   hero.addEventListener('pointerleave', () => {
     if (dragged) return;
@@ -174,9 +186,11 @@ export function floatScene(hero, MODELS) {
     if (!pointer.down) return;
     pointer.down = false;
     const click = !pointer.moved && performance.now() - pointer.t < 350;
+    const target = dragged;
     if (dragged) dragged.frame.classList.remove('drag');
     dragged = null;
-    if (click) jiggle();
+    if (click && target && target.href) location.href = target.href;
+    else if (click) jiggle();
   }
   hero.addEventListener('pointerup', release);
   hero.addEventListener('pointercancel', () => { pointer.moved = true; release(); });

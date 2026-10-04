@@ -34,15 +34,15 @@
   <a href="commercial/virtual-gap-year.html">Virtual Gap Year</a>
 </div></nav>
 
-<div class="shr-hero" id="intro-stage" aria-label="Objects from Sacred Hyper Race and Nina Ricci floating in zero gravity. Hover to see the project, drag to move, click to make them jiggle.">
+<div class="shr-hero" id="intro-stage" aria-label="Objects from Sacred Hyper Race, Nina Ricci, LOEWE SS22 and LOEWE Christmas floating in zero gravity. Hover to see the project, click an object to open it, drag to move.">
   <canvas></canvas>
   <div class="shr-frames"></div>
   <div class="shr-ui">
     <span class="tl">Polina Zinziver</span>
     <span class="tm">3D animation, CGI <br>and art direction</span>
     <span class="tr">commercial</span>
-    <span class="bl">Sacred Hyper Race · Nina Ricci</span>
-    <span class="br">drag · click</span>
+    <span class="bl">Sacred Hyper Race · Nina Ricci · LOEWE</span>
+    <span class="br">drag · click to open</span>
   </div>
 </div>
 
@@ -64,27 +64,34 @@
 <script type="module">
   import { floatScene } from './commercial/float-scene.js';
   floatScene(document.getElementById('intro-stage'), [
-    { url: 'commercial/models/hero/shr-sun-man.glb', name: 'Sun Man', tag: 'Sacred Hyper Race' },
-    { url: 'commercial/models/hero/nr-bag.glb', name: 'Bag', tag: 'Nina Ricci' },
-    { url: 'commercial/models/hero/shr-mouth-arch.glb', name: 'Mouth Arch', tag: 'Sacred Hyper Race' },
-    { url: 'commercial/models/hero/nr-apple-1.glb', name: 'Apple', tag: 'Nina Ricci', weight: 0.55 },
-    { url: 'commercial/models/hero/shr-two-heads.glb', name: 'Two Heads', tag: 'Sacred Hyper Race' },
-    { url: 'commercial/models/hero/nr-slippers.glb', name: 'Slippers', tag: 'Nina Ricci' },
-    { url: 'commercial/models/hero/shr-frog.glb', name: 'Frog', tag: 'Sacred Hyper Race' },
-    { url: 'commercial/models/hero/nr-apple-2.glb', name: 'Apple', tag: 'Nina Ricci', weight: 0.55 },
-    { url: 'commercial/models/hero/shr-squad-monster.glb', name: 'Squad Monster', tag: 'Sacred Hyper Race' },
-    { url: 'commercial/models/hero/nr-apple-3.glb', name: 'Apple', tag: 'Nina Ricci', weight: 0.55 },
-    { url: 'commercial/models/hero/shr-waterfall-tree-1.glb', name: 'Waterfall Tree I', tag: 'Sacred Hyper Race' },
-    { url: 'commercial/models/hero/nr-dove.glb', name: 'Dove', tag: 'Nina Ricci' },
-    { url: 'commercial/models/hero/shr-waterfall-tree-2.glb', name: 'Waterfall Tree II', tag: 'Sacred Hyper Race' },
-    { url: 'commercial/models/hero/nr-apple-4.glb', name: 'Apple', tag: 'Nina Ricci', weight: 0.55 },
-    { url: 'commercial/models/hero/shr-tree.glb', name: 'Tree', tag: 'Sacred Hyper Race' },
-    { url: 'commercial/models/hero/shr-orchid.glb', name: 'Orchid', tag: 'Sacred Hyper Race' },
-    { url: 'commercial/models/hero/nr-apple-5.glb', name: 'Apple', tag: 'Nina Ricci', weight: 0.55 },
-    { url: 'commercial/models/hero/shr-church.glb', name: 'Church', tag: 'Sacred Hyper Race' },
-    { url: 'commercial/models/hero/shr-house.glb', name: 'House', tag: 'Sacred Hyper Race' },
-    { url: 'commercial/models/hero/nr-apple-6.glb', name: 'Apple', tag: 'Nina Ricci', weight: 0.55 },
-    { url: 'commercial/models/hero/shr-fence.glb', name: 'Fence', tag: 'Sacred Hyper Race' }
+    { url: 'commercial/models/hero/shr-sun-man.glb', name: 'Sun Man', tag: 'Sacred Hyper Race', href: 'commercial/sacred-hyper-race.html' },
+    { url: 'commercial/models/hero/nr-bag.glb', name: 'Bag', tag: 'Nina Ricci', href: 'commercial/nina-ricci.html' },
+    { url: 'commercial/models/hero/shr-mouth-arch.glb', name: 'Mouth Arch', tag: 'Sacred Hyper Race', href: 'commercial/sacred-hyper-race.html' },
+    { url: 'commercial/models/hero/nr-apple-1.glb', name: 'Apple', tag: 'Nina Ricci', href: 'commercial/nina-ricci.html', weight: 0.55 },
+    { url: 'commercial/models/hero/shr-two-heads.glb', name: 'Two Heads', tag: 'Sacred Hyper Race', href: 'commercial/sacred-hyper-race.html' },
+    { url: 'commercial/models/hero/nr-slippers.glb', name: 'Slippers', tag: 'Nina Ricci', href: 'commercial/nina-ricci.html' },
+    { url: 'commercial/models/hero/shr-frog.glb', name: 'Frog', tag: 'Sacred Hyper Race', href: 'commercial/sacred-hyper-race.html' },
+    { url: 'commercial/models/hero/nr-apple-2.glb', name: 'Apple', tag: 'Nina Ricci', href: 'commercial/nina-ricci.html', weight: 0.55 },
+    { url: 'commercial/models/hero/shr-squad-monster.glb', name: 'Squad Monster', tag: 'Sacred Hyper Race', href: 'commercial/sacred-hyper-race.html' },
+    { url: 'commercial/models/hero/nr-apple-3.glb', name: 'Apple', tag: 'Nina Ricci', href: 'commercial/nina-ricci.html', weight: 0.55 },
+    { url: 'commercial/models/hero/shr-waterfall-tree-1.glb', name: 'Waterfall Tree I', tag: 'Sacred Hyper Race', href: 'commercial/sacred-hyper-race.html' },
+    { url: 'commercial/models/hero/nr-dove.glb', name: 'Dove', tag: 'Nina Ricci', href: 'commercial/nina-ricci.html' },
+    { url: 'commercial/models/hero/shr-waterfall-tree-2.glb', name: 'Waterfall Tree II', tag: 'Sacred Hyper Race', href: 'commercial/sacred-hyper-race.html' },
+    { url: 'commercial/models/hero/nr-apple-4.glb', name: 'Apple', tag: 'Nina Ricci', href: 'commercial/nina-ricci.html', weight: 0.55 },
+    { url: 'commercial/models/hero/shr-tree.glb', name: 'Tree', tag: 'Sacred Hyper Race', href: 'commercial/sacred-hyper-race.html' },
+    { url: 'commercial/models/hero/shr-orchid.glb', name: 'Orchid', tag: 'Sacred Hyper Race', href: 'commercial/sacred-hyper-race.html' },
+    { url: 'commercial/models/hero/nr-apple-5.glb', name: 'Apple', tag: 'Nina Ricci', href: 'commercial/nina-ricci.html', weight: 0.55 },
+    { url: 'commercial/models/hero/shr-church.glb', name: 'Church', tag: 'Sacred Hyper Race', href: 'commercial/sacred-hyper-race.html' },
+    { url: 'commercial/models/hero/shr-house.glb', name: 'House', tag: 'Sacred Hyper Race', href: 'commercial/sacred-hyper-race.html' },
+    { url: 'commercial/models/hero/nr-apple-6.glb', name: 'Apple', tag: 'Nina Ricci', href: 'commercial/nina-ricci.html', weight: 0.55 },
+    { url: 'commercial/models/lw-nail-polish.glb', norm: true, name: 'Nail Polish', tag: 'LOEWE SS22', href: 'commercial/loewe-ss22.html' },
+    { url: 'commercial/models/xm-candle-jars.glb', norm: true, name: 'Candle Jar', tag: 'LOEWE Christmas', href: 'commercial/loewe-christmas.html', pick: ['xm-candle-jars-8','xm-candle-jars-9','xm-candle-jars-10','xm-candle-jars-11'], tint: { material: 'Candle_L', color: '#7a5bd6' } },
+    { url: 'commercial/models/lw-peas.glb', norm: true, name: 'Pea Pod', tag: 'LOEWE SS22', href: 'commercial/loewe-ss22.html' },
+    { url: 'commercial/models/xm-candle-jars.glb', norm: true, name: 'Candle Jar', tag: 'LOEWE Christmas', href: 'commercial/loewe-christmas.html', pick: ['xm-candle-jars-4','xm-candle-jars-5','xm-candle-jars-6','xm-candle-jars-7'], weight: 0.8 },
+    { url: 'commercial/models/lw-sky-words.glb', norm: true, name: 'Live Love LOEWE', tag: 'LOEWE SS22', href: 'commercial/loewe-ss22.html' },
+    { url: 'commercial/models/xm-candle-jars.glb', norm: true, name: 'Candle Jar', tag: 'LOEWE Christmas', href: 'commercial/loewe-christmas.html', pick: ['xm-candle-jars-0','xm-candle-jars-1','xm-candle-jars-2','xm-candle-jars-3'], weight: 0.65 },
+    { url: 'commercial/models/xm-perfume.glb', norm: true, name: 'LOEWE 001', tag: 'LOEWE Christmas', href: 'commercial/loewe-christmas.html' },
+    { url: 'commercial/models/hero/shr-fence.glb', name: 'Fence', tag: 'Sacred Hyper Race', href: 'commercial/sacred-hyper-race.html' }
   ]);
 </script>
 </body>
