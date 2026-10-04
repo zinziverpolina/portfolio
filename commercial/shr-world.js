@@ -120,9 +120,9 @@ export function shrWorld(root, base) {
         return 0.35 * (wave(p, vec2(0.8, 0.6), 0.9, 1.3, t) + wave(p, vec2(-0.5, 0.866), 1.4, 1.7, t)
           + 0.6 * wave(p, vec2(0.2, -0.98), 2.3, 2.1, t) + 0.4 * wave(p, vec2(-0.93, -0.37), 3.7, 2.9, t));
       }\n` + sh.fragmentShader
-      .replace('#include <map_fragment>', 'vec2 rip = ripple(vWorld, time);\ndiffuseColor *= texture2D(map, vMapUv + rip * 0.006);')
-      .replace('#include <normal_fragment_begin>', '#include <normal_fragment_begin>\nnormal = normalize(normal + (viewMatrix * vec4(rip.x, 0.0, rip.y, 0.0)).xyz * 0.12);')
-      .replace('#include <opaque_fragment>', `vec3 mirrored = texture2D(tReflect, vReflect.xy / vReflect.w + rip * 0.02).rgb;
+      .replace('#include <map_fragment>', 'vec2 rip = ripple(vWorld, time * 1.6) * 1.6;\ndiffuseColor *= texture2D(map, vMapUv + rip * 0.006);')
+      .replace('#include <normal_fragment_begin>', '#include <normal_fragment_begin>\nnormal = normalize(normal + (viewMatrix * vec4(rip.x, 0.0, rip.y, 0.0)).xyz * 0.16);')
+      .replace('#include <opaque_fragment>', `vec3 mirrored = texture2D(tReflect, vReflect.xy / vReflect.w + rip * 0.024).rgb;
         float fres = pow(1.0 - clamp(dot(normalize(vViewPosition), normal), 0.0, 1.0), 4.0);
         outgoingLight = mix(outgoingLight, mirrored, 0.08 + 0.37 * fres);
         #include <opaque_fragment>`);

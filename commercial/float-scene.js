@@ -195,9 +195,9 @@ export function floatScene(hero, MODELS) {
   hero.addEventListener('pointerup', release);
   hero.addEventListener('pointercancel', () => { pointer.moved = true; release(); });
 
-  // Click on a linked object: its blue-violet frame opens to fill the screen and floods with colour,
-  // the project name appears in white, then the project page opens under the same cover
-  // and the colour slides up (see .cover in style.css and the head script on project pages).
+  // Click on a linked object: its blue-violet frame opens to fill the screen in white, then the
+  // project page opens under the same white cover, which fades away (see .cover in style.css and
+  // the head script on project pages).
   let leaving = false;
   function openProject(it) {
     if (leaving) return;
@@ -205,14 +205,12 @@ export function floatScene(hero, MODELS) {
     const r = it.rect || frameRect(it), hr = hero.getBoundingClientRect();
     const cover = document.createElement('div');
     cover.className = 'cover cover-grow';
-    cover.innerHTML = '<span></span>';
-    cover.querySelector('span').textContent = it.tag;
     Object.assign(cover.style, { left: hr.left + r.x + 'px', top: hr.top + r.y + 'px', width: r.w + 'px', height: r.h + 'px' });
     document.body.appendChild(cover);
     cover.getBoundingClientRect();   // start the transition from the frame's box
     cover.classList.add('full');
     try { sessionStorage.setItem('cover', it.tag); } catch (e) {}
-    setTimeout(() => { location.href = it.href; }, 650);
+    setTimeout(() => { location.href = it.href; }, 560);
   }
   window.addEventListener('pageshow', (e) => { if (e.persisted) { leaving = false; document.querySelectorAll('.cover').forEach((n) => n.remove()); } });
 
