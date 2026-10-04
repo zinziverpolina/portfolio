@@ -8,7 +8,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Arimo:ital,wght@0,400;0,700;1,400&family=Tinos:ital,wght@0,400;0,700;1,400;1,700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="../style.css">
+<link rel="stylesheet" href="../style.css?v=20261005b">
 <script type="importmap">{"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.169.0/build/three.module.js","three/addons/":"https://cdn.jsdelivr.net/npm/three@0.169.0/examples/jsm/","cannon-es":"https://cdn.jsdelivr.net/npm/cannon-es@0.20.0/dist/cannon-es.js"}}</script>
 <script type="module" src="https://cdn.jsdelivr.net/npm/@google/model-viewer@4.1.0/dist/model-viewer.min.js"></script>
 </head>
@@ -16,22 +16,26 @@
 
 <nav class="topnav"><div class="in">
   <a class="name" href="../commercial.html">POLINA ZINZIVER</a>
+  <div class="dd">
+    <button class="dd-btn" type="button" aria-expanded="false" aria-controls="dd-panel">all projects <span aria-hidden="true">▾</span></button>
+    <div class="dd-panel" id="dd-panel">
+    <ol class="projects">
+      <li><a href="nina-ricci.html"><img src="video/nina-ricci-1.jpg" alt="" loading="lazy" decoding="async"><span class="t">Nina Ricci</span><span class="y">2022</span><span class="w">animations for the Summer 22 collection</span></a></li>
+      <li><a href="loewe-ss22.html"><img src="video/loewe-ww-1.jpg" alt="" loading="lazy" decoding="async"><span class="t">LOEWE SS22</span><span class="y">2022</span><span class="w">runway and menswear promo animations</span></a></li>
+      <li class="on"><a href="sacred-hyper-race.html"><img src="img/shr-1.jpg" alt="" loading="lazy" decoding="async"><span class="t">Sacred Hyper Race</span><span class="y">2024</span><span class="w">art direction, level design</span></a></li>
+      <li><a href="loewe-christmas.html"><img src="video/loewe-xmas-2.jpg" alt="" loading="lazy" decoding="async"><span class="t">LOEWE Christmas</span><span class="y">2021</span><span class="w">Christmas promo animations</span></a></li>
+      <li><a href="clara-luciani.html"><img src="img/clara-2.jpg" alt="" loading="lazy" decoding="async"><span class="t">Clara Luciani</span><span class="y">2025</span><span class="w">tour visuals</span></a></li>
+      <li><a href="horosoaps.html"><img src="video/horosoaps-1.jpg" alt="" loading="lazy" decoding="async"><span class="t">HOROSOAPS</span><span class="y"></span><span class="w">promo animations</span></a></li>
+      <li><a href="carolina-sarria.html"><img src="img/carolina-1.jpg" alt="" loading="lazy" decoding="async"><span class="t">CAROLINA SARRIA</span><span class="y">2020</span><span class="w">mixed media portraits</span></a></li>
+      <li><a href="virtual-gap-year.html"><img src="img/vgy-1.jpg" alt="" loading="lazy" decoding="async"><span class="t">Virtual Gap Year</span><span class="y">2019</span><span class="w">short film, contributing artist</span></a></li>
+    </ol>
+    </div>
+  </div>
   <a href="https://zinziverpolina.github.io/Polina-CV/" target="_blank" rel="noopener">cv</a>
   <a href="https://www.instagram.com/polina_zinziver_/" target="_blank" rel="noopener">instagram</a>
-</div>
-<div class="tabs">
-  <a href="../commercial.html#projects">all projects</a>
-  <a href="nina-ricci.html">Nina Ricci</a>
-  <a href="loewe-ss22.html">LOEWE SS22</a>
-  <a href="sacred-hyper-race.html" class="on" aria-current="page">Sacred Hyper Race</a>
-  <a href="loewe-christmas.html">LOEWE Christmas</a>
-  <a href="clara-luciani.html">Clara Luciani</a>
-  <a href="horosoaps.html">HOROSOAPS</a>
-  <a href="carolina-sarria.html">CAROLINA SARRIA</a>
-  <a href="virtual-gap-year.html">Virtual Gap Year</a>
 </div></nav>
 
-<div class="shr-world" id="shr-world" aria-label="Sacred Hyper Race — walk among the sculptures from the map">
+<div class="shr-world" style="view-transition-name: proj-hero" id="shr-world" aria-label="Sacred Hyper Race — walk among the sculptures from the map">
   <canvas></canvas>
   <div class="world-ui">
     <span class="tl">Sacred Hyper Race</span>
@@ -97,13 +101,13 @@
 
 <nav class="pager">
   <a class="prev" href="loewe-ss22.html">← LOEWE SS22</a>
-  <a class="all" href="../commercial.html#projects">all projects</a>
+  <a class="all" href="../commercial.html">all projects</a>
   <a class="next" href="loewe-christmas.html">LOEWE Christmas →</a>
 </nav>
 
 <footer>© Polina Zinziver · <a href="../index.html">artistic practice →</a></footer>
 
-<script src="../site.js"></script>
+<script src="../site.js?v=20261005b"></script>
 <script type="module">
   import { shrWorld } from './shr-world.js';
   shrWorld(document.getElementById('shr-world'), '');
