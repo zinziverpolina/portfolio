@@ -137,3 +137,16 @@ section[id] { scroll-margin-top: 52px; }
 .statement { max-width: 760px; margin: 34px 0 0 10px; font-size: 18px; line-height: 1.6; color: var(--text); }
 .statement p { margin: 0 0 .8em; }
 @media (max-width: 820px) { .statement { margin-left: 4px; font-size: 16px; } }
+
+/* rotatable 3D model cards */
+.models { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+.models figure { margin: 0; }
+.models model-viewer { display: block; width: 100%; height: auto; aspect-ratio: 1; background: #f3f3f3; --poster-color: #f3f3f3; cursor: grab; }
+.models model-viewer:active { cursor: grabbing; }
+.models figcaption { font-family: var(--serif); color: var(--title); font-size: 19px; margin: 8px 0 0 2px; }
+.models figcaption span { font-style: italic; color: #999; font-size: 15px; margin-left: 8px; }
+@media (max-width: 820px) {
+  .models { grid-template-columns: 1fr 1fr; gap: 10px; }
+  .models figcaption { font-size: 16px; }
+  .models figcaption span { display: block; margin: 0; font-size: 13px; }
+}
