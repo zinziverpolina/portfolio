@@ -33,6 +33,26 @@
   <a href="virtual-gap-year.html">Virtual Gap Year</a>
 </div></nav>
 
+<div class="shr-world" id="shr-world" aria-label="Sacred Hyper Race — a walkable web version of the race map">
+  <canvas></canvas>
+  <div class="world-ui">
+    <span class="tl">Sacred Hyper Race</span>
+    <span class="tr">walk the map</span>
+    <div class="world-start">
+      <i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i>
+      <p class="t">Walk the map</p>
+      <button type="button">Enter</button>
+      <p class="h desk">WASD / arrows — walk · mouse — look · Shift — run · Esc — leave</p>
+      <p class="h tap">left thumb — walk · right thumb — look</p>
+      <p class="world-loading">loading 0%</p>
+    </div>
+    <div class="world-cross"></div>
+    <div class="world-label"></div>
+    <div class="world-stick"><i></i></div>
+    <button type="button" class="world-exit" aria-label="Leave the map">×</button>
+  </div>
+</div>
+
 <div class="shr-hero" id="shr-hero" aria-label="Sacred Hyper Race — models from the map floating in zero gravity. Drag to move them, click to make them jiggle.">
   <canvas></canvas>
   <div class="shr-frames"></div>
@@ -86,6 +106,10 @@
 <footer>© Polina Zinziver</footer>
 
 <script src="../site.js"></script>
+<script type="module">
+  import { shrWorld } from './shr-world.js';
+  shrWorld(document.getElementById('shr-world'), '');
+</script>
 <script type="module">
   import { floatScene } from './float-scene.js';
   floatScene(document.getElementById('shr-hero'), [
