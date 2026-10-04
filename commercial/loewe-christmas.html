@@ -9,6 +9,7 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Arimo:ital,wght@0,400;0,700;1,400&family=Tinos:ital,wght@0,400;0,700;1,400;1,700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="../style.css">
+<script type="module" src="https://cdn.jsdelivr.net/npm/@google/model-viewer@4.1.0/dist/model-viewer.min.js"></script>
 </head>
 <body>
 
@@ -43,6 +44,50 @@
       <video class="clip r916" src="video/loewe-xmas-1.mp4" poster="video/loewe-xmas-1.jpg" muted loop playsinline controls preload="none"></video>
       <video class="clip r45" src="video/loewe-xmas-2.mp4" poster="video/loewe-xmas-2.jpg" muted loop playsinline controls preload="none"></video>
     </div>
+  </div>
+  <p class="label">16:9 versions</p>
+  <div class="media c3">
+    <video class="clip r169" src="video/loewe-candles-h.mp4" poster="video/loewe-candles-h.jpg" muted loop playsinline controls preload="none"></video>
+    <video class="clip r169" src="video/loewe-soap-h.mp4" poster="video/loewe-soap-h.jpg" muted loop playsinline controls preload="none"></video>
+    <video class="clip r169" src="video/loewe-frag-h.mp4" poster="video/loewe-frag-h.jpg" muted loop playsinline controls preload="none"></video>
+  </div>
+  <p class="label">Vertical versions, 9:16</p>
+  <div class="media c3">
+    <video class="clip r916" src="video/loewe-candles-v.mp4" poster="video/loewe-candles-v.jpg" muted loop playsinline controls preload="none"></video>
+    <video class="clip r916" src="video/loewe-soap-v.mp4" poster="video/loewe-soap-v.jpg" muted loop playsinline controls preload="none"></video>
+    <video class="clip r916" src="video/loewe-frag-v.mp4" poster="video/loewe-frag-v.jpg" muted loop playsinline controls preload="none"></video>
+  </div>
+  <p class="label">4:5 versions</p>
+  <div class="media c3">
+    <video class="clip r45" src="video/loewe-owl-p.mp4" poster="video/loewe-owl-p.jpg" muted loop playsinline controls preload="none"></video>
+    <video class="clip r45" src="video/loewe-soap-p.mp4" poster="video/loewe-soap-p.jpg" muted loop playsinline controls preload="none"></video>
+    <video class="clip r45" src="video/loewe-frag-p.mp4" poster="video/loewe-frag-p.jpg" muted loop playsinline controls preload="none"></video>
+  </div>
+  <p class="label">Stills</p>
+  <div class="media c4">
+    <img class="zoom r45" src="img/loewe-xmas-s1.jpg" alt="LOEWE Christmas — the owl in the garden by the moon" loading="lazy">
+    <img class="zoom r45" src="img/loewe-xmas-s2.jpg" alt="LOEWE Christmas — wheat and berries in the garden" loading="lazy">
+    <img class="zoom r45" src="img/loewe-xmas-s3.jpg" alt="LOEWE Christmas — the owl among wheat and berries" loading="lazy">
+    <img class="zoom r45" src="img/loewe-xmas-s4.jpg" alt="LOEWE Christmas — candles for LOEWE Perfumes" loading="lazy">
+    <img class="zoom r45" src="img/loewe-xmas-s5.jpg" alt="LOEWE Christmas — half-melted candles" loading="lazy">
+    <img class="zoom r45" src="img/loewe-xmas-s6.jpg" alt="LOEWE Christmas — melted candles" loading="lazy">
+    <img class="zoom r45" src="img/loewe-xmas-s7.jpg" alt="LOEWE Christmas — candles, close-up" loading="lazy">
+    <img class="zoom r45" src="img/loewe-xmas-s8.jpg" alt="LOEWE Christmas — red candle" loading="lazy">
+    <img class="zoom r45" src="img/loewe-xmas-s9.jpg" alt="LOEWE Christmas — two melted candles" loading="lazy">
+    <img class="zoom r45" src="img/loewe-xmas-s10.jpg" alt="LOEWE Christmas — candle in a ribbed holder" loading="lazy">
+    <img class="zoom r45" src="img/loewe-xmas-s11.jpg" alt="LOEWE Christmas — LOEWE 001 bottle" loading="lazy">
+    <img class="zoom r45" src="img/loewe-xmas-s12.jpg" alt="LOEWE Christmas — gold fabric" loading="lazy">
+    <img class="zoom r45" src="img/loewe-xmas-s13.jpg" alt="LOEWE Christmas — blue fabric" loading="lazy">
+    <img class="zoom r45" src="img/loewe-xmas-s14.jpg" alt="LOEWE Christmas — lava-lamp soap" loading="lazy">
+    <img class="zoom r45" src="img/loewe-xmas-s15.jpg" alt="LOEWE Christmas — lava-lamp soap" loading="lazy">
+    <img class="zoom r45" src="img/loewe-xmas-s16.jpg" alt="LOEWE Christmas — lava-lamp soap" loading="lazy">
+  </div>
+  <p class="label">3D models from the scenes — drag to rotate</p>
+  <div class="models c4">
+    <figure><model-viewer src="models/xm-owl.glb" poster="models/xm-owl.jpg" alt="LOEWE Christmas — Owl, 3D model" loading="lazy" camera-controls disable-zoom disable-pan touch-action="pan-y" min-camera-orbit="auto auto 20%" max-camera-orbit="auto auto 200%" interaction-prompt="none" auto-rotate auto-rotate-delay="0" rotation-per-second="18deg" environment-image="neutral" shadow-intensity="1" camera-orbit="0deg 82deg 105%"></model-viewer><figcaption>Owl</figcaption></figure>
+    <figure><model-viewer src="models/xm-candles.glb" poster="models/xm-candles.jpg" alt="LOEWE Christmas — Candlesticks, 3D model" loading="lazy" camera-controls disable-zoom disable-pan touch-action="pan-y" min-camera-orbit="auto auto 20%" max-camera-orbit="auto auto 200%" interaction-prompt="none" auto-rotate auto-rotate-delay="0" rotation-per-second="18deg" environment-image="neutral" shadow-intensity="1" camera-orbit="20deg 70deg 105%"></model-viewer><figcaption>Candlesticks</figcaption></figure>
+    <figure><model-viewer src="models/xm-soap.glb" poster="models/xm-soap.jpg" alt="LOEWE Christmas — Lava-lamp soap, 3D model" loading="lazy" camera-controls disable-zoom disable-pan touch-action="pan-y" min-camera-orbit="auto auto 20%" max-camera-orbit="auto auto 200%" interaction-prompt="none" auto-rotate auto-rotate-delay="0" rotation-per-second="18deg" environment-image="neutral" shadow-intensity="1" camera-orbit="20deg 82deg 105%"></model-viewer><figcaption>Lava-lamp soap</figcaption></figure>
+    <figure><model-viewer src="models/xm-perfume.glb" poster="models/xm-perfume.jpg" alt="LOEWE Christmas — LOEWE 001, 3D model" loading="lazy" camera-controls disable-zoom disable-pan touch-action="pan-y" min-camera-orbit="auto auto 20%" max-camera-orbit="auto auto 200%" interaction-prompt="none" auto-rotate auto-rotate-delay="0" rotation-per-second="18deg" environment-image="neutral" shadow-intensity="1" camera-orbit="25deg 80deg 105%"></model-viewer><figcaption>LOEWE 001</figcaption></figure>
   </div>
 </section>
 
