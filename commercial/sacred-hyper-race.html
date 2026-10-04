@@ -8,14 +8,14 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Arimo:ital,wght@0,400;0,700;1,400&family=Tinos:ital,wght@0,400;0,700;1,400;1,700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="../style.css?v=20261005i">
+<link rel="stylesheet" href="../style.css?v=20261005j">
 <script type="importmap">{"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.169.0/build/three.module.js","three/addons/":"https://cdn.jsdelivr.net/npm/three@0.169.0/examples/jsm/","cannon-es":"https://cdn.jsdelivr.net/npm/cannon-es@0.20.0/dist/cannon-es.js"}}</script>
 <script type="module" src="https://cdn.jsdelivr.net/npm/@google/model-viewer@4.1.0/dist/model-viewer.min.js"></script>
 <script>
   // Arriving from the intro: start under a white cover that slowly turns transparent.
   (function () { var t; try { t = sessionStorage.getItem('cover'); sessionStorage.removeItem('cover'); } catch (e) {} if (!t) return;
-    (function add() { if (!document.body) return requestAnimationFrame(add); var c = document.createElement('div'); c.className = 'cover cover-in'; document.body.appendChild(c); document.documentElement.classList.remove('arriving');
-      setTimeout(function () { c.classList.add('go'); }, 30); setTimeout(function () { c.remove(); }, 500); })();
+    (function add() { if (!document.body) return requestAnimationFrame(add); var c = document.createElement('div'); c.className = 'cover cover-in'; document.body.appendChild(c); c.getBoundingClientRect(); document.documentElement.classList.remove('arriving');
+      setTimeout(function () { c.getBoundingClientRect(); c.classList.add('go'); }, 90); setTimeout(function () { c.remove(); }, 1200); })();
     document.documentElement.classList.add('arriving');
   })();
 </script>
@@ -125,9 +125,9 @@
 
 <footer>© Polina Zinziver · <a href="../index.html">artistic practice →</a></footer>
 
-<script src="../site.js?v=20261005i"></script>
+<script src="../site.js?v=20261005j"></script>
 <script type="module">
-  import { shrWorld } from './shr-world.js?v=20261005i';
+  import { shrWorld } from './shr-world.js?v=20261005j';
   shrWorld(document.getElementById('shr-world'), '');
 </script>
 <script type="module">
