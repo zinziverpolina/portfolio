@@ -9,13 +9,13 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Arimo:ital,wght@0,400;0,700;1,400&family=Tinos:ital,wght@0,400;0,700;1,400;1,700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="../style.css?v=20261005i">
+<link rel="stylesheet" href="../style.css?v=20261005l">
 <script type="module" src="https://cdn.jsdelivr.net/npm/@google/model-viewer@4.1.0/dist/model-viewer.min.js"></script>
 <script>
   // Arriving from the intro: start under a white cover that slowly turns transparent.
   (function () { var t; try { t = sessionStorage.getItem('cover'); sessionStorage.removeItem('cover'); } catch (e) {} if (!t) return;
-    (function add() { if (!document.body) return requestAnimationFrame(add); var c = document.createElement('div'); c.className = 'cover cover-in'; document.body.appendChild(c); document.documentElement.classList.remove('arriving');
-      setTimeout(function () { c.classList.add('go'); }, 30); setTimeout(function () { c.remove(); }, 500); })();
+    (function add() { if (!document.body) return requestAnimationFrame(add); var c = document.createElement('div'); c.className = 'cover cover-in'; document.body.appendChild(c); c.getBoundingClientRect(); document.documentElement.classList.remove('arriving');
+      setTimeout(function () { c.getBoundingClientRect(); c.classList.add('go'); }, 45); setTimeout(function () { c.remove(); }, 600); })();
     document.documentElement.classList.add('arriving');
   })();
 </script>
@@ -53,23 +53,316 @@
   <a href="virtual-gap-year.html">Virtual Gap Year</a>
 </div></nav>
 
-<div class="draft-note">draft · not linked from the site yet · to confirm: which events / artists each poster is for, years, whether all of them should be shown</div>
+<div class="draft-note">draft · not linked from the site yet · to confirm: everything that looked like a poster or cover is here, numbered P001… — tell me which numbers to keep</div>
 <section class="slide" id="posters">
   <h2>POSTERS &amp; COVERS</h2>
   <div class="meta">for parties, labels and musicians<br>2021–2025</div>
-  <div class="media c4">
-    <img class="zoom r45" src="img/posters-1.jpg" alt="poster" loading="lazy">
-    <img class="zoom r45" src="img/posters-2.jpg" alt="poster" loading="lazy">
-    <img class="zoom r45" src="img/posters-3.jpg" alt="poster" loading="lazy">
-    <img class="zoom r45" src="img/posters-4.jpg" alt="poster" loading="lazy">
-    <img class="zoom r45" src="img/posters-5.jpg" alt="poster" loading="lazy">
-    <img class="zoom r45" src="img/posters-6.jpg" alt="poster" loading="lazy">
-    <img class="zoom r45" src="img/posters-7.jpg" alt="poster" loading="lazy">
-    <img class="zoom r45" src="img/posters-8.jpg" alt="poster" loading="lazy">
-    <img class="zoom r45" src="img/posters-9.jpg" alt="poster" loading="lazy">
-    <img class="zoom r45" src="img/posters-10.jpg" alt="poster" loading="lazy">
-    <img class="zoom r45" src="img/posters-11.jpg" alt="poster" loading="lazy">
-    <img class="zoom r45" src="img/posters-12.jpg" alt="poster" loading="lazy">
+  <p class="label">POSTERS (your selection) <span class="src">D:/PORTFOLIO_WEB_FINALS/COMMERCIAL/POSTERS</span></p>
+  <div class="gallery picks">
+    <figure><img src="img/draft-p001.jpg" alt="poster or cover P001" loading="lazy"><figcaption>P001 · Beauty.png</figcaption></figure>
+    <figure><img src="img/draft-p002.jpg" alt="poster or cover P002" loading="lazy"><figcaption>P002 · Beauty2.png</figcaption></figure>
+    <figure><img src="img/draft-p003.jpg" alt="poster or cover P003" loading="lazy"><figcaption>P003 · Print_flyer.jpg</figcaption></figure>
+    <figure><img src="img/draft-p004.jpg" alt="poster or cover P004" loading="lazy"><figcaption>P004 · guy and mirror_2.jpg</figcaption></figure>
+    <figure><img src="img/draft-p005.jpg" alt="poster or cover P005" loading="lazy"><figcaption>P005 · sticker_1.tif</figcaption></figure>
+    <figure><img src="img/draft-p006.jpg" alt="poster or cover P006" loading="lazy"><figcaption>P006 · sticker_2.tif</figcaption></figure>
+    <figure><img src="img/draft-p007.jpg" alt="poster or cover P007" loading="lazy"><figcaption>P007 · still0182.png</figcaption></figure>
+    <figure><img src="img/draft-p008.jpg" alt="poster or cover P008" loading="lazy"><figcaption>P008 · animation_orchid0125.png</figcaption></figure>
+    <figure><img src="img/draft-p009.jpg" alt="poster or cover P009" loading="lazy"><figcaption>P009 · 6.png</figcaption></figure>
+    <figure><img src="img/draft-p010.jpg" alt="poster or cover P010" loading="lazy"><figcaption>P010 · Beauty.png</figcaption></figure>
+    <figure><img src="img/draft-p011.jpg" alt="poster or cover P011" loading="lazy"><figcaption>P011 · Beauty2.png</figcaption></figure>
+    <figure><img src="img/draft-p012.jpg" alt="poster or cover P012" loading="lazy"><figcaption>P012 · Beauty3.png</figcaption></figure>
+    <figure><img src="img/draft-p013.jpg" alt="poster or cover P013" loading="lazy"><figcaption>P013 · Beauty4.png</figcaption></figure>
+  </div>
+  <p class="label">illusytrations (your selection) <span class="src">D:/PORTFOLIO_WEB_FINALS/COMMERCIAL/illusytrations</span></p>
+  <div class="media c3">
+    <figure class="pick"><video class="clip" src="video/draft-pv01.mp4" poster="video/draft-pv01.jpg" muted loop playsinline controls preload="none"></video><figcaption>PV01 · a4669ab83bcd3806a27087a9c969ad2402c18a5b6c92957b6faacb60.mp4</figcaption></figure>
+  </div>
+  <div class="gallery picks">
+    <figure><img src="img/draft-p014.jpg" alt="poster or cover P014" loading="lazy"><figcaption>P014 · 1.jpg</figcaption></figure>
+    <figure><img src="img/draft-p015.jpg" alt="poster or cover P015" loading="lazy"><figcaption>P015 · 1.png</figcaption></figure>
+    <figure><img src="img/draft-p016.jpg" alt="poster or cover P016" loading="lazy"><figcaption>P016 · 2.jpg</figcaption></figure>
+    <figure><img src="img/draft-p017.jpg" alt="poster or cover P017" loading="lazy"><figcaption>P017 · 22.png</figcaption></figure>
+    <figure><img src="img/draft-p018.jpg" alt="poster or cover P018" loading="lazy"><figcaption>P018 · 33.jpg</figcaption></figure>
+    <figure><img src="img/draft-p019.jpg" alt="poster or cover P019" loading="lazy"><figcaption>P019 · 4.jpg</figcaption></figure>
+    <figure><img src="img/draft-p020.jpg" alt="poster or cover P020" loading="lazy"><figcaption>P020 · 6.png</figcaption></figure>
+    <figure><img src="img/draft-p021.jpg" alt="poster or cover P021" loading="lazy"><figcaption>P021 · Beauty2.png</figcaption></figure>
+    <figure><img src="img/draft-p022.jpg" alt="poster or cover P022" loading="lazy"><figcaption>P022 · Boticelli_1_2.jpg</figcaption></figure>
+    <figure><img src="img/draft-p023.jpg" alt="poster or cover P023" loading="lazy"><figcaption>P023 · Na Rahate.jpg</figcaption></figure>
+    <figure><img src="img/draft-p024.jpg" alt="poster or cover P024" loading="lazy"><figcaption>P024 · Na Rahate_closeup.jpg</figcaption></figure>
+    <figure><img src="img/draft-p025.jpg" alt="poster or cover P025" loading="lazy"><figcaption>P025 · abstract.jpg</figcaption></figure>
+    <figure><img src="img/draft-p026.jpg" alt="poster or cover P026" loading="lazy"><figcaption>P026 · abstract_2.jpg</figcaption></figure>
+    <figure><img src="img/draft-p027.jpg" alt="poster or cover P027" loading="lazy"><figcaption>P027 · abstract_2_1.jpg</figcaption></figure>
+    <figure><img src="img/draft-p028.jpg" alt="poster or cover P028" loading="lazy"><figcaption>P028 · fucking angry2_final.jpg</figcaption></figure>
+    <figure><img src="img/draft-p029.jpg" alt="poster or cover P029" loading="lazy"><figcaption>P029 · fucking angry3.jpg</figcaption></figure>
+    <figure><img src="img/draft-p030.jpg" alt="poster or cover P030" loading="lazy"><figcaption>P030 · fucking angry_final.jpg</figcaption></figure>
+    <figure><img src="img/draft-p031.jpg" alt="poster or cover P031" loading="lazy"><figcaption>P031 · 4_0001.png</figcaption></figure>
+    <figure><img src="img/draft-p032.jpg" alt="poster or cover P032" loading="lazy"><figcaption>P032 · 4and111_0001.png</figcaption></figure>
+    <figure><img src="img/draft-p033.jpg" alt="poster or cover P033" loading="lazy"><figcaption>P033 · 4and11_0001.png</figcaption></figure>
+    <figure><img src="img/draft-p034.jpg" alt="poster or cover P034" loading="lazy"><figcaption>P034 · 4and2_0001.png</figcaption></figure>
+    <figure><img src="img/draft-p035.jpg" alt="poster or cover P035" loading="lazy"><figcaption>P035 · 4and3_0001.png</figcaption></figure>
+    <figure><img src="img/draft-p036.jpg" alt="poster or cover P036" loading="lazy"><figcaption>P036 · Na Rahate0045.tif</figcaption></figure>
+    <figure><img src="img/draft-p037.jpg" alt="poster or cover P037" loading="lazy"><figcaption>P037 · Na Rahate_closeup0045.tif</figcaption></figure>
+  </div>
+  <p class="label">Hyenah cover <span class="src">D:/1_ZINZIVER ART/21 - Hyenah cover 16.07.21</span></p>
+  <div class="media c3">
+    <figure class="pick"><video class="clip" src="video/draft-pv02.mp4" poster="video/draft-pv02.jpg" muted loop playsinline controls preload="none"></video><figcaption>PV02 · IG square_Once a Man feat. Aquarius Heaven.mp4</figcaption></figure>
+    <figure class="pick"><video class="clip" src="video/draft-pv03.mp4" poster="video/draft-pv03.jpg" muted loop playsinline controls preload="none"></video><figcaption>PV03 · video_test.mp4</figcaption></figure>
+    <figure class="pick"><video class="clip" src="video/draft-pv04.mp4" poster="video/draft-pv04.jpg" muted loop playsinline controls preload="none"></video><figcaption>PV04 · 1920x1080_vid.mp4</figcaption></figure>
+    <figure class="pick"><video class="clip" src="video/draft-pv05.mp4" poster="video/draft-pv05.jpg" muted loop playsinline controls preload="none"></video><figcaption>PV05 · insta.mp4</figcaption></figure>
+  </div>
+  <div class="gallery picks">
+    <figure><img src="img/draft-p038.jpg" alt="poster or cover P038" loading="lazy"><figcaption>P038 · T_1.png</figcaption></figure>
+    <figure><img src="img/draft-p039.jpg" alt="poster or cover P039" loading="lazy"><figcaption>P039 · T_2.png</figcaption></figure>
+    <figure><img src="img/draft-p040.jpg" alt="poster or cover P040" loading="lazy"><figcaption>P040 · T_3.png</figcaption></figure>
+    <figure><img src="img/draft-p041.jpg" alt="poster or cover P041" loading="lazy"><figcaption>P041 · cover.psd</figcaption></figure>
+    <figure><img src="img/draft-p042.jpg" alt="poster or cover P042" loading="lazy"><figcaption>P042 · cover.tif</figcaption></figure>
+    <figure><img src="img/draft-p043.jpg" alt="poster or cover P043" loading="lazy"><figcaption>P043 · cover_full.psd</figcaption></figure>
+    <figure><img src="img/draft-p044.jpg" alt="poster or cover P044" loading="lazy"><figcaption>P044 · cover_full_final_1.jpg</figcaption></figure>
+    <figure><img src="img/draft-p045.jpg" alt="poster or cover P045" loading="lazy"><figcaption>P045 · cover_v2.tif</figcaption></figure>
+    <figure><img src="img/draft-p046.jpg" alt="poster or cover P046" loading="lazy"><figcaption>P046 · hyenah-v1.png</figcaption></figure>
+    <figure><img src="img/draft-p047.jpg" alt="poster or cover P047" loading="lazy"><figcaption>P047 · hyenah-v2.png</figcaption></figure>
+    <figure><img src="img/draft-p048.jpg" alt="poster or cover P048" loading="lazy"><figcaption>P048 · t3.png</figcaption></figure>
+    <figure><img src="img/draft-p049.jpg" alt="poster or cover P049" loading="lazy"><figcaption>P049 · t4.png</figcaption></figure>
+    <figure><img src="img/draft-p050.jpg" alt="poster or cover P050" loading="lazy"><figcaption>P050 · t5.png</figcaption></figure>
+    <figure><img src="img/draft-p051.jpg" alt="poster or cover P051" loading="lazy"><figcaption>P051 · t6.png</figcaption></figure>
+    <figure><img src="img/draft-p052.jpg" alt="poster or cover P052" loading="lazy"><figcaption>P052 · t7.png</figcaption></figure>
+    <figure><img src="img/draft-p053.jpg" alt="poster or cover P053" loading="lazy"><figcaption>P053 · te1.png</figcaption></figure>
+    <figure><img src="img/draft-p054.jpg" alt="poster or cover P054" loading="lazy"><figcaption>P054 · Hyenah_animation0094.png</figcaption></figure>
+    <figure><img src="img/draft-p055.jpg" alt="poster or cover P055" loading="lazy"><figcaption>P055 · 1080x1920_1.jpg</figcaption></figure>
+    <figure><img src="img/draft-p056.jpg" alt="poster or cover P056" loading="lazy"><figcaption>P056 · 1080x1920_2.jpg</figcaption></figure>
+    <figure><img src="img/draft-p057.jpg" alt="poster or cover P057" loading="lazy"><figcaption>P057 · FB_Header_1.jpg</figcaption></figure>
+    <figure><img src="img/draft-p058.jpg" alt="poster or cover P058" loading="lazy"><figcaption>P058 · FB_Header_2.jpg</figcaption></figure>
+    <figure><img src="img/draft-p059.jpg" alt="poster or cover P059" loading="lazy"><figcaption>P059 · FB_Header_3.jpg</figcaption></figure>
+    <figure><img src="img/draft-p060.jpg" alt="poster or cover P060" loading="lazy"><figcaption>P060 · FB_Header_4.jpg</figcaption></figure>
+  </div>
+  <p class="label">Playlist cover <span class="src">D:/1_ZINZIVER ART/26 - Playlist Cover_02.09.21</span></p>
+  <div class="gallery picks">
+    <figure><img src="img/draft-p061.jpg" alt="poster or cover P061" loading="lazy"><figcaption>P061 · var1.png</figcaption></figure>
+    <figure><img src="img/draft-p062.jpg" alt="poster or cover P062" loading="lazy"><figcaption>P062 · var2.png</figcaption></figure>
+    <figure><img src="img/draft-p063.jpg" alt="poster or cover P063" loading="lazy"><figcaption>P063 · var3.png</figcaption></figure>
+    <figure><img src="img/draft-p064.jpg" alt="poster or cover P064" loading="lazy"><figcaption>P064 · var4.png</figcaption></figure>
+    <figure><img src="img/draft-p065.jpg" alt="poster or cover P065" loading="lazy"><figcaption>P065 · var4.psd</figcaption></figure>
+    <figure><img src="img/draft-p066.jpg" alt="poster or cover P066" loading="lazy"><figcaption>P066 · var5.png</figcaption></figure>
+  </div>
+  <p class="label">Meat hardcore Jungle <span class="src">D:/1_ZINZIVER ART/53 - Meat hardcore Juncle poster</span></p>
+  <div class="gallery picks">
+    <figure><img src="img/draft-p067.jpg" alt="poster or cover P067" loading="lazy"><figcaption>P067 · 10.png</figcaption></figure>
+    <figure><img src="img/draft-p068.jpg" alt="poster or cover P068" loading="lazy"><figcaption>P068 · 7.png</figcaption></figure>
+    <figure><img src="img/draft-p069.jpg" alt="poster or cover P069" loading="lazy"><figcaption>P069 · 8.png</figcaption></figure>
+    <figure><img src="img/draft-p070.jpg" alt="poster or cover P070" loading="lazy"><figcaption>P070 · 9.png</figcaption></figure>
+    <figure><img src="img/draft-p071.jpg" alt="poster or cover P071" loading="lazy"><figcaption>P071 · Beauty5.png</figcaption></figure>
+    <figure><img src="img/draft-p072.jpg" alt="poster or cover P072" loading="lazy"><figcaption>P072 · cyberia.jpg</figcaption></figure>
+    <figure><img src="img/draft-p073.jpg" alt="poster or cover P073" loading="lazy"><figcaption>P073 · 10.jpg</figcaption></figure>
+    <figure><img src="img/draft-p074.jpg" alt="poster or cover P074" loading="lazy"><figcaption>P074 · 11.jpg</figcaption></figure>
+    <figure><img src="img/draft-p075.jpg" alt="poster or cover P075" loading="lazy"><figcaption>P075 · 3.jpg</figcaption></figure>
+    <figure><img src="img/draft-p076.jpg" alt="poster or cover P076" loading="lazy"><figcaption>P076 · 4.jpg</figcaption></figure>
+    <figure><img src="img/draft-p077.jpg" alt="poster or cover P077" loading="lazy"><figcaption>P077 · 5.jpg</figcaption></figure>
+    <figure><img src="img/draft-p078.jpg" alt="poster or cover P078" loading="lazy"><figcaption>P078 · 6.jpg</figcaption></figure>
+    <figure><img src="img/draft-p079.jpg" alt="poster or cover P079" loading="lazy"><figcaption>P079 · 7.jpg</figcaption></figure>
+    <figure><img src="img/draft-p080.jpg" alt="poster or cover P080" loading="lazy"><figcaption>P080 · 8.jpg</figcaption></figure>
+    <figure><img src="img/draft-p081.jpg" alt="poster or cover P081" loading="lazy"><figcaption>P081 · 9.jpg</figcaption></figure>
+    <figure><img src="img/draft-p082.jpg" alt="poster or cover P082" loading="lazy"><figcaption>P082 · A1.jpg</figcaption></figure>
+    <figure><img src="img/draft-p083.jpg" alt="poster or cover P083" loading="lazy"><figcaption>P083 · Print_flyer_a6.psd</figcaption></figure>
+    <figure><img src="img/draft-p084.jpg" alt="poster or cover P084" loading="lazy"><figcaption>P084 · print.tif</figcaption></figure>
+    <figure><img src="img/draft-p085.jpg" alt="poster or cover P085" loading="lazy"><figcaption>P085 · stck3.tif</figcaption></figure>
+  </div>
+  <p class="label">Heaven <span class="src">D:/1_ZINZIVER ART/55 - Heaven Poster</span></p>
+  <div class="gallery picks">
+    <figure><img src="img/draft-p086.jpg" alt="poster or cover P086" loading="lazy"><figcaption>P086 · Beauty.png</figcaption></figure>
+    <figure><img src="img/draft-p087.jpg" alt="poster or cover P087" loading="lazy"><figcaption>P087 · hd-black-china-chinese-clouds-png-31631826463wib7pahf5r.png</figcaption></figure>
+    <figure><img src="img/draft-p088.jpg" alt="poster or cover P088" loading="lazy"><figcaption>P088 · 3.jpg</figcaption></figure>
+    <figure><img src="img/draft-p089.jpg" alt="poster or cover P089" loading="lazy"><figcaption>P089 · Untitled-2.jpg</figcaption></figure>
+    <figure><img src="img/draft-p090.jpg" alt="poster or cover P090" loading="lazy"><figcaption>P090 · Venus6_0001.psd</figcaption></figure>
+    <figure><img src="img/draft-p091.jpg" alt="poster or cover P091" loading="lazy"><figcaption>P091 · print.psd</figcaption></figure>
+    <figure><img src="img/draft-p092.jpg" alt="poster or cover P092" loading="lazy"><figcaption>P092 · Venus6_0001.tif</figcaption></figure>
+  </div>
+  <p class="label">CYBERIA <span class="src">D:/1_ZINZIVER ART/58 - CYBERIA_poster_2</span></p>
+  <div class="gallery picks">
+    <figure><img src="img/draft-p093.jpg" alt="poster or cover P093" loading="lazy"><figcaption>P093 · Beauty.png</figcaption></figure>
+    <figure><img src="img/draft-p094.jpg" alt="poster or cover P094" loading="lazy"><figcaption>P094 · print1.jpg</figcaption></figure>
+    <figure><img src="img/draft-p095.jpg" alt="poster or cover P095" loading="lazy"><figcaption>P095 · print2.tif</figcaption></figure>
+    <figure><img src="img/draft-p096.jpg" alt="poster or cover P096" loading="lazy"><figcaption>P096 · IMG_6536.png</figcaption></figure>
+    <figure><img src="img/draft-p097.jpg" alt="poster or cover P097" loading="lazy"><figcaption>P097 · IMG_9502.png</figcaption></figure>
+  </div>
+  <p class="label">Hepna (obsidian) <span class="src">D:/1_ZINZIVER ART/59-obsidian_for_wrong/POSTER_hepna</span></p>
+  <div class="gallery picks">
+    <figure><img src="img/draft-p098.jpg" alt="poster or cover P098" loading="lazy"><figcaption>P098 · a3.png</figcaption></figure>
+    <figure><img src="img/draft-p099.jpg" alt="poster or cover P099" loading="lazy"><figcaption>P099 · a3.psd</figcaption></figure>
+    <figure><img src="img/draft-p100.jpg" alt="poster or cover P100" loading="lazy"><figcaption>P100 · a3_2.png</figcaption></figure>
+    <figure><img src="img/draft-p101.jpg" alt="poster or cover P101" loading="lazy"><figcaption>P101 · a3_blue.png</figcaption></figure>
+    <figure><img src="img/draft-p102.jpg" alt="poster or cover P102" loading="lazy"><figcaption>P102 · guy and mirror_1.jpg</figcaption></figure>
+    <figure><img src="img/draft-p103.jpg" alt="poster or cover P103" loading="lazy"><figcaption>P103 · guy and mirror_1.psd</figcaption></figure>
+    <figure><img src="img/draft-p104.jpg" alt="poster or cover P104" loading="lazy"><figcaption>P104 · guy and mirror_3.jpg</figcaption></figure>
+    <figure><img src="img/draft-p105.jpg" alt="poster or cover P105" loading="lazy"><figcaption>P105 · guy and mirror_3.psd</figcaption></figure>
+    <figure><img src="img/draft-p106.jpg" alt="poster or cover P106" loading="lazy"><figcaption>P106 · guy and mirror_4.jpg</figcaption></figure>
+    <figure><img src="img/draft-p107.jpg" alt="poster or cover P107" loading="lazy"><figcaption>P107 · guy and mirror_5.jpg</figcaption></figure>
+    <figure><img src="img/draft-p108.jpg" alt="poster or cover P108" loading="lazy"><figcaption>P108 · guy and mirror_6.jpg</figcaption></figure>
+    <figure><img src="img/draft-p109.jpg" alt="poster or cover P109" loading="lazy"><figcaption>P109 · guy and mirror_4.jpg</figcaption></figure>
+    <figure><img src="img/draft-p110.jpg" alt="poster or cover P110" loading="lazy"><figcaption>P110 · guy and mirror_6.jpg</figcaption></figure>
+  </div>
+  <p class="label">Sacred Hyper Race posters <span class="src">D:/1_ZINZIVER ART/75 - Fortnight Map/Posters</span></p>
+  <div class="gallery picks">
+    <figure><img src="img/draft-p111.jpg" alt="poster or cover P111" loading="lazy"><figcaption>P111 · 2 Heads.tif</figcaption></figure>
+  </div>
+  <p class="label">Dynastic cover <span class="src">D:/1_ZINZIVER ART/77- Dynastic_cover</span></p>
+  <div class="gallery picks">
+    <figure><img src="img/draft-p112.jpg" alt="poster or cover P112" loading="lazy"><figcaption>P112 · Beauty.png</figcaption></figure>
+    <figure><img src="img/draft-p113.jpg" alt="poster or cover P113" loading="lazy"><figcaption>P113 · Beauty3.png</figcaption></figure>
+    <figure><img src="img/draft-p114.jpg" alt="poster or cover P114" loading="lazy"><figcaption>P114 · Beauty4.png</figcaption></figure>
+    <figure><img src="img/draft-p115.jpg" alt="poster or cover P115" loading="lazy"><figcaption>P115 · photo_2024-05-22_00-57-16.jpg</figcaption></figure>
+    <figure><img src="img/draft-p116.jpg" alt="poster or cover P116" loading="lazy"><figcaption>P116 · photo_2024-06-05_13-39-37.jpg</figcaption></figure>
+    <figure><img src="img/draft-p117.jpg" alt="poster or cover P117" loading="lazy"><figcaption>P117 · 1.png</figcaption></figure>
+    <figure><img src="img/draft-p118.jpg" alt="poster or cover P118" loading="lazy"><figcaption>P118 · 1.psd</figcaption></figure>
+    <figure><img src="img/draft-p119.jpg" alt="poster or cover P119" loading="lazy"><figcaption>P119 · 2.png</figcaption></figure>
+    <figure><img src="img/draft-p120.jpg" alt="poster or cover P120" loading="lazy"><figcaption>P120 · 25.png</figcaption></figure>
+    <figure><img src="img/draft-p121.jpg" alt="poster or cover P121" loading="lazy"><figcaption>P121 · 3.jpg</figcaption></figure>
+    <figure><img src="img/draft-p122.jpg" alt="poster or cover P122" loading="lazy"><figcaption>P122 · 3.png</figcaption></figure>
+    <figure><img src="img/draft-p123.jpg" alt="poster or cover P123" loading="lazy"><figcaption>P123 · 4.png</figcaption></figure>
+    <figure><img src="img/draft-p124.jpg" alt="poster or cover P124" loading="lazy"><figcaption>P124 · 5.png</figcaption></figure>
+    <figure><img src="img/draft-p125.jpg" alt="poster or cover P125" loading="lazy"><figcaption>P125 · cover2.png</figcaption></figure>
+    <figure><img src="img/draft-p126.jpg" alt="poster or cover P126" loading="lazy"><figcaption>P126 · cover2_back.png</figcaption></figure>
+    <figure><img src="img/draft-p127.jpg" alt="poster or cover P127" loading="lazy"><figcaption>P127 · 1.jpg</figcaption></figure>
+    <figure><img src="img/draft-p128.jpg" alt="poster or cover P128" loading="lazy"><figcaption>P128 · 1.png</figcaption></figure>
+    <figure><img src="img/draft-p129.jpg" alt="poster or cover P129" loading="lazy"><figcaption>P129 · 10.png</figcaption></figure>
+    <figure><img src="img/draft-p130.jpg" alt="poster or cover P130" loading="lazy"><figcaption>P130 · 2.png</figcaption></figure>
+    <figure><img src="img/draft-p131.jpg" alt="poster or cover P131" loading="lazy"><figcaption>P131 · 3.png</figcaption></figure>
+    <figure><img src="img/draft-p132.jpg" alt="poster or cover P132" loading="lazy"><figcaption>P132 · 4.png</figcaption></figure>
+    <figure><img src="img/draft-p133.jpg" alt="poster or cover P133" loading="lazy"><figcaption>P133 · 5.png</figcaption></figure>
+    <figure><img src="img/draft-p134.jpg" alt="poster or cover P134" loading="lazy"><figcaption>P134 · 6.png</figcaption></figure>
+    <figure><img src="img/draft-p135.jpg" alt="poster or cover P135" loading="lazy"><figcaption>P135 · 7.png</figcaption></figure>
+    <figure><img src="img/draft-p136.jpg" alt="poster or cover P136" loading="lazy"><figcaption>P136 · 9.png</figcaption></figure>
+    <figure><img src="img/draft-p137.jpg" alt="poster or cover P137" loading="lazy"><figcaption>P137 · default-Color.png</figcaption></figure>
+    <figure><img src="img/draft-p138.jpg" alt="poster or cover P138" loading="lazy"><figcaption>P138 · default-Metallic.png</figcaption></figure>
+    <figure><img src="img/draft-p139.jpg" alt="poster or cover P139" loading="lazy"><figcaption>P139 · default-Roughness.png</figcaption></figure>
+  </div>
+  <p class="label">Hepna <span class="src">D:/1_ZINZIVER ART/93-Hepna poster</span></p>
+  <div class="gallery picks">
+    <figure><img src="img/draft-p140.jpg" alt="poster or cover P140" loading="lazy"><figcaption>P140 · 2.jpg</figcaption></figure>
+    <figure><img src="img/draft-p141.jpg" alt="poster or cover P141" loading="lazy"><figcaption>P141 · 2.psd</figcaption></figure>
+    <figure><img src="img/draft-p142.jpg" alt="poster or cover P142" loading="lazy"><figcaption>P142 · 3.jpg</figcaption></figure>
+    <figure><img src="img/draft-p143.jpg" alt="poster or cover P143" loading="lazy"><figcaption>P143 · 4.jpg</figcaption></figure>
+    <figure><img src="img/draft-p144.jpg" alt="poster or cover P144" loading="lazy"><figcaption>P144 · 10.png</figcaption></figure>
+    <figure><img src="img/draft-p145.jpg" alt="poster or cover P145" loading="lazy"><figcaption>P145 · 11.png</figcaption></figure>
+    <figure><img src="img/draft-p146.jpg" alt="poster or cover P146" loading="lazy"><figcaption>P146 · 12.png</figcaption></figure>
+    <figure><img src="img/draft-p147.jpg" alt="poster or cover P147" loading="lazy"><figcaption>P147 · 13.png</figcaption></figure>
+    <figure><img src="img/draft-p148.jpg" alt="poster or cover P148" loading="lazy"><figcaption>P148 · 14.png</figcaption></figure>
+    <figure><img src="img/draft-p149.jpg" alt="poster or cover P149" loading="lazy"><figcaption>P149 · 2.png</figcaption></figure>
+    <figure><img src="img/draft-p150.jpg" alt="poster or cover P150" loading="lazy"><figcaption>P150 · 4.png</figcaption></figure>
+    <figure><img src="img/draft-p151.jpg" alt="poster or cover P151" loading="lazy"><figcaption>P151 · 5.png</figcaption></figure>
+    <figure><img src="img/draft-p152.jpg" alt="poster or cover P152" loading="lazy"><figcaption>P152 · 7.png</figcaption></figure>
+    <figure><img src="img/draft-p153.jpg" alt="poster or cover P153" loading="lazy"><figcaption>P153 · 8.png</figcaption></figure>
+    <figure><img src="img/draft-p154.jpg" alt="poster or cover P154" loading="lazy"><figcaption>P154 · 9.png</figcaption></figure>
+  </div>
+  <p class="label">Paroxysm <span class="src">D:/1_ZINZIVER ART/94 - Paroxysm poster</span></p>
+  <div class="gallery picks">
+    <figure><img src="img/draft-p155.jpg" alt="poster or cover P155" loading="lazy"><figcaption>P155 · 2.jpg</figcaption></figure>
+    <figure><img src="img/draft-p156.jpg" alt="poster or cover P156" loading="lazy"><figcaption>P156 · 1.png</figcaption></figure>
+    <figure><img src="img/draft-p157.jpg" alt="poster or cover P157" loading="lazy"><figcaption>P157 · 3.png</figcaption></figure>
+  </div>
+  <p class="label">Decommune <span class="src">D:/1_ZINZIVER ART/96- Decommune Poster</span></p>
+  <div class="media c3">
+    <figure class="pick"><video class="clip" src="video/draft-pv06.mp4" poster="video/draft-pv06.jpg" muted loop playsinline controls preload="none"></video><figcaption>PV06 · Comp 1.mp4</figcaption></figure>
+    <figure class="pick"><video class="clip" src="video/draft-pv07.mp4" poster="video/draft-pv07.jpg" muted loop playsinline controls preload="none"></video><figcaption>PV07 · Gen-2 1635243885, Cropped - 333333web, cam_H 02, cam_V -13, cam_R -07, cam_Z 77, cam_P 10.mp4</figcaption></figure>
+    <figure class="pick"><video class="clip" src="video/draft-pv08.mp4" poster="video/draft-pv08.jpg" muted loop playsinline controls preload="none"></video><figcaption>PV08 · Gen-2 889869077, Cropped - 333333web, M 10.mp4</figcaption></figure>
+    <figure class="pick"><video class="clip" src="video/draft-pv09.mp4" poster="video/draft-pv09.jpg" muted loop playsinline controls preload="none"></video><figcaption>PV09 · RENDER.mp4</figcaption></figure>
+  </div>
+  <div class="gallery picks">
+    <figure><img src="img/draft-p158.jpg" alt="poster or cover P158" loading="lazy"><figcaption>P158 · 00051-1872165886.psd</figcaption></figure>
+    <figure><img src="img/draft-p159.jpg" alt="poster or cover P159" loading="lazy"><figcaption>P159 · 00121-4020982510.psd</figcaption></figure>
+    <figure><img src="img/draft-p160.jpg" alt="poster or cover P160" loading="lazy"><figcaption>P160 · 20.jpg</figcaption></figure>
+    <figure><img src="img/draft-p161.jpg" alt="poster or cover P161" loading="lazy"><figcaption>P161 · Beauty2.png</figcaption></figure>
+    <figure><img src="img/draft-p162.jpg" alt="poster or cover P162" loading="lazy"><figcaption>P162 · RENDER.tif</figcaption></figure>
+    <figure><img src="img/draft-p163.jpg" alt="poster or cover P163" loading="lazy"><figcaption>P163 · RENDER5.tif</figcaption></figure>
+    <figure><img src="img/draft-p164.jpg" alt="poster or cover P164" loading="lazy"><figcaption>P164 · photo_2024-11-07_12-48-01.jpg</figcaption></figure>
+    <figure><img src="img/draft-p165.jpg" alt="poster or cover P165" loading="lazy"><figcaption>P165 · 00000.jpg</figcaption></figure>
+    <figure><img src="img/draft-p166.jpg" alt="poster or cover P166" loading="lazy"><figcaption>P166 · 00084-2072454723.jpg</figcaption></figure>
+    <figure><img src="img/draft-p167.jpg" alt="poster or cover P167" loading="lazy"><figcaption>P167 · 00121-4020982510.jpg</figcaption></figure>
+    <figure><img src="img/draft-p168.jpg" alt="poster or cover P168" loading="lazy"><figcaption>P168 · 00184-18561780.jpg</figcaption></figure>
+    <figure><img src="img/draft-p169.jpg" alt="poster or cover P169" loading="lazy"><figcaption>P169 · RENDER544.jpg</figcaption></figure>
+    <figure><img src="img/draft-p170.jpg" alt="poster or cover P170" loading="lazy"><figcaption>P170 · RENDER56544.tif</figcaption></figure>
+    <figure><img src="img/draft-p171.jpg" alt="poster or cover P171" loading="lazy"><figcaption>P171 · RENDER565244454.tif</figcaption></figure>
+    <figure><img src="img/draft-p172.jpg" alt="poster or cover P172" loading="lazy"><figcaption>P172 · 00048-1872165883.png</figcaption></figure>
+    <figure><img src="img/draft-p173.jpg" alt="poster or cover P173" loading="lazy"><figcaption>P173 · 3.png</figcaption></figure>
+    <figure><img src="img/draft-p174.jpg" alt="poster or cover P174" loading="lazy"><figcaption>P174 · 4.png</figcaption></figure>
+    <figure><img src="img/draft-p175.jpg" alt="poster or cover P175" loading="lazy"><figcaption>P175 · 5.png</figcaption></figure>
+    <figure><img src="img/draft-p176.jpg" alt="poster or cover P176" loading="lazy"><figcaption>P176 · Beauty.png</figcaption></figure>
+    <figure><img src="img/draft-p177.jpg" alt="poster or cover P177" loading="lazy"><figcaption>P177 · Beauty2.png</figcaption></figure>
+    <figure><img src="img/draft-p178.jpg" alt="poster or cover P178" loading="lazy"><figcaption>P178 · Beauty2.psd</figcaption></figure>
+  </div>
+  <p class="label">llfms slow cover <span class="src">D:/1_ZINZIVER ART/97- llfms_slow_cover</span></p>
+  <div class="gallery picks">
+    <figure><img src="img/draft-p179.jpg" alt="poster or cover P179" loading="lazy"><figcaption>P179 · 00000-2042412113.png</figcaption></figure>
+    <figure><img src="img/draft-p180.jpg" alt="poster or cover P180" loading="lazy"><figcaption>P180 · 00029-2696034628.png</figcaption></figure>
+  </div>
+  <p class="label">raghoul cover <span class="src">D:/2_ZINZIVER_ART_2025/15 - raghoul_cover</span></p>
+  <div class="gallery picks">
+    <figure><img src="img/draft-p181.jpg" alt="poster or cover P181" loading="lazy"><figcaption>P181 · Изображение WhatsApp 2025-06-03 в 22.53.37_b07dc0c4.png</figcaption></figure>
+    <figure><img src="img/draft-p182.jpg" alt="poster or cover P182" loading="lazy"><figcaption>P182 · 00280-1329528289.jpg</figcaption></figure>
+    <figure><img src="img/draft-p183.jpg" alt="poster or cover P183" loading="lazy"><figcaption>P183 · 00303-1107683912.png</figcaption></figure>
+    <figure><img src="img/draft-p184.jpg" alt="poster or cover P184" loading="lazy"><figcaption>P184 · 00216-3861063607.png</figcaption></figure>
+    <figure><img src="img/draft-p185.jpg" alt="poster or cover P185" loading="lazy"><figcaption>P185 · 00221-3686406550.png</figcaption></figure>
+    <figure><img src="img/draft-p186.jpg" alt="poster or cover P186" loading="lazy"><figcaption>P186 · 00224-2803298616.png</figcaption></figure>
+    <figure><img src="img/draft-p187.jpg" alt="poster or cover P187" loading="lazy"><figcaption>P187 · 00241-141507683.png</figcaption></figure>
+    <figure><img src="img/draft-p188.jpg" alt="poster or cover P188" loading="lazy"><figcaption>P188 · 00246-2989276846.png</figcaption></figure>
+    <figure><img src="img/draft-p189.jpg" alt="poster or cover P189" loading="lazy"><figcaption>P189 · 00250-2291941572.png</figcaption></figure>
+    <figure><img src="img/draft-p190.jpg" alt="poster or cover P190" loading="lazy"><figcaption>P190 · 00252-28693627.png</figcaption></figure>
+    <figure><img src="img/draft-p191.jpg" alt="poster or cover P191" loading="lazy"><figcaption>P191 · 00279-1329528288.png</figcaption></figure>
+  </div>
+  <p class="label">joycore <span class="src">D:/2_ZINZIVER_ART_2025/17- joycore_poster</span></p>
+  <div class="gallery picks">
+    <figure><img src="img/draft-p192.jpg" alt="poster or cover P192" loading="lazy"><figcaption>P192 · 1.tif</figcaption></figure>
+    <figure><img src="img/draft-p193.jpg" alt="poster or cover P193" loading="lazy"><figcaption>P193 · 10.jpg</figcaption></figure>
+    <figure><img src="img/draft-p194.jpg" alt="poster or cover P194" loading="lazy"><figcaption>P194 · 11.jpg</figcaption></figure>
+    <figure><img src="img/draft-p195.jpg" alt="poster or cover P195" loading="lazy"><figcaption>P195 · 11.psd</figcaption></figure>
+    <figure><img src="img/draft-p196.jpg" alt="poster or cover P196" loading="lazy"><figcaption>P196 · 12.jpg</figcaption></figure>
+    <figure><img src="img/draft-p197.jpg" alt="poster or cover P197" loading="lazy"><figcaption>P197 · 13.jpg</figcaption></figure>
+    <figure><img src="img/draft-p198.jpg" alt="poster or cover P198" loading="lazy"><figcaption>P198 · 14.jpg</figcaption></figure>
+    <figure><img src="img/draft-p199.jpg" alt="poster or cover P199" loading="lazy"><figcaption>P199 · 4_single.jpg</figcaption></figure>
+    <figure><img src="img/draft-p200.jpg" alt="poster or cover P200" loading="lazy"><figcaption>P200 · 5.jpg</figcaption></figure>
+    <figure><img src="img/draft-p201.jpg" alt="poster or cover P201" loading="lazy"><figcaption>P201 · 6.jpg</figcaption></figure>
+    <figure><img src="img/draft-p202.jpg" alt="poster or cover P202" loading="lazy"><figcaption>P202 · 7.jpg</figcaption></figure>
+    <figure><img src="img/draft-p203.jpg" alt="poster or cover P203" loading="lazy"><figcaption>P203 · 8.jpg</figcaption></figure>
+    <figure><img src="img/draft-p204.jpg" alt="poster or cover P204" loading="lazy"><figcaption>P204 · IMG_1466.png</figcaption></figure>
+    <figure><img src="img/draft-p205.jpg" alt="poster or cover P205" loading="lazy"><figcaption>P205 · 1.png</figcaption></figure>
+    <figure><img src="img/draft-p206.jpg" alt="poster or cover P206" loading="lazy"><figcaption>P206 · 2.tif</figcaption></figure>
+    <figure><img src="img/draft-p207.jpg" alt="poster or cover P207" loading="lazy"><figcaption>P207 · HT.png</figcaption></figure>
+    <figure><img src="img/draft-p208.jpg" alt="poster or cover P208" loading="lazy"><figcaption>P208 · JC.png</figcaption></figure>
+  </div>
+  <p class="label">AquaTM <span class="src">D:/2_ZINZIVER_ART_2025/18 - AquaTM_poster</span></p>
+  <div class="media c3">
+    <figure class="pick"><video class="clip" src="video/draft-pv10.mp4" poster="video/draft-pv10.jpg" muted loop playsinline controls preload="none"></video><figcaption>PV10 · ATM_7.mp4</figcaption></figure>
+    <figure class="pick"><video class="clip" src="video/draft-pv11.mp4" poster="video/draft-pv11.jpg" muted loop playsinline controls preload="none"></video><figcaption>PV11 · atm6.mp4</figcaption></figure>
+    <figure class="pick"><video class="clip" src="video/draft-pv12.mp4" poster="video/draft-pv12.jpg" muted loop playsinline controls preload="none"></video><figcaption>PV12 · vid_anim.mp4</figcaption></figure>
+    <figure class="pick"><video class="clip" src="video/draft-pv13.mp4" poster="video/draft-pv13.jpg" muted loop playsinline controls preload="none"></video><figcaption>PV13 · vid_anim_2.mov</figcaption></figure>
+    <figure class="pick"><video class="clip" src="video/draft-pv14.mp4" poster="video/draft-pv14.jpg" muted loop playsinline controls preload="none"></video><figcaption>PV14 · vid_anim_23.mp4</figcaption></figure>
+    <figure class="pick"><video class="clip" src="video/draft-pv15.mp4" poster="video/draft-pv15.jpg" muted loop playsinline controls preload="none"></video><figcaption>PV15 · vid_anim_2_prob3.mov</figcaption></figure>
+    <figure class="pick"><video class="clip" src="video/draft-pv16.mp4" poster="video/draft-pv16.jpg" muted loop playsinline controls preload="none"></video><figcaption>PV16 · vid_anim_7.mp4</figcaption></figure>
+    <figure class="pick"><video class="clip" src="video/draft-pv17.mp4" poster="video/draft-pv17.jpg" muted loop playsinline controls preload="none"></video><figcaption>PV17 · vid_anim_chf3_dtd4.mov</figcaption></figure>
+  </div>
+  <div class="gallery picks">
+    <figure><img src="img/draft-p209.jpg" alt="poster or cover P209" loading="lazy"><figcaption>P209 · 2.tif</figcaption></figure>
+    <figure><img src="img/draft-p210.jpg" alt="poster or cover P210" loading="lazy"><figcaption>P210 · 3.tif</figcaption></figure>
+    <figure><img src="img/draft-p211.jpg" alt="poster or cover P211" loading="lazy"><figcaption>P211 · Capture d’écran 2025-09-22 à 15.06.56.png</figcaption></figure>
+    <figure><img src="img/draft-p212.jpg" alt="poster or cover P212" loading="lazy"><figcaption>P212 · FLUX_00001_.jpg</figcaption></figure>
+    <figure><img src="img/draft-p213.jpg" alt="poster or cover P213" loading="lazy"><figcaption>P213 · PRINT.psd</figcaption></figure>
+    <figure><img src="img/draft-p214.jpg" alt="poster or cover P214" loading="lazy"><figcaption>P214 · aquatransmute logo.png</figcaption></figure>
+    <figure><img src="img/draft-p215.jpg" alt="poster or cover P215" loading="lazy"><figcaption>P215 · IMG_2334.png</figcaption></figure>
+    <figure><img src="img/draft-p216.jpg" alt="poster or cover P216" loading="lazy"><figcaption>P216 · 1.jpg</figcaption></figure>
+    <figure><img src="img/draft-p217.jpg" alt="poster or cover P217" loading="lazy"><figcaption>P217 · 10.jpg</figcaption></figure>
+    <figure><img src="img/draft-p218.jpg" alt="poster or cover P218" loading="lazy"><figcaption>P218 · 2.jpg</figcaption></figure>
+    <figure><img src="img/draft-p219.jpg" alt="poster or cover P219" loading="lazy"><figcaption>P219 · 3.jpg</figcaption></figure>
+    <figure><img src="img/draft-p220.jpg" alt="poster or cover P220" loading="lazy"><figcaption>P220 · 4.jpg</figcaption></figure>
+    <figure><img src="img/draft-p221.jpg" alt="poster or cover P221" loading="lazy"><figcaption>P221 · 5.jpg</figcaption></figure>
+    <figure><img src="img/draft-p222.jpg" alt="poster or cover P222" loading="lazy"><figcaption>P222 · 6.jpg</figcaption></figure>
+    <figure><img src="img/draft-p223.jpg" alt="poster or cover P223" loading="lazy"><figcaption>P223 · 8.jpg</figcaption></figure>
+  </div>
+  <p class="label">AQTM <span class="src">D:/2_ZINZIVER_ART_2025/21_AQTM_poster</span></p>
+  <div class="gallery picks">
+    <figure><img src="img/draft-p224.jpg" alt="poster or cover P224" loading="lazy"><figcaption>P224 · 1.jpg</figcaption></figure>
+    <figure><img src="img/draft-p225.jpg" alt="poster or cover P225" loading="lazy"><figcaption>P225 · 1.png</figcaption></figure>
+    <figure><img src="img/draft-p226.jpg" alt="poster or cover P226" loading="lazy"><figcaption>P226 · 2.jpg</figcaption></figure>
+    <figure><img src="img/draft-p227.jpg" alt="poster or cover P227" loading="lazy"><figcaption>P227 · 3.jpg</figcaption></figure>
+    <figure><img src="img/draft-p228.jpg" alt="poster or cover P228" loading="lazy"><figcaption>P228 · istockphoto-1435905111-170667a.jpg</figcaption></figure>
   </div>
 </section>
 
@@ -81,6 +374,6 @@
 
 <footer>© Polina Zinziver · <a href="../index.html">artistic practice →</a></footer>
 
-<script src="../site.js?v=20261005i"></script>
+<script src="../site.js?v=20261005l"></script>
 </body>
 </html>
