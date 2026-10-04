@@ -285,9 +285,9 @@ section[id] { scroll-margin-top: 52px; }
 /* intro → project: the object's frame opens to fill the screen in white, then on the project page
    the white slowly turns transparent and reveals the page */
 .cover { position: fixed; z-index: 50; border: 1px solid #4b2bff; background: rgba(255,255,255,0); pointer-events: none; }
-.cover-grow { transition: left .26s cubic-bezier(.7,0,.2,1), top .26s cubic-bezier(.7,0,.2,1), width .26s cubic-bezier(.7,0,.2,1), height .26s cubic-bezier(.7,0,.2,1), background-color .2s .04s, border-color .15s .15s; }
+.cover-grow { transition: left .13s cubic-bezier(.7,0,.2,1), top .13s cubic-bezier(.7,0,.2,1), width .13s cubic-bezier(.7,0,.2,1), height .13s cubic-bezier(.7,0,.2,1), background-color .1s .02s, border-color .08s .08s; }
 .cover-grow.full { left: 0 !important; top: 0 !important; width: 100vw !important; height: 100vh !important; background: #fff; border-color: rgba(75,43,255,0); }
-.cover-in { inset: 0; border: 0; background: #fff; opacity: 1; transition: opacity .45s cubic-bezier(.4,0,.2,1); }
+.cover-in { inset: 0; border: 0; background: #fff; opacity: 1; transition: opacity .22s cubic-bezier(.4,0,.2,1); }
 .cover-in.go { opacity: 0; }
 html.arriving, html.arriving body { background: #fff; }
 html.arriving body > * { visibility: hidden; }

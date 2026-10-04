@@ -210,7 +210,7 @@ export function floatScene(hero, MODELS) {
     cover.getBoundingClientRect();   // start the transition from the frame's box
     cover.classList.add('full');
     try { sessionStorage.setItem('cover', it.tag); } catch (e) {}
-    setTimeout(() => { location.href = it.href; }, 280);
+    setTimeout(() => { location.href = it.href; }, 140);
   }
   window.addEventListener('pageshow', (e) => { if (e.persisted) { leaving = false; document.querySelectorAll('.cover').forEach((n) => n.remove()); } });
 
