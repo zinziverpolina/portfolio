@@ -38,7 +38,7 @@
   <div class="shr-frames"></div>
   <div class="shr-ui">
     <span class="tl">Sacred Hyper Race</span>
-    <span class="tm">Models from<br>the map</span>
+    <span class="tm">Models from <br>the map</span>
     <span class="tr">2024</span>
     <span class="bl">Fortnite map, MultiGamesStudio</span>
     <span class="br">drag · click</span>
@@ -86,6 +86,22 @@
 <footer>© Polina Zinziver</footer>
 
 <script src="../site.js"></script>
-<script type="module" src="shr-hero.js"></script>
+<script type="module">
+  import { floatScene } from './float-scene.js';
+  floatScene(document.getElementById('shr-hero'), [
+    { url: 'models/hero/shr-sun-man.glb', name: 'Sun Man' },
+    { url: 'models/hero/shr-mouth-arch.glb', name: 'Mouth Arch' },
+    { url: 'models/hero/shr-two-heads.glb', name: 'Two Heads' },
+    { url: 'models/hero/shr-frog.glb', name: 'Frog' },
+    { url: 'models/hero/shr-squad-monster.glb', name: 'Squad Monster' },
+    { url: 'models/hero/shr-waterfall-tree-1.glb', name: 'Waterfall Tree I' },
+    { url: 'models/hero/shr-waterfall-tree-2.glb', name: 'Waterfall Tree II' },
+    { url: 'models/hero/shr-tree.glb', name: 'Tree' },
+    { url: 'models/hero/shr-orchid.glb', name: 'Orchid' },
+    { url: 'models/hero/shr-church.glb', name: 'Church' },
+    { url: 'models/hero/shr-house.glb', name: 'House' },
+    { url: 'models/hero/shr-fence.glb', name: 'Fence' }
+  ]);
+</script>
 </body>
 </html>
