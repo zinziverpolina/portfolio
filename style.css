@@ -225,3 +225,9 @@ section[id] { scroll-margin-top: 52px; }
   .shr-ui .tm br { display: none; }
   .shr-frame .tag { font-size: 20px; }
 }
+.models figure { position: relative; }
+.models .zoom-ctl { position: absolute; right: 8px; top: 8px; display: flex; flex-direction: column; gap: 4px; }
+.models .zoom-ctl button { width: 30px; height: 30px; padding: 0; border: 1px solid #ddd; background: rgba(255,255,255,.9); color: var(--title); font: 18px/1 var(--sans); cursor: pointer; }
+.models .zoom-ctl button:hover { border-color: var(--title); }
+.models.c4 { grid-template-columns: repeat(4, 1fr); }
+@media (max-width: 820px) { .models.c4 { grid-template-columns: 1fr 1fr; } }
