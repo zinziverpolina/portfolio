@@ -1,18 +1,18 @@
-// Sacred Hyper Race, walkable: the map's sculptures in a small park at sunset.
-// A lavender path loops past every piece, so a stroll round takes about a minute.
+// Sacred Hyper Race, walkable: the map's sculptures in a small park under a lavender dusk.
+// A lavender path loops round; more sculptures stand on the lawn inside it, so you can wander in.
 // Desktop: click Enter, WASD / arrows to walk, mouse to look, Shift to run, Esc to leave.
 // Touch: left thumb walks, right thumb looks, × leaves.
 import * as THREE from 'three';
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 import { RoomEnvironment } from 'three/addons/environments/RoomEnvironment.js';
-import { Sky } from 'three/addons/objects/Sky.js';
 import { SimplexNoise } from 'three/addons/math/SimplexNoise.js';
 
-const EYE = 1.8, WALK = 5.5, RUN = 13, LIMIT = 150;
+const EYE = 1.8, WALK = 5.5, RUN = 13, LIMIT = 120;
+const LAVENDER = 0xcbb8ec, VIOLET = 0x5a1fc0;   // path colour; the very top of the sky
 
-// The path: a soft closed loop, about 300 m round.
-const PATH = [[0, -62], [38, -52], [62, -20], [58, 18], [36, 48], [4, 58], [-30, 46], [-56, 22], [-62, -14], [-38, -46]].map(([x, z]) => [x * 0.8, z * 0.8]);
-const HALF = 2.6;   // half the path width
+// The path: a soft closed loop, about 250 m round.
+const PATH = [[0, -40], [25, -34], [40, -13], [38, 12], [23, 31], [3, 38], [-20, 30], [-36, 14], [-40, -9], [-25, -30]];
+const HALF = 2.4;   // half the path width
 
 const MODELS = {
   sunMan: ['shr-sun-man', 'Sun Man'], mouth: ['shr-mouth-arch', 'Mouth Arch'], heads: ['shr-two-heads', 'Two Heads'],
@@ -21,15 +21,18 @@ const MODELS = {
   church: ['shr-church', 'Church'], house: ['shr-house', 'House'], fence: ['shr-fence', 'Fence'],
 };
 
-// [model, position along the path 0..1, side (1 towards the middle of the loop, -1 outside), distance from the path, height, extra]
-// One of each, alternating sides, close enough to see the next one from the last.
-const PLACES = [
-  ['sunMan', 0.02, 1, 14, 32], ['wt1', 0.1, -1, 11, 25], ['frog', 0.18, 1, 9, 13], ['mouth', 0.27, -1, 14, 28],
-  ['orchid', 0.36, 1, 10, 18], ['heads', 0.45, -1, 11, 27], ['squad', 0.54, 1, 9, 14], ['wt2', 0.63, -1, 11, 25],
-  ['tree', 0.72, 1, 11, 22],
-  // the temple: church and house inside the fence ring
-  ['fence', 0.84, -1, 22, 0, { width: 32 }], ['church', 0.84, -1, 26, 21], ['house', 0.84, -1, 16, 14, { yaw: 2.4 }],
+// Along the outside of the path: [model, position on the path 0..1, distance outwards, height, yaw]
+const OUTSIDE = [
+  ['sunMan', 0.05, 12, 26, 0.2], ['wt2', 0.19, 9, 20, -0.5], ['heads', 0.32, 10, 20, 0.7], ['tree', 0.45, 9, 16, -0.3],
+  ['orchid', 0.57, 8, 13, 0.9], ['wt1', 0.69, 9, 19, -0.8], ['frog', 0.8, 7, 9, 0.4], ['squad', 0.9, 8, 11, -0.6],
 ];
+// On the lawn inside the loop: [model, x, z, height, yaw]
+const INSIDE = [
+  ['mouth', 0, -6, 22, 0.3], ['church', 14, 13, 18, -0.4], ['house', 6, 21, 12, 2.4], ['wt1', -15, -12, 18, 1.1],
+  ['tree', -14, 13, 17, -1.6], ['squad', 18, -12, 11, 2.2], ['orchid', -3, -24, 12, 0.6], ['frog', -24, -1, 9, -2.4],
+  ['heads', 23, 1, 20, -1.2], ['wt2', -4, 12, 15, 2.9],
+];
+const FENCE = [10, 16, 26];   // [x, z, width]: the ring of figures round the church and house
 
 export function shrWorld(root, base) {
   const canvas = root.querySelector('canvas');
@@ -42,24 +45,47 @@ export function shrWorld(root, base) {
   const renderer = new THREE.WebGLRenderer({ canvas, antialias: true });
   renderer.setPixelRatio(Math.min(devicePixelRatio, 1.5));
   renderer.toneMapping = THREE.NeutralToneMapping;
-  renderer.toneMappingExposure = 0.9;
   const scene = new THREE.Scene();
   scene.environment = new THREE.PMREMGenerator(renderer).fromScene(new RoomEnvironment(), 0.04).texture;
-  scene.environmentIntensity = 0.55;
-  scene.fog = new THREE.Fog(0xb07ab8, 90, 520);
+  scene.environmentIntensity = 0.6;
+  scene.fog = new THREE.Fog(LAVENDER, 70, 420);
   const camera = new THREE.PerspectiveCamera(65, 1, 0.2, 6000);
   camera.rotation.order = 'YXZ';
 
-  // Dusk: the sun just under the horizon, pink and violet haze, warm low light.
-  const sky = new Sky(); sky.scale.setScalar(10000); scene.add(sky);
-  const su = sky.material.uniforms;
-  su.turbidity.value = 9; su.rayleigh.value = 3.2; su.mieCoefficient.value = 0.008; su.mieDirectionalG.value = 0.93;
-  const sun = new THREE.Vector3().setFromSphericalCoords(1, THREE.MathUtils.degToRad(89.2), THREE.MathUtils.degToRad(210));
-  su.sunPosition.value.copy(sun);
-  scene.add(new THREE.HemisphereLight(0xb9a2ff, 0x40245e, 1.15));
-  const sunLight = new THREE.DirectionalLight(0xffa77a, 1.5);
-  sunLight.position.setFromSphericalCoords(300, THREE.MathUtils.degToRad(78), THREE.MathUtils.degToRad(210)); scene.add(sunLight);
-  const water = new THREE.Mesh(new THREE.CircleGeometry(5000, 64), new THREE.MeshStandardMaterial({ color: 0x4b3a9c, metalness: 0.7, roughness: 0.15 }));
+  // Sky: the path's lavender almost all the way up, turning saturated violet only near the zenith.
+  const skyMat = new THREE.ShaderMaterial({
+    side: THREE.BackSide, depthWrite: false, fog: false,
+    uniforms: { bottom: { value: new THREE.Color(LAVENDER) }, top: { value: new THREE.Color(VIOLET) } },
+    vertexShader: 'varying vec3 vDir; void main() { vDir = normalize(position); gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0); }',
+    fragmentShader: `uniform vec3 bottom; uniform vec3 top; varying vec3 vDir;
+      void main() { float t = smoothstep(0.3, 1.0, max(vDir.y, 0.0)); gl_FragColor = vec4(mix(bottom, top, t * t), 1.0);
+        #include <tonemapping_fragment>
+        #include <colorspace_fragment>
+      }`,
+  });
+  const skyDome = new THREE.Mesh(new THREE.SphereGeometry(4000, 48, 24), skyMat);
+  skyDome.renderOrder = -1; scene.add(skyDome);
+  // Stars: brighter towards the top, softly twinkling.
+  const STARS = 1400, sp = new Float32Array(STARS * 3), ss = new Float32Array(STARS);
+  for (let i = 0; i < STARS; i++) {
+    const y = 0.12 + Math.random() * 0.88, a = Math.random() * Math.PI * 2, r = Math.sqrt(1 - y * y);
+    sp.set([Math.cos(a) * r * 3500, y * 3500, Math.sin(a) * r * 3500], i * 3); ss[i] = Math.random();
+  }
+  const starGeo = new THREE.BufferGeometry();
+  starGeo.setAttribute('position', new THREE.BufferAttribute(sp, 3));
+  starGeo.setAttribute('seed', new THREE.BufferAttribute(ss, 1));
+  const starMat = new THREE.ShaderMaterial({
+    transparent: true, depthWrite: false, fog: false, uniforms: { time: { value: 0 }, px: { value: renderer.getPixelRatio() } },
+    vertexShader: `attribute float seed; uniform float time; uniform float px; varying float vA;
+      void main() { vec3 d = normalize(position); vA = smoothstep(0.15, 0.75, d.y) * (0.55 + 0.45 * sin(time * (1.0 + seed * 2.0) + seed * 40.0));
+        gl_PointSize = (1.2 + seed * 2.2) * px; gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0); }`,
+    fragmentShader: 'varying float vA; void main() { float d = length(gl_PointCoord - 0.5); gl_FragColor = vec4(1.0, 0.98, 1.0, vA * smoothstep(0.5, 0.1, d)); }',
+  });
+  scene.add(new THREE.Points(starGeo, starMat));
+
+  scene.add(new THREE.HemisphereLight(0xeee2ff, 0x5a3f8a, 1.25));
+  const key = new THREE.DirectionalLight(0xffe6f4, 1.1); key.position.set(-120, 160, 80); scene.add(key);
+  const water = new THREE.Mesh(new THREE.CircleGeometry(5000, 64), new THREE.MeshStandardMaterial({ color: 0x7a63d0, metalness: 0.6, roughness: 0.18 }));
   water.rotation.x = -Math.PI / 2; water.position.y = -0.6; scene.add(water);
 
   // Island lawn under the park, ragged at the shore
@@ -70,11 +96,11 @@ export function shrWorld(root, base) {
   const ip = islandGeo.attributes.position, iuv = islandGeo.attributes.uv;
   for (let i = 1; i < ip.count; i++) {
     const a = Math.atan2(ip.getY(i), ip.getX(i));
-    const r = 140 + noise.noise(Math.cos(a) * 2, Math.sin(a) * 2) * 18;
+    const r = 112 + noise.noise(Math.cos(a) * 2, Math.sin(a) * 2) * 14;
     ip.setXY(i, Math.cos(a) * r, Math.sin(a) * r);
   }
   for (let i = 0; i < ip.count; i++) iuv.setXY(i, ip.getX(i) / 30, ip.getY(i) / 30);
-  const lawn = new THREE.Mesh(islandGeo, new THREE.MeshStandardMaterial({ map: lawnTex, color: 0x9b8cff, roughness: 0.6, metalness: 0.1 }));
+  const lawn = new THREE.Mesh(islandGeo, new THREE.MeshStandardMaterial({ map: lawnTex, color: 0xb7a9ff, roughness: 0.6, metalness: 0.1 }));
   lawn.rotation.x = -Math.PI / 2; scene.add(lawn);
 
   // The path: soft lavender asphalt, no markings
@@ -85,6 +111,8 @@ export function shrWorld(root, base) {
     const nrm = new THREE.Vector3(-tan.z, 0, tan.x).normalize();   // points into the loop
     return { p, tan, nrm };
   };
+  const samples = Array.from({ length: 400 }, (_, i) => ({ t: i / 400, p: curve.getPointAt(i / 400) }));
+  const nearest = (x, z) => samples.reduce((a, b) => (Math.hypot(b.p.x - x, b.p.z - z) < Math.hypot(a.p.x - x, a.p.z - z) ? b : a));
   const pc = document.createElement('canvas'); pc.width = pc.height = 256;
   const g = pc.getContext('2d');
   g.fillStyle = '#cbb8ec'; g.fillRect(0, 0, 256, 256);
@@ -93,7 +121,7 @@ export function shrWorld(root, base) {
     g.fillRect(Math.random() * 256, Math.random() * 256, 1 + Math.random() * 2, 1 + Math.random() * 2);
   }
   const pathTex = new THREE.CanvasTexture(pc); pathTex.wrapS = pathTex.wrapT = THREE.RepeatWrapping; pathTex.colorSpace = THREE.SRGBColorSpace; pathTex.anisotropy = 8;
-  const N = 600, len = curve.getLength();
+  const N = 500, len = curve.getLength();
   const pos = [], uv = [], idx = [];
   for (let i = 0; i <= N; i++) {
     const { p, nrm } = frame(i / N);
@@ -110,34 +138,40 @@ export function shrWorld(root, base) {
   const blockers = [];   // {x, z, r} circles the walker can't enter
   const targets = [];    // meshes the crosshair can name
   const stops = [];      // where each sculpture stands, for the preview camera
+  const spots = [
+    ...OUTSIDE.map(([k, t, off, h, yaw]) => { const { p, nrm } = frame(t); return [k, p.x - nrm.x * off, p.z - nrm.z * off, h, yaw]; }),
+    ...INSIDE,
+  ];
   const loader = new GLTFLoader();
   const cache = {};
-  const ids = [...new Set(PLACES.map((p) => p[0]))];
+  const ids = Object.keys(MODELS);
   let loaded = 0;
-  ids.forEach((key) => {
-    loader.load(`${base}models/hero/${MODELS[key][0]}.glb`, (gltf) => {
-      cache[key] = gltf.scene;
+  ids.forEach((k) => {
+    loader.load(`${base}models/hero/${MODELS[k][0]}.glb`, (gltf) => {
+      cache[k] = gltf.scene;
       loadEl.textContent = `loading ${Math.round(++loaded / ids.length * 100)}%`;
-      PLACES.filter((p) => p[0] === key).forEach(place);
+      spots.filter((s) => s[0] === k).forEach(place);
+      if (k === 'fence') place(['fence', FENCE[0], FENCE[1], 0, 0.5], FENCE[2]);
       if (loaded === ids.length) root.classList.add('ready');
     });
   });
-  function place([key, t, side, off, h, o = {}]) {
-    const obj = cache[key].clone(true);
+  function place([k, x, z, h, yaw], width) {
+    const obj = cache[k].clone(true);
     const size = new THREE.Box3().setFromObject(obj).getSize(new THREE.Vector3());
-    const s = o.width ? o.width / Math.max(size.x, size.z) : h / size.y;
+    const s = width ? width / Math.max(size.x, size.z) : h / size.y;
     obj.scale.setScalar(s);
-    const { p, nrm } = frame(t);
     const holder = new THREE.Group();
     holder.add(obj);
-    holder.position.copy(p).addScaledVector(nrm, side * off);
-    // Face the path, so the front is what you see walking up.
-    holder.rotation.y = Math.atan2(-nrm.x * side, -nrm.z * side) + (o.yaw || 0);
+    holder.position.set(x, 0, z);
+    // Roughly face the nearest bit of path, then turn a little for a looser arrangement.
+    const near = nearest(x, z);
+    holder.rotation.y = Math.atan2(near.p.x - x, near.p.z - z) + yaw;
     scene.add(holder);
-    stops.push({ t, at: holder.position.clone().setY(Math.min(h * 0.35, 7)) });
-    holder.traverse((c) => { if (c.isMesh) { c.userData.name = MODELS[key][1]; targets.push(c); } });
+    stops.push({ t: near.t, at: holder.position.clone().setY(Math.min((h || 4) * 0.35, 7)) });
+    holder.traverse((c) => { if (c.isMesh) { c.userData.name = MODELS[k][1]; targets.push(c); } });
     // Solid up to its footprint, but never over the path; the fence ring lets you step inside.
-    if (key !== 'fence') blockers.push({ x: holder.position.x, z: holder.position.z, r: Math.min(Math.max(size.x, size.z) * s * 0.35, off - HALF - 1) });
+    const gap = Math.hypot(near.p.x - x, near.p.z - z) - HALF - 0.8;
+    if (k !== 'fence') blockers.push({ x, z, r: Math.max(0, Math.min(Math.max(size.x, size.z) * s * 0.33, gap)) });
   }
 
   // ----- walking -----
@@ -258,6 +292,7 @@ export function shrWorld(root, base) {
   renderer.setAnimationLoop(() => {
     const dt = Math.min(clock.getDelta(), 0.05);
     if (!inView || document.hidden) return;
+    starMat.uniforms.time.value += dt;
     if (playing) { walk(dt); pick(performance.now()); }
     else {
       tour = (tour + dt * 0.008) % 1;
