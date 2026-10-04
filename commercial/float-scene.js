@@ -158,7 +158,7 @@ export function floatScene(hero, MODELS) {
   hero.addEventListener('pointermove', (e) => {
     const [x, y] = local(e);
     pointer.x = x; pointer.y = y;
-    if (pointer.down && Math.hypot(x - pointer.sx, y - pointer.sy) > 6) pointer.moved = true;
+    if (pointer.down && Math.hypot(x - pointer.sx, y - pointer.sy) > 14) pointer.moved = true;
     const h = dragged || hit(x, y);
     if (h !== hovered) {
       hovered && hovered.frame.classList.remove('on');
@@ -185,7 +185,7 @@ export function floatScene(hero, MODELS) {
   function release() {
     if (!pointer.down) return;
     pointer.down = false;
-    const click = !pointer.moved && performance.now() - pointer.t < 350;
+    const click = !pointer.moved && performance.now() - pointer.t < 900;
     const target = dragged;
     if (dragged) dragged.frame.classList.remove('drag');
     dragged = null;
