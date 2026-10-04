@@ -91,3 +91,11 @@
   document.addEventListener('click', function (e) { if (!dd.contains(e.target)) set(false); });
   document.addEventListener('keydown', function (e) { if (e.key === 'Escape') { set(false); btn.blur(); } });
 })();
+
+// Photo selection mode (picker.js): on draft pages by itself, elsewhere with ?pick in the address.
+(function () {
+  if (!/[?&]pick\b/.test(location.search) && !document.querySelector('.draft-note')) return;
+  var s = document.createElement('script');
+  s.src = new URL('picker.js', document.currentScript ? document.currentScript.src : location.href).href;
+  document.body.appendChild(s);
+})();
