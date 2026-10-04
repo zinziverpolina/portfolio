@@ -6,12 +6,13 @@ import * as THREE from 'three';
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 import { RoomEnvironment } from 'three/addons/environments/RoomEnvironment.js';
 import { SimplexNoise } from 'three/addons/math/SimplexNoise.js';
+import { Reflector } from 'three/addons/objects/Reflector.js';
 
 const EYE = 1.8, WALK = 5.5, RUN = 13, LIMIT = 120;
-const LAVENDER = 0xcbb8ec, VIOLET = 0x5a1fc0;   // path colour; the very top of the sky
+const LAVENDER = 0xcbb8ec, VIOLET = 0x5a1fc0, NIGHT = 0x22095c;   // path colour; the sky going up
 
-// The path: a soft closed loop, about 250 m round.
-const PATH = [[0, -40], [25, -34], [40, -13], [38, 12], [23, 31], [3, 38], [-20, 30], [-36, 14], [-40, -9], [-25, -30]];
+// The path: a soft closed loop, about 320 m round.
+const PATH = [[0, -52], [33, -44], [52, -17], [49, 16], [30, 40], [4, 49], [-26, 39], [-47, 18], [-52, -12], [-33, -39]];
 const HALF = 2.4;   // half the path width
 
 const MODELS = {
@@ -21,18 +22,19 @@ const MODELS = {
   church: ['shr-church', 'Church'], house: ['shr-house', 'House'], fence: ['shr-fence', 'Fence'],
 };
 
-// Along the outside of the path: [model, position on the path 0..1, distance outwards, height, yaw]
+// All sculptures roughly the size of the biggest ones (about 20 m), the wide frog and squad a touch lower.
+// Along the outside of the path: [model, position on the path 0..1, height, yaw]; each stands just clear of the path.
 const OUTSIDE = [
-  ['sunMan', 0.05, 12, 26, 0.2], ['wt2', 0.19, 9, 20, -0.5], ['heads', 0.32, 10, 20, 0.7], ['tree', 0.45, 9, 16, -0.3],
-  ['orchid', 0.57, 8, 13, 0.9], ['wt1', 0.69, 9, 19, -0.8], ['frog', 0.8, 7, 9, 0.4], ['squad', 0.9, 8, 11, -0.6],
+  ['sunMan', 0.05, 26, 0.2], ['wt2', 0.19, 21, -0.5], ['heads', 0.32, 21, 0.7], ['tree', 0.45, 20, -0.3],
+  ['orchid', 0.57, 20, 0.9], ['wt1', 0.69, 21, -0.8], ['frog', 0.8, 18, 0.4], ['squad', 0.9, 18, -0.6],
 ];
 // On the lawn inside the loop: [model, x, z, height, yaw]
 const INSIDE = [
-  ['mouth', 0, -6, 22, 0.3], ['church', 14, 13, 18, -0.4], ['house', 6, 21, 12, 2.4], ['wt1', -15, -12, 18, 1.1],
-  ['tree', -14, 13, 17, -1.6], ['squad', 18, -12, 11, 2.2], ['orchid', -3, -24, 12, 0.6], ['frog', -24, -1, 9, -2.4],
-  ['heads', 23, 1, 20, -1.2], ['wt2', -4, 12, 15, 2.9],
+  ['mouth', 0, -8, 22, 0.3], ['church', 18, 17, 22, -0.4], ['house', 8, 27, 17, 2.4], ['wt1', -20, -18, 20, 1.1],
+  ['tree', -26, 22, 20, -1.6], ['squad', 25, -16, 18, 2.2], ['orchid', -4, -32, 20, 0.6], ['frog', -36, -4, 18, -2.4],
+  ['heads', 31, 3, 21, -1.2], ['wt2', -6, 13, 20, 2.9],
 ];
-const FENCE = [10, 16, 26];   // [x, z, width]: the ring of figures round the church and house
+const FENCE = [13, 22, 34];   // [x, z, width]: the ring of figures round the church and house
 
 export function shrWorld(root, base) {
   const canvas = root.querySelector('canvas');
@@ -52,13 +54,15 @@ export function shrWorld(root, base) {
   const camera = new THREE.PerspectiveCamera(65, 1, 0.2, 6000);
   camera.rotation.order = 'YXZ';
 
-  // Sky: the path's lavender almost all the way up, turning saturated violet only near the zenith.
+  // Sky: light lavender at the horizon, darkening quickly upwards: violet by mid-height, deep night violet overhead.
   const skyMat = new THREE.ShaderMaterial({
     side: THREE.BackSide, depthWrite: false, fog: false,
-    uniforms: { bottom: { value: new THREE.Color(LAVENDER) }, top: { value: new THREE.Color(VIOLET) } },
+    uniforms: { bottom: { value: new THREE.Color(LAVENDER) }, mid: { value: new THREE.Color(VIOLET) }, top: { value: new THREE.Color(NIGHT) } },
     vertexShader: 'varying vec3 vDir; void main() { vDir = normalize(position); gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0); }',
-    fragmentShader: `uniform vec3 bottom; uniform vec3 top; varying vec3 vDir;
-      void main() { float t = smoothstep(0.3, 1.0, max(vDir.y, 0.0)); gl_FragColor = vec4(mix(bottom, top, t * t), 1.0);
+    fragmentShader: `uniform vec3 bottom; uniform vec3 mid; uniform vec3 top; varying vec3 vDir;
+      void main() { float y = max(vDir.y, 0.0);
+        vec3 c = mix(bottom, mid, pow(smoothstep(0.0, 0.42, y), 0.8));
+        gl_FragColor = vec4(mix(c, top, smoothstep(0.3, 0.9, y)), 1.0);
         #include <tonemapping_fragment>
         #include <colorspace_fragment>
       }`,
@@ -88,7 +92,8 @@ export function shrWorld(root, base) {
   const water = new THREE.Mesh(new THREE.CircleGeometry(5000, 64), new THREE.MeshStandardMaterial({ color: 0x7a63d0, metalness: 0.6, roughness: 0.18 }));
   water.rotation.x = -Math.PI / 2; water.position.y = -0.6; scene.add(water);
 
-  // Island lawn under the park, ragged at the shore
+  // Island under the park, ragged at the shore: its pattern stays, but it shines like shallow water,
+  // mirroring the sky and sculptures through slow ripples.
   const tex = new THREE.TextureLoader();
   const lawnTex = tex.load(`${base}world/rock-2.jpg`); lawnTex.colorSpace = THREE.SRGBColorSpace; lawnTex.wrapS = lawnTex.wrapT = THREE.RepeatWrapping;
   const noise = new SimplexNoise();
@@ -100,7 +105,28 @@ export function shrWorld(root, base) {
     ip.setXY(i, Math.cos(a) * r, Math.sin(a) * r);
   }
   for (let i = 0; i < ip.count; i++) iuv.setXY(i, ip.getX(i) / 30, ip.getY(i) / 30);
-  const lawn = new THREE.Mesh(islandGeo, new THREE.MeshStandardMaterial({ map: lawnTex, color: 0xb7a9ff, roughness: 0.6, metalness: 0.1 }));
+  const lawn = new Reflector(islandGeo, { textureWidth: 512, textureHeight: 512, clipBias: 0.003 });
+  const reflectMatrix = lawn.material.uniforms.textureMatrix.value;
+  lawn.material.dispose();
+  const waterTime = { value: 0 };
+  lawn.material = new THREE.MeshStandardMaterial({ map: lawnTex, color: 0xb7a9ff, roughness: 0.45, metalness: 0.1 });
+  lawn.material.onBeforeCompile = (sh) => {
+    Object.assign(sh.uniforms, { time: waterTime, tReflect: { value: lawn.getRenderTarget().texture }, reflectMatrix: { value: reflectMatrix } });
+    sh.vertexShader = 'uniform mat4 reflectMatrix; varying vec4 vReflect; varying vec2 vWorld;\n' + sh.vertexShader.replace('#include <project_vertex>',
+      '#include <project_vertex>\nvReflect = reflectMatrix * vec4(transformed, 1.0); vWorld = (modelMatrix * vec4(transformed, 1.0)).xz;');
+    sh.fragmentShader = `uniform float time; uniform sampler2D tReflect; varying vec4 vReflect; varying vec2 vWorld;
+      vec2 wave(vec2 p, vec2 d, float k, float w, float t) { return d * cos(dot(p, d) * k + t * w); }
+      vec2 ripple(vec2 p, float t) {   // slope of a few crossing swells
+        return 0.35 * (wave(p, vec2(0.8, 0.6), 0.9, 1.3, t) + wave(p, vec2(-0.5, 0.866), 1.4, 1.7, t)
+          + 0.6 * wave(p, vec2(0.2, -0.98), 2.3, 2.1, t) + 0.4 * wave(p, vec2(-0.93, -0.37), 3.7, 2.9, t));
+      }\n` + sh.fragmentShader
+      .replace('#include <map_fragment>', 'vec2 rip = ripple(vWorld, time);\ndiffuseColor *= texture2D(map, vMapUv + rip * 0.006);')
+      .replace('#include <normal_fragment_begin>', '#include <normal_fragment_begin>\nnormal = normalize(normal + (viewMatrix * vec4(rip.x, 0.0, rip.y, 0.0)).xyz * 0.12);')
+      .replace('#include <opaque_fragment>', `vec3 mirrored = texture2D(tReflect, vReflect.xy / vReflect.w + rip * 0.02).rgb;
+        float fres = pow(1.0 - clamp(dot(normalize(vViewPosition), normal), 0.0, 1.0), 4.0);
+        outgoingLight = mix(outgoingLight, mirrored, 0.08 + 0.37 * fres);
+        #include <opaque_fragment>`);
+  };
   lawn.rotation.x = -Math.PI / 2; scene.add(lawn);
 
   // The path: soft lavender asphalt, no markings
@@ -139,7 +165,8 @@ export function shrWorld(root, base) {
   const targets = [];    // meshes the crosshair can name
   const stops = [];      // where each sculpture stands, for the preview camera
   const spots = [
-    ...OUTSIDE.map(([k, t, off, h, yaw]) => { const { p, nrm } = frame(t); return [k, p.x - nrm.x * off, p.z - nrm.z * off, h, yaw]; }),
+    // Outside ones need their size first, so they get their distance from the path when placed.
+    ...OUTSIDE.map(([k, t, h, yaw]) => [k, (r) => { const { p, nrm } = frame(t); const off = HALF + 1.2 + r; return [p.x - nrm.x * off, p.z - nrm.z * off]; }, null, h, yaw]),
     ...INSIDE,
   ];
   const loader = new GLTFLoader();
@@ -159,6 +186,7 @@ export function shrWorld(root, base) {
     const obj = cache[k].clone(true);
     const size = new THREE.Box3().setFromObject(obj).getSize(new THREE.Vector3());
     const s = width ? width / Math.max(size.x, size.z) : h / size.y;
+    if (typeof x === 'function') [x, z] = x(Math.max(size.x, size.z) * s / 2);
     obj.scale.setScalar(s);
     const holder = new THREE.Group();
     holder.add(obj);
@@ -280,6 +308,8 @@ export function shrWorld(root, base) {
   function resize() {
     const w = root.clientWidth, h = root.clientHeight;
     renderer.setSize(w, h, false); camera.aspect = w / h; camera.updateProjectionMatrix();
+    const pr = renderer.getPixelRatio() * 0.5;   // the water's mirror image at half resolution, blurred by the ripples anyway
+    lawn.getRenderTarget().setSize(Math.round(w * pr), Math.round(h * pr));
   }
   new ResizeObserver(resize).observe(root); resize();
 
@@ -292,7 +322,7 @@ export function shrWorld(root, base) {
   renderer.setAnimationLoop(() => {
     const dt = Math.min(clock.getDelta(), 0.05);
     if (!inView || document.hidden) return;
-    starMat.uniforms.time.value += dt;
+    starMat.uniforms.time.value += dt; waterTime.value += dt;
     if (playing) { walk(dt); pick(performance.now()); }
     else {
       tour = (tour + dt * 0.008) % 1;
