@@ -44,3 +44,8 @@
   document.querySelectorAll('.gallery img, img.zoom').forEach(function (img) {
     img.addEventListener('click', function () { lb.firstChild.src = img.src; lb.firstChild.alt = img.alt; lb.classList.add('open'); });
   });
+
+  // Project tabs: on narrow screens scroll the current tab into view.
+  var tabs = document.querySelector('.topnav .tabs');
+  var cur = tabs && tabs.querySelector('a.on');
+  if (cur) tabs.scrollLeft = cur.offsetLeft - (tabs.clientWidth - cur.offsetWidth) / 2;
