@@ -8,7 +8,15 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Arimo:ital,wght@0,400;0,700;1,400&family=Tinos:ital,wght@0,400;0,700;1,400;1,700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="../style.css?v=20261005b">
+<link rel="stylesheet" href="../style.css?v=20261005e">
+<script>
+  // Arriving from the intro: show the blue-violet cover with the project name, then slide it up.
+  (function () { var t; try { t = sessionStorage.getItem('cover'); sessionStorage.removeItem('cover'); } catch (e) {} if (!t) return;
+    (function add() { if (!document.body) return requestAnimationFrame(add); var c = document.createElement('div'); c.className = 'cover cover-in'; c.innerHTML = '<span></span>'; c.firstChild.textContent = t; document.body.appendChild(c); document.documentElement.classList.remove('arriving');
+      setTimeout(function () { c.classList.add('go'); }, 120); setTimeout(function () { c.remove(); }, 1100); })();
+    document.documentElement.classList.add('arriving');
+  })();
+</script>
 </head>
 <body>
 
@@ -40,7 +48,7 @@
     <p>Mixed media portraits made in collaboration with the clothing brand CAROLINA SARRIA for its runway show in New York: art direction, 3D modelling and render. The collaboration continued with the NFT drop “Unidentified Reflection”.</p>
   </div>
   <div class="media c4">
-    <img style="view-transition-name: proj-hero" class="zoom" src="img/carolina-1.jpg" alt="CAROLINA SARRIA — portrait in a glass structure above clouds" loading="lazy">
+    <img class="zoom" src="img/carolina-1.jpg" alt="CAROLINA SARRIA — portrait in a glass structure above clouds" loading="lazy">
     <img class="zoom" src="img/carolina-2.jpg" alt="CAROLINA SARRIA — fragmented portrait on black" loading="lazy">
     <img class="zoom" src="img/carolina-3.jpg" alt="CAROLINA SARRIA — portrait among iridescent tubes" loading="lazy">
     <img class="zoom" src="img/carolina-4.jpg" alt="CAROLINA SARRIA — model with a yellow seaplane" loading="lazy">
@@ -59,6 +67,6 @@
 
 <footer>© Polina Zinziver · <a href="../index.html">artistic practice →</a></footer>
 
-<script src="../site.js?v=20261005b"></script>
+<script src="../site.js?v=20261005e"></script>
 </body>
 </html>

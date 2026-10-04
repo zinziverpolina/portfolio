@@ -125,7 +125,7 @@ export function floatScene(hero, MODELS) {
       body.velocity.set((Math.random() - 0.5) * 2, (Math.random() - 0.5) * 2, 0);
       world.addBody(body);
 
-      const it = { i, name: m.name, href: m.href, group, body, size, weight: 1, frame: makeFrame(i, m), rect: null, wobble: 0, seed: Math.random() * 100 };
+      const it = { i, name: m.name, tag: m.tag, href: m.href, group, body, size, weight: 1, frame: makeFrame(i, m), rect: null, wobble: 0, seed: Math.random() * 100 };
       // Flat, wide pieces (the fence ring) read better a bit larger.
       it.weight = (m.weight || 1) * THREE.MathUtils.clamp(1 / Math.sqrt(Math.max(size.x, size.y)), 1, 1.25);
       items.push(it);
@@ -195,35 +195,26 @@ export function floatScene(hero, MODELS) {
   hero.addEventListener('pointerup', release);
   hero.addEventListener('pointercancel', () => { pointer.moved = true; release(); });
 
-  // Click on a linked object: the others scatter, then a snapshot of the object morphs into
-  // the first image of the project page (cross-document view transition; plain navigation elsewhere).
+  // Click on a linked object: its blue-violet frame opens to fill the screen and floods with colour,
+  // the project name appears in white, then the project page opens under the same cover
+  // and the colour slides up (see .cover in style.css and the head script on project pages).
   let leaving = false;
   function openProject(it) {
     if (leaving) return;
     leaving = true;
-    const c = it.body.position;
-    for (const o of items) {
-      if (o === it) continue;
-      const d = new CANNON.Vec3(o.body.position.x - c.x, o.body.position.y - c.y, 0);
-      const len = Math.max(d.length(), 0.5);
-      o.body.applyImpulse(new CANNON.Vec3(d.x / len * 14, d.y / len * 14, 0));
-    }
-    it.frame.classList.add('on');
-    setTimeout(() => {
-      try {
-        renderer.render(scene, camera);
-        const r = frameRect(it), k = canvas.width / hero.clientWidth, hr = hero.getBoundingClientRect();
-        const snap = document.createElement('canvas');
-        snap.width = Math.max(1, Math.round(r.w * k)); snap.height = Math.max(1, Math.round(r.h * k));
-        snap.getContext('2d').drawImage(canvas, r.x * k, r.y * k, r.w * k, r.h * k, 0, 0, snap.width, snap.height);
-        snap.className = 'vt-snap';
-        Object.assign(snap.style, { left: hr.left + r.x + 'px', top: hr.top + r.y + 'px', width: r.w + 'px', height: r.h + 'px' });
-        document.body.appendChild(snap);
-      } catch (e) { /* snapshot is only decoration */ }
-      location.href = it.href;
-    }, 260);
+    const r = it.rect || frameRect(it), hr = hero.getBoundingClientRect();
+    const cover = document.createElement('div');
+    cover.className = 'cover cover-grow';
+    cover.innerHTML = '<span></span>';
+    cover.querySelector('span').textContent = it.tag;
+    Object.assign(cover.style, { left: hr.left + r.x + 'px', top: hr.top + r.y + 'px', width: r.w + 'px', height: r.h + 'px' });
+    document.body.appendChild(cover);
+    cover.getBoundingClientRect();   // start the transition from the frame's box
+    cover.classList.add('full');
+    try { sessionStorage.setItem('cover', it.tag); } catch (e) {}
+    setTimeout(() => { location.href = it.href; }, 650);
   }
-  window.addEventListener('pageshow', (e) => { if (e.persisted) { leaving = false; document.querySelectorAll('.vt-snap').forEach((n) => n.remove()); } });
+  window.addEventListener('pageshow', (e) => { if (e.persisted) { leaving = false; document.querySelectorAll('.cover').forEach((n) => n.remove()); } });
 
   function jiggle() {
     for (const it of items) {

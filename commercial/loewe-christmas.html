@@ -8,8 +8,16 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Arimo:ital,wght@0,400;0,700;1,400&family=Tinos:ital,wght@0,400;0,700;1,400;1,700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="../style.css?v=20261005b">
+<link rel="stylesheet" href="../style.css?v=20261005e">
 <script type="module" src="https://cdn.jsdelivr.net/npm/@google/model-viewer@4.1.0/dist/model-viewer.min.js"></script>
+<script>
+  // Arriving from the intro: show the blue-violet cover with the project name, then slide it up.
+  (function () { var t; try { t = sessionStorage.getItem('cover'); sessionStorage.removeItem('cover'); } catch (e) {} if (!t) return;
+    (function add() { if (!document.body) return requestAnimationFrame(add); var c = document.createElement('div'); c.className = 'cover cover-in'; c.innerHTML = '<span></span>'; c.firstChild.textContent = t; document.body.appendChild(c); document.documentElement.classList.remove('arriving');
+      setTimeout(function () { c.classList.add('go'); }, 120); setTimeout(function () { c.remove(); }, 1100); })();
+    document.documentElement.classList.add('arriving');
+  })();
+</script>
 </head>
 <body>
 
@@ -43,7 +51,7 @@
       <div class="credit">art direction by Bob Eaton</div>
     </div>
     <div class="media xmas">
-      <video style="view-transition-name: proj-hero" class="clip r916" src="video/loewe-xmas-1.mp4" poster="video/loewe-xmas-1.jpg" muted loop playsinline controls preload="none"></video>
+      <video class="clip r916" src="video/loewe-xmas-1.mp4" poster="video/loewe-xmas-1.jpg" muted loop playsinline controls preload="none"></video>
       <video class="clip r45" src="video/loewe-xmas-2.mp4" poster="video/loewe-xmas-2.jpg" muted loop playsinline controls preload="none"></video>
     </div>
   </div>
@@ -104,6 +112,6 @@
 
 <footer>© Polina Zinziver · <a href="../index.html">artistic practice →</a></footer>
 
-<script src="../site.js?v=20261005b"></script>
+<script src="../site.js?v=20261005e"></script>
 </body>
 </html>
