@@ -14,7 +14,7 @@ export function collage(stage, sources) {
   let ready = false;
 
   // Originals at full quality; a random selection is enough for the stage.
-  [...sources].sort(() => Math.random() - 0.5).slice(0, 36).forEach((img) => {
+  [...sources].sort(() => Math.random() - 0.5).slice(0, 64).forEach((img) => {
     const thumb = img.getAttribute('src');
     const pre = new Image();
     pre.onload = () => { pool.push({ thumb, ar: pre.naturalWidth / pre.naturalHeight, target: img }); if (!ready && pool.length >= 8) start(); };
@@ -36,7 +36,7 @@ export function collage(stage, sources) {
   function buildLayouts() {
     const W = stage.clientWidth, H = stage.clientHeight;
     // Every poster gets about the same area, medium-sized, and always fits whole inside the stage.
-    const S = Math.min(H * 0.55, W * 0.42);
+    const S = Math.min(H * 0.55, W * 0.42) * 0.5;
     const size = (p) => {
       let w = S * Math.sqrt(p.ar) * rnd(0.94, 1.06), h = w / p.ar;
       const k = Math.min(1, (H * 0.9) / h, (W * 0.7) / w);
@@ -122,15 +122,15 @@ export function collage(stage, sources) {
     raf = requestAnimationFrame(draw);
     const t = (now - t0) / 1000;
     for (const it of tiles) {
-      const ease = it === dragged ? 0.35 : 0.035;   // a grabbed poster keeps up with the hand
+      const ease = it === dragged ? 0.16 : 0.035;   // a grabbed poster keeps up with the hand
       it.x += (it.tx - it.x) * ease; it.y += (it.ty - it.y) * ease; it.w += (it.tw - it.w) * ease;
       // Lean away from the cursor, softly, within a few hundred pixels.
       let px = 0, py = 0;
       if (pointer && it !== dragged) {
-        const dx = it.x - pointer[0], dy = it.y - pointer[1], d = Math.hypot(dx, dy) || 1, R = 420;
-        if (d < R) { const f = (1 - d / R) ** 2 * 120; px = dx / d * f; py = dy / d * f; }
+        const dx = it.x - pointer[0], dy = it.y - pointer[1], d = Math.hypot(dx, dy) || 1, R = 320;
+        if (d < R) { const f = (1 - d / R) ** 2 * 60; px = dx / d * f; py = dy / d * f; }
       }
-      it.px = (it.px || 0) + (px - (it.px || 0)) * 0.08; it.py = (it.py || 0) + (py - (it.py || 0)) * 0.08;
+      it.px = (it.px || 0) + (px - (it.px || 0)) * 0.035; it.py = (it.py || 0) + (py - (it.py || 0)) * 0.035;
       const a = t * it.sp + it.ph, r = it === dragged ? 0 : it.r;
       const cx = it.x + it.px + Math.cos(a) * r, cy = it.y + it.py + Math.sin(a) * r * 0.8;
       it.el.style.width = it.w.toFixed(1) + 'px';
