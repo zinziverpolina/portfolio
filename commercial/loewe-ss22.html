@@ -8,8 +8,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Arimo:ital,wght@0,400;0,700;1,400&family=Tinos:ital,wght@0,400;0,700;1,400;1,700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="../style.css?v=20261005m">
-<script type="module" src="https://cdn.jsdelivr.net/npm/@google/model-viewer@4.1.0/dist/model-viewer.min.js"></script>
+<link rel="stylesheet" href="../style.css?v=20261005u">
 <script>
   // Arriving from the intro: start under a white cover that slowly turns transparent.
   (function () { var t; try { t = sessionStorage.getItem('cover'); sessionStorage.removeItem('cover'); } catch (e) {} if (!t) return;
@@ -61,44 +60,48 @@
   <div class="meta">promo animations for the women’s runway show and the men’s collection<br>2022</div>
   <div class="body"><p>Animations for the SS22 women’s runway show were used on LOEWE’s social media, website and in the windows of LOEWE boutiques.</p></div>
   <div class="credit">art direction by Bob Eaton</div>
-  <div class="media">
-    <video class="clip r169" src="video/loewe-ww-1.mp4" poster="video/loewe-ww-1.jpg" muted loop playsinline controls preload="none"></video>
-  </div>
-  <div class="media c3">
+  <div class="media c2">
     <video class="clip r45" src="video/loewe-ww-2.mp4" poster="video/loewe-ww-2.jpg" muted loop playsinline controls preload="none"></video>
     <video class="clip r45" src="video/loewe-ww-3.mp4" poster="video/loewe-ww-3.jpg" muted loop playsinline controls preload="none"></video>
-    <video class="clip r45" src="video/loewe-mw-1.mp4" poster="video/loewe-mw-1.jpg" muted loop playsinline controls preload="none"></video>
+    <video class="clip r45" src="video/loewe-sky-p1.mp4" poster="video/loewe-sky-p1.jpg" muted loop playsinline controls preload="none"></video>
+    <video class="clip r45" src="video/loewe-mw-p1.mp4" poster="video/loewe-mw-p1.jpg" muted loop playsinline controls preload="none"></video>
   </div>
-  <div class="credit">right: LOEWE Menswear SS22, music “Love and Happiness” by Kindness</div>
-  <p class="label">More 16:9 versions</p>
-  <div class="media c2">
+  <div class="credit">bottom right: LOEWE Menswear SS22, music “Love and Happiness” by Kindness</div>
+  <div class="stacks c3">
+    <button class="stack" type="button" aria-expanded="false" aria-controls="ss-h">
+      <span class="stack-img"><img src="video/loewe-ww-1.jpg" alt="" loading="lazy"></span>
+      <span class="stack-t">Horizontal versions, 16:9 <i>3 videos</i></span>
+    </button>
+    <button class="stack" type="button" aria-expanded="false" aria-controls="ss-v">
+      <span class="stack-img fit"><img src="video/loewe-ww-v1.jpg" alt="" loading="lazy"></span>
+      <span class="stack-t">Vertical versions, 9:16 <i>3 videos</i></span>
+    </button>
+    <button class="stack" type="button" aria-expanded="false" aria-controls="ss-s">
+      <span class="stack-img"><img src="img/loewe-ss22-s5.jpg" alt="" loading="lazy"></span>
+      <span class="stack-t">Stills <i>4 images</i></span>
+    </button>
+  </div>
+  <div class="stack-panel" id="ss-h" hidden>
+  <div class="media c3">
+    <video class="clip r169" src="video/loewe-ww-1.mp4" poster="video/loewe-ww-1.jpg" muted loop playsinline controls preload="none"></video>
     <video class="clip r169" src="video/loewe-sky-1.mp4" poster="video/loewe-sky-1.jpg" muted loop playsinline controls preload="none"></video>
     <video class="clip r169" src="video/loewe-mw-h1.mp4" poster="video/loewe-mw-h1.jpg" muted loop playsinline controls preload="none"></video>
   </div>
-  <p class="label">Vertical versions, 9:16</p>
+  </div>
+  <div class="stack-panel" id="ss-v" hidden>
   <div class="media c3">
     <video class="clip r916" src="video/loewe-ww-v1.mp4" poster="video/loewe-ww-v1.jpg" muted loop playsinline controls preload="none"></video>
     <video class="clip r916" src="video/loewe-sky-v1.mp4" poster="video/loewe-sky-v1.jpg" muted loop playsinline controls preload="none"></video>
     <video class="clip r916" src="video/loewe-mw-v1.mp4" poster="video/loewe-mw-v1.jpg" muted loop playsinline controls preload="none"></video>
   </div>
-  <p class="label">4:5 versions</p>
-  <div class="media c2">
-    <video class="clip r45" src="video/loewe-sky-p1.mp4" poster="video/loewe-sky-p1.jpg" muted loop playsinline controls preload="none"></video>
-    <video class="clip r45" src="video/loewe-mw-p1.mp4" poster="video/loewe-mw-p1.jpg" muted loop playsinline controls preload="none"></video>
   </div>
-  <p class="label">Stills</p>
+  <div class="stack-panel" id="ss-s" hidden>
   <div class="media c4">
     <img class="zoom r45" src="img/loewe-ss22-s5.jpg" alt="LOEWE SS22 — candles in the sky" loading="lazy">
     <img class="zoom r45" src="img/loewe-ss22-s7.jpg" alt="LOEWE SS22 — candles from below" loading="lazy">
     <img class="zoom r45" src="img/loewe-ss22-s8.jpg" alt="LOEWE SS22 — nail polish in the clouds" loading="lazy">
     <img class="zoom r45" src="img/loewe-ss22-s10.jpg" alt="LOEWE SS22 — menswear pea pod" loading="lazy">
   </div>
-  <p class="label">3D models from the scenes — drag to rotate</p>
-  <div class="models c4">
-    <figure><model-viewer src="models/lw-candles.glb" poster="models/lw-candles.jpg" alt="LOEWE SS22 — Candles, 3D model" loading="lazy" camera-controls disable-zoom disable-pan touch-action="pan-y" min-camera-orbit="auto auto 20%" max-camera-orbit="auto auto 200%" interaction-prompt="none" auto-rotate auto-rotate-delay="0" rotation-per-second="18deg" environment-image="neutral" shadow-intensity="1" camera-orbit="20deg 78deg 105%"></model-viewer><figcaption>Candles</figcaption></figure>
-    <figure><model-viewer src="models/lw-nail-polish.glb" poster="models/lw-nail-polish.jpg" alt="LOEWE SS22 — Nail polish, 3D model" loading="lazy" camera-controls disable-zoom disable-pan touch-action="pan-y" min-camera-orbit="auto auto 20%" max-camera-orbit="auto auto 200%" interaction-prompt="none" auto-rotate auto-rotate-delay="0" rotation-per-second="18deg" environment-image="neutral" shadow-intensity="1" camera-orbit="20deg 78deg 105%"></model-viewer><figcaption>Nail polish</figcaption></figure>
-    <figure><model-viewer src="models/lw-peas.glb" poster="models/lw-peas.jpg" alt="LOEWE SS22 — Pea pod, 3D model" loading="lazy" camera-controls disable-zoom disable-pan touch-action="pan-y" min-camera-orbit="auto auto 20%" max-camera-orbit="auto auto 200%" interaction-prompt="none" auto-rotate auto-rotate-delay="0" rotation-per-second="18deg" environment-image="neutral" shadow-intensity="1" camera-orbit="20deg 78deg 105%"></model-viewer><figcaption>Pea pod</figcaption></figure>
-    <figure><model-viewer src="models/lw-sky-words.glb" poster="models/lw-sky-words.jpg" alt="LOEWE SS22 — Live Laugh Loewe, 3D model" loading="lazy" camera-controls disable-zoom disable-pan touch-action="pan-y" min-camera-orbit="auto auto 20%" max-camera-orbit="auto auto 200%" interaction-prompt="none" auto-rotate auto-rotate-delay="0" rotation-per-second="18deg" environment-image="neutral" shadow-intensity="1" camera-orbit="15deg 85deg 105%"></model-viewer><figcaption>Live Laugh Loewe</figcaption></figure>
   </div>
 </section>
 
@@ -110,6 +113,6 @@
 
 <footer>© Polina Zinziver · <a href="../index.html">artistic practice →</a></footer>
 
-<script src="../site.js?v=20261005l"></script>
+<script src="../site.js?v=20261005s"></script>
 </body>
 </html>

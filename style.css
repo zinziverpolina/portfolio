@@ -376,3 +376,8 @@ body.page-dark footer { color: #777; }
 .stack-panel { margin-top: 26px; }
 .stack-panel > .media:first-child { margin-top: 0; }
 @media (max-width: 820px) { .stacks { gap: 24px; } .stack-t { font-size: 17px; } .stack-t i { font-size: 14px; } }
+.stacks.c3 { grid-template-columns: repeat(3, 1fr); gap: 40px; }
+@media (max-width: 820px) { .stacks.c3 { grid-template-columns: 1fr 1fr; } }
+.stack-img.fit img { object-fit: contain; background: #f2efe9; }
+/* header menu: project names in capitals */
+.topnav .tabs > a, .topnav .dd-panel .projects .t { text-transform: uppercase; }
