@@ -12,7 +12,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Arimo:ital,wght@0,400;0,700;1,400&family=Tinos:ital,wght@0,400;0,700;1,400;1,700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="style.css?v=20261006c">
+<link rel="stylesheet" href="style.css?v=20261006d">
 <script type="importmap">{"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.169.0/build/three.module.js","three/addons/":"https://cdn.jsdelivr.net/npm/three@0.169.0/examples/jsm/","cannon-es":"https://cdn.jsdelivr.net/npm/cannon-es@0.20.0/dist/cannon-es.js"}}</script>
 </head>
 <body class="intro-page">
@@ -67,13 +67,13 @@
 
 <script>
 (function () {
-  // Centre logo: the 20 versions cycle on their own, grouped by typeface (Robbery, Kinky, Saint, Mirabela),
+  // Centre logo: the picked versions cycle on their own, grouped by typeface (Robbery, Kinky, Saint, Mirabela),
   // a new one every 1.5 s; the mouse over the logo holds the current version.
   const logo = document.getElementById('intro-logo'), logoImg = logo.querySelector('img');
-  const ORDER = [3, 2, 7, 13, 14, 16, 17, 18, 19, 20, 5, 8, 9, 10, 12, 15, 4, 6, 1, 11];
+  const ORDER = [3, 2, 7, 13, 14, 16, 17, 18, 20, 5, 8, 9, 10, 15, 4, 6, 1];   // final pick (17)
   const N = ORDER.length, url = (i) => 'commercial/img/logo/zz-' + String(ORDER[i]).padStart(2, '0') + '.webp?v=3';
   let cur = 0, timer = 0, logoVisible = true, held = false;
-  // Preload right away (not after the heavy 3D models): each version is only ~50 KB.
+  // Preload right away (not after the heavy 3D models): each version is ~50 KB.
   const pics = ORDER.map((_, i) => { const im = new Image(); im.src = url(i); return im; });
   function startLogo() {
     if (timer || held || !logoVisible || document.hidden) return;
