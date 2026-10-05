@@ -195,13 +195,12 @@ section[id] { scroll-margin-top: 52px; }
 /* Intro (main page, no header): logo + project menu in one centred block, raised by 1/4 of the logo's gap to the top;
    the floating models keep out of the whole block. Logo versions cycle every 1.5 s, mouse movement over it holds one. */
 body.no-header .shr-hero { height: 100vh; height: 100svh; }
-/* Desktop layout set by hand in the layout editor (1440x900): logo 759 px wide, top at 30.3 %; menu 9.5 px in two centred lines within the logo width, tucked 2.7 % of the logo width into its bottom margin; only the centred "drag · click to open" caption at the bottom. */
+/* Desktop layout set by hand in the layout editor (1440x900): logo 759 px wide, top at 30.3 %; only ALL PROJECTS (19 px, opens the project list) centred under the logo, tucked 2.7 % of the logo width into its bottom margin; only the centred "drag · click to open" caption at the bottom. */
 .intro-center { --lw: min(52.7vw, 759px); position: absolute; left: 50%; top: 30.3%; width: var(--lw); transform: translateX(-50%); z-index: 3; display: flex; flex-direction: column; align-items: center; }
 .intro-logo { width: var(--lw); aspect-ratio: 1000 / 247; }
 .intro-logo img { width: 100%; height: 100%; object-fit: contain; display: block; user-select: none; }
 .topnav.intro-nav { position: relative; top: auto; z-index: auto; background: none; backdrop-filter: none; border: 0; width: 100%; margin-top: calc(var(--lw) * -0.027); }
-.topnav.intro-nav .tabs { max-width: none; padding: 0; justify-content: center; flex-wrap: wrap; overflow: visible; font-size: 9.5px; gap: .2em 1.467em; }
-.topnav.intro-nav .nl { flex-basis: 100%; height: 0; }
+.topnav.intro-nav .tabs { max-width: none; padding: 0; justify-content: center; overflow: visible; font-size: 19px; }
 .topnav.intro-nav .dd-btn { text-transform: uppercase; }
 .topnav.intro-nav .dd-panel { top: calc(100% + 10px); left: 50%; right: auto; width: min(92vw, 1060px); margin-left: calc(min(92vw, 1060px) / -2); max-height: 44vh; text-align: left; border: 1px solid #eee; }
 .shr-frame { --c: #3d85c6; position: absolute; left: 0; top: 0; border: 1px solid var(--c); opacity: .55; transition: opacity .2s; will-change: transform; }
@@ -236,8 +235,7 @@ body.no-header .shr-hero { height: 100vh; height: 100svh; }
   /* Phone: same arrangement as desktop, logo full width, the menu stays readable and wraps into centred lines under it. */
   .intro-center { --lw: 92vw; width: var(--lw); top: calc(37.5% - var(--lw) * 0.247 * 3 / 8); }
   .topnav.intro-nav { width: 100%; }
-  .topnav.intro-nav .tabs { font-size: 13px; gap: .25em 1.1em; }
-  .topnav.intro-nav .nl { display: none; }
+  .topnav.intro-nav .tabs { font-size: 17px; }
   .intro-page .shr-ui .br { right: auto; bottom: 22px; }
   .shr-frame .tag { font-size: 20px; }
 }
