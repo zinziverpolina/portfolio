@@ -2,7 +2,7 @@
 // Whole posters (never cropped) are layered over each other until they fill the stage. Each one
 // drifts smoothly around its own place on a slow circle; now and then a poster glides over to its
 // place in the next layout and lands on top, so the collage keeps rebuilding itself in a loop.
-// Posters lean away from the cursor, can be dragged around, and a click scrolls to that poster in
+// Posters near the cursor follow it, can be dragged around, and a click scrolls to that poster in
 // the gallery below.
 // collage(stageElement, galleryImages)
 export function collage(stage, sources) {
@@ -76,7 +76,7 @@ export function collage(stage, sources) {
     setPoster(t, s.p); t.tx = s.x; t.ty = s.y; t.tw = s.w; t.el.style.zIndex = ++zTop;   // a poster that changes always lands on top
   }
 
-  // Pointer, as on the home page: posters near the cursor lean away from it, a poster can be
+  // Pointer: posters near the cursor are drawn after it, a poster can be
   // grabbed and dragged (it stays where it is dropped until its next turn), and a click without
   // dragging scrolls to that poster in the gallery.
   let zTop = 1000, dragged = null, grab = null, pointer = null;
@@ -124,11 +124,11 @@ export function collage(stage, sources) {
     for (const it of tiles) {
       const ease = it === dragged ? 0.35 : 0.035;   // a grabbed poster keeps up with the hand
       it.x += (it.tx - it.x) * ease; it.y += (it.ty - it.y) * ease; it.w += (it.tw - it.w) * ease;
-      // Lean away from the cursor, softly, within a few hundred pixels.
+      // Follow the cursor: posters within reach are drawn towards it, the nearer the stronger.
       let px = 0, py = 0;
       if (pointer && it !== dragged) {
-        const dx = it.x - pointer[0], dy = it.y - pointer[1], d = Math.hypot(dx, dy) || 1, R = 420;
-        if (d < R) { const f = (1 - d / R) ** 2 * 120; px = dx / d * f; py = dy / d * f; }
+        const dx = pointer[0] - it.x, dy = pointer[1] - it.y, d = Math.hypot(dx, dy), R = 520;
+        if (d < R) { const k = (1 - d / R) * 0.55; px = dx * k; py = dy * k; }
       }
       it.px = (it.px || 0) + (px - (it.px || 0)) * 0.08; it.py = (it.py || 0) + (py - (it.py || 0)) * 0.08;
       const a = t * it.sp + it.ph, r = it === dragged ? 0 : it.r;
