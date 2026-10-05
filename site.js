@@ -100,3 +100,16 @@
   s.src = new URL('picker.js?t=' + Date.now(), document.currentScript ? document.currentScript.src : location.href).href;
   document.body.appendChild(s);
 })();
+
+// Collapsible stacks: a button shows a pile as one picture; clicking opens or closes its full grid.
+document.querySelectorAll('.stack[aria-controls]').forEach(function (btn) {
+  var panel = document.getElementById(btn.getAttribute('aria-controls'));
+  if (!panel) return;
+  btn.addEventListener('click', function () {
+    var open = btn.getAttribute('aria-expanded') !== 'true';
+    btn.setAttribute('aria-expanded', open ? 'true' : 'false');
+    panel.hidden = !open;
+    if (!open) panel.querySelectorAll('video').forEach(function (v) { v.pause(); });
+    else panel.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+  });
+});

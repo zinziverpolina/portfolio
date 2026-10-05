@@ -8,8 +8,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Arimo:ital,wght@0,400;0,700;1,400&family=Tinos:ital,wght@0,400;0,700;1,400;1,700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="../style.css?v=20261005m">
-<script type="module" src="https://cdn.jsdelivr.net/npm/@google/model-viewer@4.1.0/dist/model-viewer.min.js"></script>
+<link rel="stylesheet" href="../style.css?v=20261005s">
 <script>
   // Arriving from the intro: start under a white cover that slowly turns transparent.
   (function () { var t; try { t = sessionStorage.getItem('cover'); sessionStorage.removeItem('cover'); } catch (e) {} if (!t) return;
@@ -63,12 +62,6 @@
     <p>A logo animation and a series of animations about the brand’s symbols and summer items — doves, the apple and the Three Graces. 3D modelling, animation and render; shown on the brand’s website and social media.</p>
   </div>
   <div class="credit">co-art direction with Javier Sola</div>
-  <div class="media c2">
-    <video class="clip r169" src="video/nina-ricci-1.mp4" poster="video/nina-ricci-1.jpg" muted loop playsinline controls preload="none"></video>
-    <video class="clip r169" src="video/nina-ricci-2.mp4" poster="video/nina-ricci-2.jpg" muted loop playsinline controls preload="none"></video>
-    <video class="clip r169" src="video/nina-ricci-3.mp4" poster="video/nina-ricci-3.jpg" muted loop playsinline controls preload="none"></video>
-    <video class="clip r169" src="video/nina-ricci-4.mp4" poster="video/nina-ricci-4.jpg" muted loop playsinline controls preload="none"></video>
-  </div>
   <p class="label">Vertical versions, 9:16</p>
   <div class="media c4">
     <video class="clip r916" src="video/nina-ricci-v1.mp4" poster="video/nina-ricci-v1.jpg" muted loop playsinline controls preload="none"></video>
@@ -76,7 +69,25 @@
     <video class="clip r916" src="video/nina-ricci-v3.mp4" poster="video/nina-ricci-v3.jpg" muted loop playsinline controls preload="none"></video>
     <video class="clip r916" src="video/nina-ricci-v4.mp4" poster="video/nina-ricci-v4.jpg" muted loop playsinline controls preload="none"></video>
   </div>
-  <p class="label">Stills</p>
+  <div class="stacks">
+    <button class="stack" type="button" aria-expanded="false" aria-controls="nr-horizontal">
+      <span class="stack-img"><img src="video/nina-ricci-1.jpg" alt="" loading="lazy"></span>
+      <span class="stack-t">Horizontal versions, 16:9 <i>4 videos</i></span>
+    </button>
+    <button class="stack" type="button" aria-expanded="false" aria-controls="nr-stills">
+      <span class="stack-img"><img src="img/nina-ricci-s1.jpg" alt="" loading="lazy"></span>
+      <span class="stack-t">Stills <i>8 images</i></span>
+    </button>
+  </div>
+  <div class="stack-panel" id="nr-horizontal" hidden>
+  <div class="media c2">
+    <video class="clip r169" src="video/nina-ricci-1.mp4" poster="video/nina-ricci-1.jpg" muted loop playsinline controls preload="none"></video>
+    <video class="clip r169" src="video/nina-ricci-2.mp4" poster="video/nina-ricci-2.jpg" muted loop playsinline controls preload="none"></video>
+    <video class="clip r169" src="video/nina-ricci-3.mp4" poster="video/nina-ricci-3.jpg" muted loop playsinline controls preload="none"></video>
+    <video class="clip r169" src="video/nina-ricci-4.mp4" poster="video/nina-ricci-4.jpg" muted loop playsinline controls preload="none"></video>
+  </div>
+  </div>
+  <div class="stack-panel" id="nr-stills" hidden>
   <div class="media c4">
     <img class="zoom r45" src="img/nina-ricci-s1.jpg" alt="Nina Ricci Summer 22 — bag animation still" loading="lazy">
     <img class="zoom r45" src="img/nina-ricci-s3.jpg" alt="Nina Ricci Summer 22 — bag animation still" loading="lazy">
@@ -87,12 +98,6 @@
     <img class="zoom r45" src="img/nina-ricci-s10.jpg" alt="Nina Ricci Summer 22 — logo animation still" loading="lazy">
     <img class="zoom r45" src="img/nina-ricci-s11.jpg" alt="Nina Ricci Summer 22 — logo animation still" loading="lazy">
   </div>
-  <p class="label">3D models from the scenes — drag to rotate</p>
-  <div class="models c4">
-    <figure><model-viewer src="models/nr-slippers.glb" poster="models/nr-slippers.jpg" alt="Nina Ricci — Slippers, 3D model" loading="lazy" camera-controls disable-zoom disable-pan touch-action="pan-y" min-camera-orbit="auto auto 20%" max-camera-orbit="auto auto 200%" interaction-prompt="none" auto-rotate auto-rotate-delay="0" rotation-per-second="18deg" environment-image="neutral" shadow-intensity="1" camera-orbit="25deg 65deg 105%"></model-viewer><figcaption>Slippers</figcaption></figure>
-    <figure><model-viewer src="models/nr-bag.glb" poster="models/nr-bag.jpg" alt="Nina Ricci — Bag, 3D model" loading="lazy" camera-controls disable-zoom disable-pan touch-action="pan-y" min-camera-orbit="auto auto 20%" max-camera-orbit="auto auto 200%" interaction-prompt="none" auto-rotate auto-rotate-delay="0" rotation-per-second="18deg" environment-image="neutral" shadow-intensity="1" camera-orbit="20deg 78deg 105%"></model-viewer><figcaption>Bag</figcaption></figure>
-    <figure><model-viewer src="models/nr-apples.glb" poster="models/nr-apples.jpg" alt="Nina Ricci — Apples, 3D model" loading="lazy" camera-controls disable-zoom disable-pan touch-action="pan-y" min-camera-orbit="auto auto 20%" max-camera-orbit="auto auto 200%" interaction-prompt="none" auto-rotate auto-rotate-delay="0" rotation-per-second="18deg" environment-image="neutral" shadow-intensity="1" camera-orbit="20deg 78deg 105%"></model-viewer><figcaption>Apples</figcaption></figure>
-    <figure><model-viewer src="models/nr-dove.glb" poster="models/nr-dove.jpg" alt="Nina Ricci — Dove, 3D model" loading="lazy" camera-controls disable-zoom disable-pan touch-action="pan-y" min-camera-orbit="auto auto 20%" max-camera-orbit="auto auto 200%" interaction-prompt="none" auto-rotate auto-rotate-delay="0" rotation-per-second="18deg" environment-image="neutral" shadow-intensity="1" camera-orbit="20deg 78deg 105%"></model-viewer><figcaption>Dove</figcaption></figure>
   </div>
 </section>
 
@@ -104,6 +109,6 @@
 
 <footer>© Polina Zinziver · <a href="../index.html">artistic practice →</a></footer>
 
-<script src="../site.js?v=20261005l"></script>
+<script src="../site.js?v=20261005s"></script>
 </body>
 </html>
