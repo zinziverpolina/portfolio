@@ -329,11 +329,11 @@ html.picking section.slide img.kept, html.picking section.slide video.kept { out
 @media (min-width: 821px) { .topnav .tabs { flex-wrap: wrap; row-gap: 6px; } }
 
 /* Posters & covers: paper-collage stage */
-.cl-stage { position: relative; height: calc(100vh - 92px); height: calc(100svh - 92px); min-height: 420px; overflow: hidden; background: #f4f1ea; border-bottom: 1px solid #eee; cursor: crosshair; touch-action: pan-y; }
-.cl-piece { position: absolute; padding: 0; border: 0; background-color: #ddd; background-repeat: no-repeat; cursor: pointer; filter: drop-shadow(0 2px 3px rgba(0,0,0,.18)); }
-.cl-piece:hover { outline: 2px solid #4b2bff; outline-offset: -2px; z-index: 30; }
-.cl-ui { position: absolute; inset: 0; pointer-events: none; z-index: 40; }
-.cl-ui span { position: absolute; font: 15px/1.2 var(--sans); color: #111; background: #f4f1ea; padding: 2px 6px; }
+.cl-stage { position: relative; height: calc(100vh - 92px); height: calc(100svh - 92px); min-height: 420px; overflow: hidden; background: #111; border-bottom: 1px solid #eee; cursor: crosshair; touch-action: pan-y; }
+.cl-piece { position: absolute; display: block; height: auto; max-width: none; cursor: pointer; user-select: none; -webkit-user-drag: none; box-shadow: 0 2px 6px rgba(0,0,0,.25); }
+.cl-piece:hover { outline: 2px solid #4b2bff; outline-offset: -2px; }
+.cl-ui { position: absolute; inset: 0; pointer-events: none; z-index: 10000; }
+.cl-ui span { position: absolute; font: 15px/1.2 var(--sans); color: #111; background: #fff; padding: 2px 6px; }
 .cl-ui .tl { left: 42px; top: 18px; font: 500 clamp(22px, 3vw, 40px)/1 var(--sans); letter-spacing: -.02em; text-transform: uppercase; }
 .cl-ui .tr { right: 42px; top: 22px; }
 .cl-ui .br { right: 42px; bottom: 18px; font-size: 13px; color: #777; }
