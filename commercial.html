@@ -65,32 +65,31 @@
 
 <footer>© Polina Zinziver · <a href="index.html">artistic practice →</a></footer>
 
-<script type="module">
-  import { floatScene } from './commercial/float-scene.js?v=20261006a';
+<script>
+(function () {
   // Centre logo: the 20 versions cycle on their own, grouped by typeface (Robbery, Kinky, Saint, Mirabela),
   // a new one every 1.5 s; the mouse over the logo holds the current version.
   const logo = document.getElementById('intro-logo'), logoImg = logo.querySelector('img');
   const ORDER = [3, 2, 7, 13, 14, 16, 17, 18, 19, 20, 5, 8, 9, 10, 12, 15, 4, 6, 1, 11];
   const N = ORDER.length, url = (i) => 'commercial/img/logo/zz-' + String(ORDER[i]).padStart(2, '0') + '.webp?v=3';
-  let cur = 0, timer = 0, ready = 0, logoVisible = true, held = false;
-  const pics = [];
+  let cur = 0, timer = 0, logoVisible = true, held = false;
+  // Preload right away (not after the heavy 3D models): each version is only ~50 KB.
+  const pics = ORDER.map((_, i) => { const im = new Image(); im.src = url(i); return im; });
   function startLogo() {
-    if (timer || held || ready < N || !logoVisible || document.hidden) return;
-    timer = setInterval(() => { cur = (cur + 1) % N; logoImg.src = pics[cur] ? pics[cur].src : url(cur); }, 1500);
+    if (timer || held || !logoVisible || document.hidden) return;
+    timer = setInterval(() => { cur = (cur + 1) % N; logoImg.src = pics[cur].src; }, 1500);
   }
   function stopLogo() { clearInterval(timer); timer = 0; }
-  setTimeout(() => { ready = N; startLogo(); }, 6000);   // start anyway on a slow connection
-  window.addEventListener('load', () => {
-    for (let i = 0; i < N; i++) {
-      const im = new Image(); pics[i] = im;
-      im.onload = im.onerror = () => { ready++; startLogo(); };
-      im.src = url(i);
-    }
-  });
   new IntersectionObserver((e) => { logoVisible = e[0].isIntersecting; logoVisible ? startLogo() : stopLogo(); }).observe(logo);
   document.addEventListener('visibilitychange', () => document.hidden ? stopLogo() : startLogo());
-  logo.addEventListener('pointerenter', (e) => { if (e.pointerType === 'mouse') { held = true; stopLogo(); } });
-  logo.addEventListener('pointerleave', (e) => { if (e.pointerType === 'mouse') { held = false; startLogo(); } });
+  // Hold only while the mouse really moves over the logo (a resting cursor under it doesn't count).
+  logo.addEventListener('pointermove', (e) => { if (e.pointerType === 'mouse' && !held) { held = true; stopLogo(); } });
+  logo.addEventListener('pointerleave', (e) => { if (e.pointerType === 'mouse' && held) { held = false; startLogo(); } });
+  startLogo();
+})();
+</script>
+<script type="module">
+  import { floatScene } from './commercial/float-scene.js?v=20261006a';
   floatScene(document.getElementById('intro-stage'), [
     { url: 'commercial/models/hero/shr-sun-man.glb', name: 'Sun Man', tag: 'Sacred Hyper Race', href: 'commercial/sacred-hyper-race.html', weight: 1.5 },
     { url: 'commercial/models/hero/nr-bag.glb', name: 'Bag', tag: 'Nina Ricci', href: 'commercial/nina-ricci.html' },
@@ -119,7 +118,7 @@
     { url: 'commercial/models/hero/hs-soap.glb', norm: true, name: 'Soap', tag: 'HOROSOAPS', href: 'commercial/horosoaps.html', shine: 0.1 },
     { url: 'commercial/models/hero/cl-charm.glb', norm: true, name: 'Charm', tag: 'Clara Luciani', href: 'commercial/clara-luciani.html' },
     { url: 'commercial/models/xm-perfume.glb', norm: true, name: 'LOEWE 001', tag: 'LOEWE', href: 'commercial/loewe.html', weight: 2 },
-  ], { keepOut: logo });
+  ], { keepOut: document.getElementById('intro-logo') });
 </script>
 <script src="site.js?v=20261005l"></script>
 </body>
