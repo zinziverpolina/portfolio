@@ -26,7 +26,7 @@ export function collage(stage, sources) {
     const el = document.createElement('img');
     el.className = 'cl-piece'; el.alt = ''; el.draggable = false;
     stage.appendChild(el);
-    const it = { el, p: null, x, y, w, tx: x, ty: y, tw: w, r: rnd(10, 28), ph: rnd(0, Math.PI * 2), sp: rnd(0.12, 0.3) * (Math.random() < 0.5 ? -1 : 1) };
+    const it = { el, p: null, x, y, w, tx: x, ty: y, tw: w, r: rnd(6, 16), ph: rnd(0, Math.PI * 2), sp: rnd(0.06, 0.15) * (Math.random() < 0.5 ? -1 : 1) };
     setPoster(it, p); it.el.style.zIndex = z;
     return it;
   }
@@ -88,8 +88,8 @@ export function collage(stage, sources) {
     if (pointer && !dragged) {
       const mx = x - pointer[0], my = y - pointer[1];
       for (const it of tiles) {
-        const d = Math.hypot(it.x + (it.px || 0) - x, it.y + (it.py || 0) - y), R = 380;
-        if (d < R) { const k = (1 - d / R) * 0.9; it.vx = (it.vx || 0) + mx * k; it.vy = (it.vy || 0) + my * k; }
+        const d = Math.hypot(it.x + (it.px || 0) - x, it.y + (it.py || 0) - y), R = 480;
+        if (d < R) { const k = (1 - d / R) * 0.55; it.ix = (it.ix || 0) + mx * k; it.iy = (it.iy || 0) + my * k; }
       }
     }
     pointer = [x, y];
@@ -133,9 +133,12 @@ export function collage(stage, sources) {
       const ease = it === dragged ? 0.35 : 0.035;   // a grabbed poster keeps up with the hand
       it.x += (it.tx - it.x) * ease; it.y += (it.ty - it.y) * ease; it.w += (it.tw - it.w) * ease;
       // Carried along the cursor's path, then slowly drifting back home.
-      it.px = (it.px || 0) + (it.vx || 0) * 0.25; it.py = (it.py || 0) + (it.vy || 0) * 0.25;
-      it.vx = (it.vx || 0) * 0.82; it.vy = (it.vy || 0) * 0.82;
-      it.px *= 0.985; it.py *= 0.985;
+      // The hand's push arrives gradually (ix → vx), so posters ease into motion instead of jerking.
+      const ix = it.ix || 0, iy = it.iy || 0;
+      it.vx = (it.vx || 0) + ix * 0.06; it.vy = (it.vy || 0) + iy * 0.06; it.ix = ix * 0.94; it.iy = iy * 0.94;
+      it.px = (it.px || 0) + it.vx * 0.2; it.py = (it.py || 0) + it.vy * 0.2;
+      it.vx *= 0.9; it.vy *= 0.9;
+      it.px *= 0.988; it.py *= 0.988;
       const a = t * it.sp + it.ph, r = it === dragged ? 0 : it.r;
       const cx = it.x + it.px + Math.cos(a) * r, cy = it.y + it.py + Math.sin(a) * r * 0.8;
       it.el.style.width = it.w.toFixed(1) + 'px';
