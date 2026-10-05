@@ -53,8 +53,12 @@ export function collage(stage, sources) {
         };
       }));
     }
-    tiles.forEach((t) => t.el.remove());
-    tiles = layouts[0].map((s) => make(s.p, s.x, s.y, s.w, s.z));
+    // First time: put posters straight into the first layout. Later rebuilds (more posters loaded,
+    // window resized) only change the targets, so the posters glide there instead of jumping.
+    if (!tiles.length) { tiles = layouts[0].map((s) => make(s.p, s.x, s.y, s.w, s.z)); return; }
+    while (tiles.length < n) { const s = layouts[0][tiles.length]; tiles.push(make(s.p, s.x, s.y, s.w, s.z)); }
+    while (tiles.length > n) tiles.pop().el.remove();
+    queue = [];
   }
 
   // The loop through layouts: one poster at a time glides to its place in the next layout.
@@ -118,9 +122,9 @@ export function collage(stage, sources) {
     ready = true;
     buildLayouts();
     run(visible);
-    setTimeout(() => { run(false); buildLayouts(); run(visible); }, 4000);   // posters loaded later join in
+    setTimeout(buildLayouts, 4000);   // posters loaded later join the next layouts
   }
   new IntersectionObserver((en) => { visible = en[0].isIntersecting; run(visible); }).observe(stage);
   let rz;
-  new ResizeObserver(() => { clearTimeout(rz); rz = setTimeout(() => { if (ready) { run(false); buildLayouts(); run(visible); } }, 200); }).observe(stage);
+  new ResizeObserver(() => { clearTimeout(rz); rz = setTimeout(() => { if (ready) buildLayouts(); }, 200); }).observe(stage);
 }
