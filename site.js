@@ -96,6 +96,7 @@
 (function () {
   if (!/[?&]pick\b/.test(location.search) && !document.querySelector('.draft-note')) return;
   var s = document.createElement('script');
-  s.src = new URL('picker.js', document.currentScript ? document.currentScript.src : location.href).href;
+  // Always fetched fresh: it's small, only loads in review mode, and a cached copy hid the video checkboxes once.
+  s.src = new URL('picker.js?t=' + Date.now(), document.currentScript ? document.currentScript.src : location.href).href;
   document.body.appendChild(s);
 })();
