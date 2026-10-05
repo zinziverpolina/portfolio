@@ -88,7 +88,7 @@ export function collage(stage, sources) {
     if (pointer && !dragged) {
       const mx = x - pointer[0], my = y - pointer[1];
       for (const it of tiles) {
-        const d = Math.hypot(it.x + (it.px || 0) - x, it.y + (it.py || 0) - y), R = 480;
+        const d = Math.hypot(it.x + (it.px || 0) - x, it.y + (it.py || 0) - y), R = 760;
         if (d < R) { const k = (1 - d / R) * 0.55; it.ix = (it.ix || 0) + mx * k; it.iy = (it.iy || 0) + my * k; }
       }
     }
