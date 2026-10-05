@@ -53,7 +53,7 @@
 <div class="shr-hero" id="intro-stage" aria-label="Objects from Sacred Hyper Race, Nina Ricci, LOEWE SS22 and LOEWE Christmas floating in zero gravity. Hover to see the project, click an object to open it, drag to move.">
   <canvas></canvas>
   <div class="intro-logo" id="intro-logo">
-    <div class="logo-stack"><img class="a" src="commercial/img/logo/zz-03.webp" alt="Polina Zinziver" width="1000" height="190" decoding="async"><img class="b" src="commercial/img/logo/zz-04.webp" alt="" width="1000" height="190" decoding="async"></div>
+    <div class="logo-stack"><img class="a" src="commercial/img/logo/zz-03.webp?v=2" alt="Polina Zinziver" width="1000" height="190" decoding="async"><img class="b" src="commercial/img/logo/zz-04.webp?v=2" alt="" width="1000" height="190" decoding="async"></div>
     <div class="logo-slider"><input type="range" id="logo-range" min="0" max="19" step="0.01" value="2" aria-label="Версия логотипа"><span class="logo-n" id="logo-n">03 / 20</span></div>
   </div>
   <div class="shr-frames"></div>
@@ -74,7 +74,7 @@
   // a mouse hover (tap on touch screens) moves on to the next version.
   const logo = document.getElementById('intro-logo'), range = document.getElementById('logo-range'), counter = document.getElementById('logo-n');
   const imgA = logo.querySelector('img.a'), imgB = logo.querySelector('img.b');
-  const N = 20, url = (i) => 'commercial/img/logo/zz-' + String(i % N + 1).padStart(2, '0') + '.webp';
+  const N = 20, url = (i) => 'commercial/img/logo/zz-' + String(i % N + 1).padStart(2, '0') + '.webp?v=2';
   function show(v) {
     v = Math.max(0, Math.min(N - 1, v));
     const i = Math.floor(v), f = v - i;
