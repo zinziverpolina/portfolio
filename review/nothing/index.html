@@ -1,0 +1,140 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>Nothing — AD Review</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Doto:wght@700;900&family=Inter:wght@400;500;600&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #f4f4f2; --card: #ffffff; --ink: #111; --muted: #6b6b6b; --line: #dcdcd8;
+    --red: #d71921; --ok: #111; --okbg: #e9e9e6; 
+  }
+  @media (prefers-color-scheme: dark) {
+    :root { --bg: #0b0b0b; --card: #151515; --ink: #f2f2f2; --muted: #9a9a9a; --line: #2a2a2a;
+            --red: #ff3b3b; --ok: #f2f2f2; --okbg: #222; }
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; background: var(--bg); color: var(--ink); }
+  body { font: 15px/1.5 Inter, system-ui, sans-serif; -webkit-font-smoothing: antialiased; }
+  .wrap { max-width: 1120px; margin: 0 auto; padding: 0 16px 120px; }
+  .mono { font-family: "Space Mono", ui-monospace, monospace; letter-spacing: .02em; }
+
+  header { padding: 56px 0 32px; border-bottom: 1px solid var(--line); }
+  header h1 { font: 900 clamp(40px, 8vw, 84px)/.95 Doto, "Space Mono", monospace; margin: 0 0 18px; text-transform: uppercase; }
+  header h1 span { color: var(--red); }
+  header p { margin: 0; color: var(--muted); max-width: 640px; }
+  .meta { display: flex; gap: 18px; flex-wrap: wrap; margin-top: 18px; font-size: 12px; color: var(--muted); text-transform: uppercase; }
+  nav.toc { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 24px; }
+  nav.toc a { color: var(--ink); text-decoration: none; border: 1px solid var(--line); border-radius: 999px; padding: 6px 14px; font-size: 13px; }
+  nav.toc a:hover { border-color: var(--ink); }
+
+  section.block { padding: 56px 0 8px; border-bottom: 1px solid var(--line); scroll-margin-top: 16px; }
+  .block-head { display: flex; align-items: baseline; gap: 16px; margin-bottom: 28px; }
+  .block-head .num { font: 900 56px/1 Doto, monospace; color: var(--red); }
+  .block-head h2 { font: 700 clamp(26px, 4vw, 36px)/1.1 "Space Mono", monospace; margin: 0; text-transform: uppercase; }
+
+  .item { background: var(--card); border: 1px solid var(--line); border-radius: 18px; padding: 22px; margin-bottom: 20px; }
+  .item-head { display: flex; justify-content: space-between; align-items: center; gap: 12px; flex-wrap: wrap; margin-bottom: 6px; }
+  .item-head h3 { margin: 0; font: 700 14px/1.3 "Space Mono", monospace; text-transform: uppercase; }
+  .goal { margin: 0 0 18px; color: var(--muted); }
+  .tag { font: 700 11px/1 "Space Mono", monospace; text-transform: uppercase; padding: 6px 10px; border-radius: 999px; white-space: nowrap; }
+  .tag.ok { background: var(--okbg); color: var(--ok); }
+  .tag.ok::before { content: "● "; }
+  .tag.todo { background: var(--red); color: #fff; }
+
+  .media { display: flex; justify-content: center; }
+  .media video, .media img { display: block; width: 100%; max-width: 380px; border-radius: 12px; background: #000; }
+  .options { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 16px; }
+  .opt { position: relative; display: block; border-radius: 14px; }
+  .opt img { display: block; width: 100%; aspect-ratio: 9/16; object-fit: cover; border-radius: 12px; background: #000; }
+  .opt .letter { position: absolute; top: 10px; left: 10px; width: 38px; height: 38px; border-radius: 50%; background: rgba(0,0,0,.6); color: #fff;
+                 display: grid; place-items: center; font: 900 22px/1 Doto, monospace; }
+  .zoom { position: absolute; bottom: 10px; right: 10px; border: 0; border-radius: 999px; padding: 6px 10px; background: rgba(0,0,0,.6); color: #fff;
+          font: 11px "Space Mono", monospace; cursor: zoom-in; }
+
+  #lb { position: fixed; inset: 0; background: rgba(0,0,0,.92); display: none; place-items: center; z-index: 10; cursor: zoom-out; padding: 16px; }
+  #lb.on { display: grid; }
+  #lb img { max-width: 100%; max-height: 100%; border-radius: 8px; }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header>
+  <h1>Nothing<span>.</span><br>AD Review</h1>
+  <p>Three videos — headphones, phone, earbuds. Items marked red need your feedback; grey ones are already approved.</p>
+  <div class="meta mono"><span>Polina Zinziver</span><span>5 Oct 2026</span></div>
+  <nav class="toc"><a href="#headphones">01 Headphones</a><a href="#phone">02 Phone</a><a href="#earbuds">03 Earbuds</a></nav>
+</header>
+
+<!-- 01 HEADPHONES -->
+<section class="block" id="headphones">
+  <div class="block-head"><span class="num">01</span><h2>Headphones</h2></div>
+
+  <div class="item">
+    <div class="item-head"><h3>Camera movement</h3><span class="tag ok">Approved</span></div>
+    <p class="goal">Camera movement is approved — this is how it plays.</p>
+    <div class="media"><video src="headphones/camera.mp4" autoplay muted loop playsinline controls preload="metadata"></video></div>
+  </div>
+
+  <div class="item">
+    <div class="item-head"><h3>First frame · background</h3><span class="tag ok">Approved</span></div>
+    <p class="goal">The background still for the first frame is approved.</p>
+    <div class="media"><img src="headphones/first-frame.webp" alt="Approved first frame: white rocks, trees and lake" data-zoom></div>
+  </div>
+
+  <div class="item">
+    <div class="item-head"><h3>Headphones on the grass</h3><span class="tag todo">Pick one</span></div>
+    <p class="goal">Please choose one of the three headphone stills — A, B or C.</p>
+    <div class="options">
+      <div class="opt"><img src="headphones/option-a.webp" alt="Option A: burnt headphones shape" data-zoom><span class="letter">A</span><button type="button" class="zoom" data-src="headphones/option-a.webp">view</button></div>
+      <div class="opt"><img src="headphones/option-b.webp" alt="Option B: burnt round swirl" data-zoom><span class="letter">B</span><button type="button" class="zoom" data-src="headphones/option-b.webp">view</button></div>
+      <div class="opt"><img src="headphones/option-c.webp" alt="Option C: straw crop-circle headphones" data-zoom><span class="letter">C</span><button type="button" class="zoom" data-src="headphones/option-c.webp">view</button></div>
+    </div>
+  </div>
+</section>
+
+<!-- 02 PHONE -->
+<section class="block" id="phone">
+  <div class="block-head"><span class="num">02</span><h2>Phone</h2></div>
+
+  <div class="item">
+    <div class="item-head"><h3>Final HQ render</h3><span class="tag todo">Review</span></div>
+    <p class="goal">Final HQ render — are you happy with the light, color and details?</p>
+    <div class="media"><video src="phone/hq.mp4" autoplay muted loop playsinline controls preload="metadata"></video></div>
+  </div>
+</section>
+
+<!-- 03 EARBUDS -->
+<section class="block" id="earbuds">
+  <div class="block-head"><span class="num">03</span><h2>Earbuds</h2></div>
+
+  <div class="item">
+    <div class="item-head"><h3>Camera &amp; particle trails</h3><span class="tag todo">Review</span></div>
+    <p class="goal">How do the camera move and the particle trails behind the earbuds feel — what would you change, or should I proceed at my discretion?</p>
+    <div class="media"><video src="earbuds/preview.mp4" autoplay muted loop playsinline controls preload="metadata"></video></div>
+  </div>
+</section>
+
+</div>
+
+<div id="lb"><img alt=""></div>
+
+<script>
+(function () {
+  var lb = document.getElementById('lb'), lbImg = lb.querySelector('img');
+  function open(src) { lbImg.src = src; lb.classList.add('on'); }
+  document.querySelectorAll('[data-zoom]').forEach(function (i) { i.style.cursor = 'zoom-in'; i.addEventListener('click', function () { open(i.src); }); });
+  document.querySelectorAll('.zoom').forEach(function (b) {
+    b.addEventListener('click', function (e) { e.preventDefault(); e.stopPropagation(); open(b.dataset.src); });
+  });
+  lb.addEventListener('click', function () { lb.classList.remove('on'); });
+  document.addEventListener('keydown', function (e) { if (e.key === 'Escape') lb.classList.remove('on'); });
+})();
+</script>
+</body>
+</html>
