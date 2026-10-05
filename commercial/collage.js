@@ -15,23 +15,47 @@ export function collage(stage, sources) {
   let ready = false;
 
   // Originals at full quality; a random selection is enough for the stage.
-  [...sources].sort(() => Math.random() - 0.5).slice(0, 64).forEach((img) => {
-    const thumb = img.getAttribute('src');
+  // Originals at full quality; a random selection is enough for the stage. Videos join as muted
+  // loops (their poster frame gives the size); only a few play on stage at once.
+  const MAX_VIDEOS = 4;
+  [...sources].sort(() => Math.random() - 0.5).slice(0, 64).forEach((node) => {
+    const video = node.tagName === 'VIDEO';
+    const thumb = node.getAttribute('src');
     const pre = new Image();
-    pre.onload = () => { pool.push({ thumb, ar: pre.naturalWidth / pre.naturalHeight, target: img }); if (!ready && pool.length >= 8) start(); };
-    pre.src = thumb;
+    pre.onload = () => { pool.push({ thumb, video, ar: pre.naturalWidth / pre.naturalHeight, target: node }); if (!ready && pool.length >= 8) start(); };
+    pre.src = video ? node.getAttribute('poster') : thumb;
   });
+  const playing = () => tiles.filter((t) => t.p && t.p.video).length;
+  // A video poster only when there is room for one more playing loop.
+  const usable = (p, it) => !p.video || (it && it.p && it.p.video) || playing() < MAX_VIDEOS;
 
   // Every poster on stage: where it is now (x, y, w), where it is heading (tx, ty, tw), and its own circle.
+  function element(p) {
+    const el = document.createElement(p.video ? 'video' : 'img');
+    el.className = 'cl-piece'; el.draggable = false;
+    if (p.video) { el.muted = true; el.loop = true; el.playsInline = true; el.autoplay = true; el.setAttribute('muted', ''); el.poster = p.target.getAttribute('poster'); }
+    else el.alt = '';
+    return el;
+  }
   function make(p, x, y, w, z) {
-    const el = document.createElement('img');
-    el.className = 'cl-piece'; el.alt = ''; el.draggable = false;
+    const el = element(p);
     stage.appendChild(el);
     const it = { el, p: null, x, y, w, tx: x, ty: y, tw: w, r: rnd(6, 16), ph: rnd(0, Math.PI * 2), sp: rnd(0.06, 0.15) * (Math.random() < 0.5 ? -1 : 1) };
     setPoster(it, p); it.el.style.zIndex = z;
     return it;
   }
-  function setPoster(it, p) { if (it.p !== p) { it.p = p; it.el.src = p.thumb; } }
+  function setPoster(it, p) {
+    if (it.p === p) return;
+    if (!it.p || it.p.video !== p.video) {   // image ↔ video: swap the element, keep its place on stage
+      const el = element(p);
+      el.style.cssText = it.el.style.cssText;
+      if (it.el.parentNode) it.el.replaceWith(el);
+      if (it.el.tagName === 'VIDEO') it.el.removeAttribute('src');
+      it.el = el;
+    }
+    it.p = p; it.el.src = p.thumb;
+    if (p.video) it.el.play().catch(() => {});
+  }
 
   let tiles = [], layouts = [];
   function buildLayouts() {
@@ -50,7 +74,11 @@ export function collage(stage, sources) {
     const n = cols * rows;
     layouts = [];
     for (let l = 0; l < LAYOUTS; l++) {
-      const order = [...pool].sort(() => Math.random() - 0.5);
+      // Each layout: shuffled images with at most a few videos mixed in.
+      const imgs = pool.filter((q) => !q.video).sort(() => Math.random() - 0.5);
+      const vids = pool.filter((q) => q.video).sort(() => Math.random() - 0.5).slice(0, MAX_VIDEOS);
+      const order = imgs.length ? imgs : [...vids];
+      vids.forEach((v) => order.splice(Math.floor(Math.random() * Math.min(order.length, n)), 0, v));
       layouts.push(Array.from({ length: n }, (_, i) => {
         const p = order[i % order.length], w = size(p), h = w / p.ar;
         const cx = ((i % cols) + 0.5) / cols * W + rnd(-S * 0.2, S * 0.2);
@@ -77,6 +105,7 @@ export function collage(stage, sources) {
     const i = queue.pop(), s = layouts[layout][i], t = tiles[i];
     if (!s || !t) return;
     if (t === dragged) return;
+    if (!usable(s.p, t)) return;   // too many loops playing: this one waits for its next turn
     setPoster(t, s.p); t.tx = s.x; t.ty = s.y; t.tw = s.w; t.el.style.zIndex = ++zTop;   // a poster that changes always lands on top
   }
 
@@ -145,7 +174,7 @@ export function collage(stage, sources) {
       it.px *= 0.988; it.py *= 0.988;
       const a = t * it.sp + it.ph, r = it === dragged ? 0 : it.r;
       const cx = it.x + it.px + Math.cos(a) * r, cy = it.y + it.py + Math.sin(a) * r * 0.8;
-      it.el.style.width = it.w.toFixed(1) + 'px';
+      it.el.style.width = it.w.toFixed(1) + 'px'; it.el.style.height = (it.w / it.p.ar).toFixed(1) + 'px';
       it.el.style.transform = `translate(${(cx - it.w / 2).toFixed(1)}px, ${(cy - it.w / it.p.ar / 2).toFixed(1)}px)`;
     }
   }
