@@ -67,14 +67,16 @@
 
 <script type="module">
   import { floatScene } from './commercial/float-scene.js?v=20261006a';
-  // Centre logo: the 20 versions cycle on their own, a new one every half second (no mouse interaction yet).
+  // Centre logo: the 20 versions cycle on their own, grouped by typeface (Robbery, Kinky, Saint, Mirabela),
+  // a new one every 1.5 s; the mouse over the logo holds the current version.
   const logo = document.getElementById('intro-logo'), logoImg = logo.querySelector('img');
-  const N = 20, url = (i) => 'commercial/img/logo/zz-' + String(i + 1).padStart(2, '0') + '.webp?v=3';
-  let cur = 2, timer = 0, ready = 0, logoVisible = true;
+  const ORDER = [3, 2, 7, 13, 14, 16, 17, 18, 19, 20, 5, 8, 9, 10, 12, 15, 4, 6, 1, 11];
+  const N = ORDER.length, url = (i) => 'commercial/img/logo/zz-' + String(ORDER[i]).padStart(2, '0') + '.webp?v=3';
+  let cur = 0, timer = 0, ready = 0, logoVisible = true, held = false;
   const pics = [];
   function startLogo() {
-    if (timer || ready < N || !logoVisible || document.hidden) return;
-    timer = setInterval(() => { cur = (cur + 1) % N; logoImg.src = pics[cur].src; }, 500);
+    if (timer || held || ready < N || !logoVisible || document.hidden) return;
+    timer = setInterval(() => { cur = (cur + 1) % N; logoImg.src = pics[cur] ? pics[cur].src : url(cur); }, 1500);
   }
   function stopLogo() { clearInterval(timer); timer = 0; }
   setTimeout(() => { ready = N; startLogo(); }, 6000);   // start anyway on a slow connection
@@ -87,6 +89,8 @@
   });
   new IntersectionObserver((e) => { logoVisible = e[0].isIntersecting; logoVisible ? startLogo() : stopLogo(); }).observe(logo);
   document.addEventListener('visibilitychange', () => document.hidden ? stopLogo() : startLogo());
+  logo.addEventListener('pointerenter', (e) => { if (e.pointerType === 'mouse') { held = true; stopLogo(); } });
+  logo.addEventListener('pointerleave', (e) => { if (e.pointerType === 'mouse') { held = false; startLogo(); } });
   floatScene(document.getElementById('intro-stage'), [
     { url: 'commercial/models/hero/shr-sun-man.glb', name: 'Sun Man', tag: 'Sacred Hyper Race', href: 'commercial/sacred-hyper-race.html', weight: 1.5 },
     { url: 'commercial/models/hero/nr-bag.glb', name: 'Bag', tag: 'Nina Ricci', href: 'commercial/nina-ricci.html' },
