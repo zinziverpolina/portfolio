@@ -5,6 +5,7 @@
 //   pick: node names to keep from the file (to show one piece of a multi-object model)
 //   tint: { material, color } recolours one material of this copy
 //   norm: scale a full-size file down to about one unit
+//   shine: roughness for every material of this copy (0.1 = glossy like the apples)
 import * as THREE from 'three';
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 import { RoomEnvironment } from 'three/addons/environments/RoomEnvironment.js';
@@ -104,7 +105,13 @@ export function floatScene(hero, MODELS) {
       const model = gltf.scene;
       if (m.pick) for (const c of [...model.children]) if (!m.pick.includes(c.name)) model.remove(c);
       if (m.tint) model.traverse((o) => {
-        if (o.isMesh && o.material && o.material.name === m.tint.material) { o.material = o.material.clone(); o.material.color.set(m.tint.color); }
+        if (o.isMesh && o.material && o.material.name === m.tint.material) {
+          o.material = o.material.clone();
+          if (Array.isArray(m.tint.color)) o.material.color.setRGB(...m.tint.color); else o.material.color.set(m.tint.color);
+        }
+      });
+      if (m.shine != null) model.traverse((o) => {   // glossy like the apples
+        if (o.isMesh && o.material) { o.material = o.material.clone(); o.material.roughness = m.shine; o.material.metalness = 0; }
       });
       if (m.norm) {   // full-size source files: scale to about one unit like the hero copies
         const s0 = new THREE.Box3().setFromObject(model).getSize(new THREE.Vector3());
