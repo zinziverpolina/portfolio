@@ -26,7 +26,7 @@ export function collage(stage, sources) {
     const el = document.createElement('img');
     el.className = 'cl-piece'; el.alt = ''; el.draggable = false;
     stage.appendChild(el);
-    const it = { el, p: null, x, y, w, tx: x, ty: y, tw: w, r: rnd(18, 60), ph: rnd(0, Math.PI * 2), sp: rnd(0.12, 0.3) * (Math.random() < 0.5 ? -1 : 1) };
+    const it = { el, p: null, x, y, w, tx: x, ty: y, tw: w, r: rnd(10, 28), ph: rnd(0, Math.PI * 2), sp: rnd(0.12, 0.3) * (Math.random() < 0.5 ? -1 : 1) };
     setPoster(it, p); it.el.style.zIndex = z;
     return it;
   }
@@ -35,19 +35,26 @@ export function collage(stage, sources) {
   let tiles = [], layouts = [];
   function buildLayouts() {
     const W = stage.clientWidth, H = stage.clientHeight;
-    const cell = Math.max(300, Math.min(520, Math.sqrt(W * H / 4.5)));
-    const cols = Math.ceil(W / cell) + 1, rows = Math.ceil(H / cell) + 1, n = cols * rows;
-    const gx = W / (cols - 1), gy = H / (rows - 1);
+    // Every poster gets about the same area, medium-sized, and always fits whole inside the stage.
+    const S = Math.min(H * 0.55, W * 0.42);
+    const size = (p) => {
+      let w = S * Math.sqrt(p.ar) * rnd(0.94, 1.06), h = w / p.ar;
+      const k = Math.min(1, (H * 0.9) / h, (W * 0.7) / w);
+      return w * k;
+    };
+    const cols = Math.max(2, Math.round(W / (S * 0.75))), rows = Math.max(2, Math.round(H / (S * 0.75)));
+    const n = cols * rows;
     layouts = [];
     for (let l = 0; l < LAYOUTS; l++) {
       const order = [...pool].sort(() => Math.random() - 0.5);
       layouts.push(Array.from({ length: n }, (_, i) => {
-        const p = order[i % order.length];
+        const p = order[i % order.length], w = size(p), h = w / p.ar;
+        const cx = ((i % cols) + 0.5) / cols * W + rnd(-S * 0.2, S * 0.2);
+        const cy = (Math.floor(i / cols) + 0.5) / rows * H + rnd(-S * 0.2, S * 0.2);
         return {
-          p, z: Math.floor(rnd(1, 100)),
-          x: (i % cols) * gx + rnd(-cell * 0.3, cell * 0.3),
-          y: Math.floor(i / cols) * gy + rnd(-cell * 0.3, cell * 0.3),
-          w: cell * rnd(1.3, 1.8) * Math.min(1.3, Math.max(0.8, Math.sqrt(p.ar))),
+          p, w, z: Math.floor(rnd(1, 100)),
+          x: Math.min(Math.max(cx, w / 2 + 6), W - w / 2 - 6),
+          y: Math.min(Math.max(cy, h / 2 + 6), H - h / 2 - 6),
         };
       }));
     }
