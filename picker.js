@@ -1,15 +1,15 @@
-// Photo selection mode for reviewing pages: on draft pages it starts by itself, on any other page add ?pick to the address.
-// Every photo gets a checkbox in its corner: ticked = keep it on the site, unticked = remove. Clicking the photo itself
-// still opens it large. Ticks are remembered in this browser per page; "copy list" / "download" export every page
+// Photo and video selection mode for reviewing pages: on draft pages it starts by itself, on any other page add ?pick to the address.
+// Every photo and video gets a checkbox in its top-left corner: ticked = keep it on the site, unticked = remove. Clicking
+// the photo itself still opens it large, videos keep their own controls. Ticks are remembered in this browser per page; "copy list" / "download" export every page
 // reviewed here, to send back.
 (function () {
-  var imgs = Array.prototype.filter.call(document.querySelectorAll('section.slide img'), function (i) { return !i.closest('.projects'); });
+  var imgs = Array.prototype.filter.call(document.querySelectorAll('section.slide img, section.slide video'), function (i) { return !i.closest('.projects'); });
   if (!imgs.length) return;
   var page = location.pathname.replace(/^.*\/portfolio\//, '').replace(/^\//, '');
   var KEY = 'pick:' + page, PAGES = 'pick:pages';
   function load(k, d) { try { return JSON.parse(localStorage.getItem(k)) || d; } catch (e) { return d; } }
   function store(k, v) { try { localStorage.setItem(k, JSON.stringify(v)); } catch (e) {} }
-  var src = function (i) { return i.getAttribute('src'); };
+  var src = function (i) { return i.getAttribute('src') || (i.querySelector('source') || {getAttribute: function () { return ''; }}).getAttribute('src'); };
   var label = function (i) { var c = i.closest('figure') && i.closest('figure').querySelector('figcaption'); return c ? c.textContent.split(' · ')[0] : src(i).split('/').pop(); };
   var keep = new Set(load(KEY, []));
   document.documentElement.classList.add('picking');
@@ -21,7 +21,7 @@
   var boxes = imgs.map(function (img) {
     var box = document.createElement('label');
     box.className = 'pick-box';
-    box.title = 'keep this photo';
+    box.title = img.tagName === 'VIDEO' ? 'keep this video' : 'keep this photo';
     box.innerHTML = '<input type="checkbox"><span></span>';
     var input = box.firstChild;
     input.checked = keep.has(src(img));
@@ -62,7 +62,8 @@
   }
   function paint() {
     boxes.forEach(function (b) { var k = keep.has(src(b.img)); b.input.checked = k; b.img.classList.toggle('kept', k); b.box.classList.toggle('on', k); });
-    n.textContent = keep.size + ' of ' + imgs.length + ' ticked to keep';
+    var nv = imgs.filter(function (i) { return i.tagName === 'VIDEO'; }), kv = nv.filter(function (i) { return keep.has(src(i)); }).length;
+    n.textContent = (keep.size - kv) + ' of ' + (imgs.length - nv.length) + ' photos' + (nv.length ? ', ' + kv + ' of ' + nv.length + ' videos' : '') + ' ticked to keep';
   }
   function exportText() {
     var pages = load(PAGES, {}), out = [];
