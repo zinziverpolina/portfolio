@@ -12,7 +12,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Arimo:ital,wght@0,400;0,700;1,400&family=Tinos:ital,wght@0,400;0,700;1,400;1,700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="style.css?v=20261006b">
+<link rel="stylesheet" href="style.css?v=20261006c">
 <script type="importmap">{"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.169.0/build/three.module.js","three/addons/":"https://cdn.jsdelivr.net/npm/three@0.169.0/examples/jsm/","cannon-es":"https://cdn.jsdelivr.net/npm/cannon-es@0.20.0/dist/cannon-es.js"}}</script>
 </head>
 <body class="intro-page">
@@ -52,10 +52,7 @@
 
 <div class="shr-hero" id="intro-stage" aria-label="Objects from Sacred Hyper Race, Nina Ricci, LOEWE SS22 and LOEWE Christmas floating in zero gravity. Hover to see the project, click an object to open it, drag to move.">
   <canvas></canvas>
-  <div class="intro-logo" id="intro-logo">
-    <div class="logo-stack"><img class="a" src="commercial/img/logo/zz-03.webp?v=2" alt="Polina Zinziver" width="1000" height="190" decoding="async"><img class="b" src="commercial/img/logo/zz-04.webp?v=2" alt="" width="1000" height="190" decoding="async"></div>
-    <div class="logo-slider"><input type="range" id="logo-range" min="0" max="19" step="0.01" value="2" aria-label="Версия логотипа"><span class="logo-n" id="logo-n">03 / 20</span></div>
-  </div>
+  <div class="intro-logo" id="intro-logo" aria-hidden="true"><img src="commercial/img/logo/zz-03.webp?v=3" alt="" decoding="async"></div>
   <div class="shr-frames"></div>
   <div class="shr-ui">
     <span class="tl">Polina Zinziver</span>
@@ -70,38 +67,26 @@
 
 <script type="module">
   import { floatScene } from './commercial/float-scene.js?v=20261006a';
-  // Centre logo: 20 versions; the slider fades the next one in over the current one,
-  // a mouse hover (tap on touch screens) moves on to the next version.
-  const logo = document.getElementById('intro-logo'), range = document.getElementById('logo-range'), counter = document.getElementById('logo-n');
-  const imgA = logo.querySelector('img.a'), imgB = logo.querySelector('img.b');
-  const N = 20, url = (i) => 'commercial/img/logo/zz-' + String(i % N + 1).padStart(2, '0') + '.webp?v=2';
-  function show(v) {
-    v = Math.max(0, Math.min(N - 1, v));
-    const i = Math.floor(v), f = v - i;
-    const a = url(i), b = url(Math.min(i + 1, N - 1));
-    if (imgA.getAttribute('src') !== a) imgA.src = a;
-    if (imgB.getAttribute('src') !== b) imgB.src = b;
-    imgB.style.opacity = f.toFixed(3);
-    counter.textContent = String(Math.round(v) + 1).padStart(2, '0') + ' / ' + N;
+  // Centre logo: the 20 versions cycle on their own, a new one every half second (no mouse interaction yet).
+  const logo = document.getElementById('intro-logo'), logoImg = logo.querySelector('img');
+  const N = 20, url = (i) => 'commercial/img/logo/zz-' + String(i + 1).padStart(2, '0') + '.webp?v=3';
+  let cur = 2, timer = 0, ready = 0, logoVisible = true;
+  const pics = [];
+  function startLogo() {
+    if (timer || ready < N || !logoVisible || document.hidden) return;
+    timer = setInterval(() => { cur = (cur + 1) % N; logoImg.src = pics[cur].src; }, 500);
   }
-  let anim = 0;
-  function glideTo(target) {
-    cancelAnimationFrame(anim);
-    const from = parseFloat(range.value), t0 = performance.now(), dur = matchMedia('(prefers-reduced-motion: reduce)').matches ? 1 : 420;
-    (function step(t) {
-      const k = Math.min(1, (t - t0) / dur), v = from + (target - from) * (1 - Math.pow(1 - k, 3));
-      range.value = v; show(v);
-      if (k < 1) anim = requestAnimationFrame(step);
-    })(t0);
-  }
-  range.addEventListener('input', () => { cancelAnimationFrame(anim); show(parseFloat(range.value)); });
-  range.addEventListener('change', () => glideTo(Math.round(parseFloat(range.value))));
-  const next = () => { const v = Math.round(parseFloat(range.value)); if (v >= N - 1) { range.value = 0; show(0); glideTo(0); } else glideTo(v + 1); };
-  logo.querySelector('.logo-stack').addEventListener('pointerenter', (e) => { if (e.pointerType === 'mouse') next(); });
-  logo.querySelector('.logo-stack').addEventListener('pointerdown', (e) => { if (e.pointerType !== 'mouse') next(); });
-  logo.addEventListener('pointerdown', (e) => e.stopPropagation());
-  show(2);
-  window.addEventListener('load', () => setTimeout(() => { for (let i = 0; i < N; i++) { const im = new Image(); im.decoding = 'async'; im.src = url(i); } }, 600));
+  function stopLogo() { clearInterval(timer); timer = 0; }
+  setTimeout(() => { ready = N; startLogo(); }, 6000);   // start anyway on a slow connection
+  window.addEventListener('load', () => {
+    for (let i = 0; i < N; i++) {
+      const im = new Image(); pics[i] = im;
+      im.onload = im.onerror = () => { ready++; startLogo(); };
+      im.src = url(i);
+    }
+  });
+  new IntersectionObserver((e) => { logoVisible = e[0].isIntersecting; logoVisible ? startLogo() : stopLogo(); }).observe(logo);
+  document.addEventListener('visibilitychange', () => document.hidden ? stopLogo() : startLogo());
   floatScene(document.getElementById('intro-stage'), [
     { url: 'commercial/models/hero/shr-sun-man.glb', name: 'Sun Man', tag: 'Sacred Hyper Race', href: 'commercial/sacred-hyper-race.html', weight: 1.5 },
     { url: 'commercial/models/hero/nr-bag.glb', name: 'Bag', tag: 'Nina Ricci', href: 'commercial/nina-ricci.html' },
