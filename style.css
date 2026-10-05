@@ -322,3 +322,8 @@ html.picking section.slide img.kept, html.picking section.slide video.kept { out
 .pick-bar button:hover { border-color: #111; }
 .pick-bar .msg { color: #3d85c6; font-size: 12px; }
 .pick-links { columns: 3; margin: 12px 0 0 10px; padding: 0 0 0 18px; font: 17px var(--serif); } .pick-links a { color: var(--link); } @media (max-width: 820px) { .pick-links { columns: 1; } }
+/* videos inside a masonry gallery (HYPERTRASH, Posters & covers) */
+.gallery .clip { margin-bottom: 16px; break-inside: avoid; }
+@media (max-width: 820px) { .gallery .clip { margin-bottom: 10px; } }
+/* 11 projects no longer fit one line on narrower desktops: wrap instead of pushing the page sideways */
+@media (min-width: 821px) { .topnav .tabs { flex-wrap: wrap; row-gap: 6px; } }
