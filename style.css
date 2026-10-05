@@ -381,3 +381,8 @@ body.page-dark footer { color: #777; }
 .stack-img.fit img { object-fit: contain; background: #f2efe9; }
 /* header menu: project names in capitals */
 .topnav .tabs > a, .topnav .dd-panel .projects .t { text-transform: uppercase; }
+/* in-page links between parts of a combined project (LOEWE) */
+.subnav { display: flex; flex-wrap: wrap; gap: 8px 28px; margin: 30px 0 0 10px; font-family: var(--serif); font-size: 21px; }
+.subnav a { color: var(--title); text-decoration: none; border-bottom: 1px solid #bbb; }
+.subnav a:hover { color: var(--ink); border-color: var(--ink); }
+html { scroll-padding-top: 100px; }
