@@ -1,7 +1,8 @@
 // Floating intro: models drift in zero gravity inside the hero, each in a poster-style frame.
 // Drag a model (or its frame) to move it, hover shows its tag, click a model to open its project,
 // click empty space to make them all jiggle.
-// floatScene(heroElement, [{ url, name, tag?, href?, weight?, pick?, tint? }, ...])
+// floatScene(heroElement, [{ url, name, tag?, href?, weight?, pick?, tint? }, ...], { keepOut? })
+//   keepOut: an element inside the hero (the intro logo) — models keep out of its box
 //   pick: node names to keep from the file (to show one piece of a multi-object model)
 //   tint: { material, color } recolours one material of this copy
 //   norm: scale a full-size file down to about one unit
@@ -14,7 +15,7 @@ import * as CANNON from 'cannon-es';
 const VIEW_H = 10;   // world units visible vertically
 const DEPTH = 2.5;   // half-depth of the box the models float in
 
-export function floatScene(hero, MODELS) {
+export function floatScene(hero, MODELS, opts = {}) {
   const canvas = hero.querySelector('canvas');
   const ui = hero.querySelector('.shr-frames');
 
@@ -46,6 +47,11 @@ export function floatScene(hero, MODELS) {
     return b;
   });
 
+  // Optional keep-out box (the intro logo): a static block the models bump against.
+  const zone = { x: 0, y: 0, hw: 0, hh: 0 };
+  const block = opts.keepOut ? new CANNON.Body({ type: CANNON.Body.STATIC }) : null;
+  if (block) world.addBody(block);
+
   let W = 1, H = VIEW_H, unit = 1;
   function resize() {
     const w = hero.clientWidth, h = hero.clientHeight;
@@ -59,19 +65,40 @@ export function floatScene(hero, MODELS) {
     walls[3].position.set(0, H / 2, 0);
     walls[4].position.set(0, 0, -DEPTH);
     walls[5].position.set(0, 0, DEPTH);
-    unit = Math.min(Math.sqrt(W * H / MODELS.length) * 0.62, Math.min(W, H) * 0.4);
+    let free = 1;
+    if (block) {
+      const hr = hero.getBoundingClientRect(), r = opts.keepOut.getBoundingClientRect();
+      zone.hw = r.width / w * W / 2; zone.hh = r.height / h * H / 2;
+      zone.x = ((r.left + r.width / 2 - hr.left) / w - 0.5) * W; zone.y = (0.5 - (r.top + r.height / 2 - hr.top) / h) * H;
+      block.shapes = []; block.shapeOffsets = []; block.shapeOrientations = [];
+      if (zone.hw > 0 && zone.hh > 0) block.addShape(new CANNON.Box(new CANNON.Vec3(zone.hw, zone.hh, DEPTH)));
+      block.position.set(zone.x, zone.y, 0);
+      block.updateMassProperties(); block.aabbNeedsUpdate = true;
+      free = Math.max(0.45, 1 - (4 * zone.hw * zone.hh) / (W * H));
+    }
+    unit = Math.min(Math.sqrt(W * H * free / MODELS.length) * 0.62, Math.min(W, H) * 0.4);
     items.forEach(fit);
   }
 
   const items = [];
 
-  // Each model drifts around its own cell of a grid that fills the screen.
+  // Each model drifts around its own cell of a grid that fills the screen;
+  // cells that fall on the keep-out box move to just above or below it.
   function home(i) {
     const n = MODELS.length;
     const cols = Math.max(2, Math.round(Math.sqrt(n * W / H)));
     const rows = Math.ceil(n / cols);
     const row = Math.floor(i / cols), inRow = row < rows - 1 ? cols : n - row * cols;
-    return { x: ((i % cols) + 0.5) / inRow * W - W / 2, y: H / 2 - (row + 0.5) / rows * H };
+    const p = { x: ((i % cols) + 0.5) / inRow * W - W / 2, y: H / 2 - (row + 0.5) / rows * H };
+    if (block && zone.hw > 0) {
+      const m = unit * 0.55;
+      if (Math.abs(p.x - zone.x) < zone.hw + m && Math.abs(p.y - zone.y) < zone.hh + m) {
+        const up = p.y > zone.y || (p.y === zone.y && i % 2 === 0);
+        p.y = zone.y + (up ? 1 : -1) * (zone.hh + m);
+        p.y = THREE.MathUtils.clamp(p.y, -H / 2 + m * 0.8, H / 2 - m * 0.8);
+      }
+    }
+    return p;
   }
 
   function fit(it) {
