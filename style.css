@@ -192,12 +192,19 @@ section[id] { scroll-margin-top: 52px; }
 .shr-hero { position: relative; height: calc(100vh - 92px); height: calc(100svh - 92px); min-height: 420px; overflow: hidden; background: #fff; user-select: none; -webkit-user-select: none; touch-action: pan-y; border-bottom: 1px solid #eee; }
 .shr-hero canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
 .shr-frames, .shr-ui { position: absolute; inset: 0; pointer-events: none; }
-/* Intro logo: fixed box in the centre (models keep out of it), the version changes on hover. */
-.intro-logo { position: absolute; left: 50%; top: 50%; width: min(64vw, 920px); aspect-ratio: 1400 / 343; transform: translate(-50%, -50%); z-index: 1; cursor: pointer; }
-.intro-logo img { width: 100%; height: 100%; object-fit: contain; display: block; -webkit-user-drag: none; user-select: none; }
-.intro-logo.pop img { animation: logo-pop .32s ease-out; }
-@keyframes logo-pop { from { transform: scale(.94); opacity: .55; } to { transform: scale(1); opacity: 1; } }
-@media (prefers-reduced-motion: reduce) { .intro-logo.pop img { animation: none; } }
+/* Intro logo: fixed box in the centre (models keep out of it); a slider fades between the 20 versions. */
+.intro-logo { position: absolute; left: 50%; top: 50%; width: min(34vw, 470px); transform: translate(-50%, -50%); z-index: 1; }
+.logo-stack { position: relative; aspect-ratio: 1000 / 190; cursor: pointer; }
+.logo-stack img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: contain; display: block; -webkit-user-drag: none; user-select: none; }
+.logo-stack img.b { opacity: 0; }
+.logo-slider { display: flex; align-items: center; gap: 10px; width: 70%; margin: 6px auto 0; }
+.logo-slider input { flex: 1; min-width: 0; height: 18px; margin: 0; background: transparent; -webkit-appearance: none; appearance: none; cursor: ew-resize; }
+.logo-slider input::-webkit-slider-runnable-track { height: 1px; background: #3d85c6; }
+.logo-slider input::-moz-range-track { height: 1px; background: #3d85c6; }
+.logo-slider input::-webkit-slider-thumb { -webkit-appearance: none; width: 11px; height: 11px; margin-top: -5px; border: 1px solid #3d85c6; background: #fff; }
+.logo-slider input::-moz-range-thumb { width: 9px; height: 9px; border: 1px solid #3d85c6; border-radius: 0; background: #fff; }
+.logo-slider input:focus-visible { outline: 2px solid #4b2bff; outline-offset: 3px; }
+.logo-n { font: 12px var(--sans); color: #3d85c6; font-variant-numeric: tabular-nums; min-width: 4.5em; text-align: right; }
 .shr-frame { --c: #3d85c6; position: absolute; left: 0; top: 0; border: 1px solid var(--c); opacity: .55; transition: opacity .2s; will-change: transform; }
 .shr-frame.on { --c: #4b2bff; opacity: 1; z-index: 2; }
 .shr-frame.on .tag { color: #4b2bff; }
@@ -226,7 +233,7 @@ section[id] { scroll-margin-top: 52px; }
   .shr-ui .tr, .shr-ui .br { right: 16px; }
   .shr-ui .tm { left: 16px; top: 40px; }
   .shr-ui .tm br { display: none; }
-  .intro-logo { width: 90vw; }
+  .intro-logo { width: 72vw; }
   .shr-frame .tag { font-size: 20px; }
 }
 .models figure { position: relative; }
