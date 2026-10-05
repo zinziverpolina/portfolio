@@ -1,15 +1,13 @@
 // Paper-collage stage for Posters & covers.
 // Whole posters (never cropped) are layered over each other until they fill the stage. Each one
 // drifts smoothly around its own place on a slow circle; now and then a poster glides over to its
-// place in the next layout, so the collage keeps rebuilding itself in a loop. Moving the pointer
-// makes a few posters follow it, gliding after the cursor one behind another. Clicking a poster
-// scrolls to it in the gallery below.
+// place in the next layout and lands on top, so the collage keeps rebuilding itself in a loop.
+// Posters lean away from the cursor, can be dragged around, and a click scrolls to that poster in
+// the gallery below.
 // collage(stageElement, galleryImages)
 export function collage(stage, sources) {
   const LAYOUTS = 4;       // layouts the base layer loops through
   const SWAP_MS = 700;     // one poster moves to the next layout this often
-  const TRAIL = 5;         // posters following the pointer
-  const STEP = 110;         // px of pointer travel per new follower
 
   const rnd = (a, b) => a + Math.random() * (b - a);
   const pool = [];
@@ -67,49 +65,67 @@ export function collage(stage, sources) {
     if (!queue.length) { layout = (layout + 1) % LAYOUTS; queue = tiles.map((_, i) => i).sort(() => Math.random() - 0.5); }
     const i = queue.pop(), s = layouts[layout][i], t = tiles[i];
     if (!s || !t) return;
-    setPoster(t, s.p); t.tx = s.x; t.ty = s.y; t.tw = s.w; t.el.style.zIndex = s.z;
+    if (t === dragged) return;
+    setPoster(t, s.p); t.tx = s.x; t.ty = s.y; t.tw = s.w; t.el.style.zIndex = ++zTop;   // a poster that changes always lands on top
   }
 
-  // Followers glide after the pointer, each a step behind the one before.
-  const trail = [];
-  let path = [], last = null, zTop = 200;
+  // Pointer, as on the home page: posters near the cursor lean away from it, a poster can be
+  // grabbed and dragged (it stays where it is dropped until its next turn), and a click without
+  // dragging scrolls to that poster in the gallery.
+  let zTop = 1000, dragged = null, grab = null, pointer = null;
   function local(e) { const r = stage.getBoundingClientRect(); return [e.clientX - r.left, e.clientY - r.top]; }
+  const find = (el) => el && tiles.find((t) => t.el === el);
   stage.addEventListener('pointermove', (e) => {
     const [x, y] = local(e);
-    if (!last) { last = [x, y]; }
-    if (Math.hypot(x - last[0], y - last[1]) >= STEP || !trail.length) {
-      last = [x, y];
-      if (trail.length < TRAIL) {
-        const p = pool[Math.floor(Math.random() * pool.length)];
-        const w = Math.min(stage.clientWidth * 0.55, rnd(400, 560) * Math.min(1.2, Math.sqrt(p.ar)));
-        const f = make(p, x, y, w, ++zTop);
-        f.r = 0; trail.push(f);
-      }
+    pointer = [x, y];
+    if (dragged) {
+      if (Math.hypot(x - grab.sx, y - grab.sy) > 8) grab.moved = true;
+      dragged.tx = x - grab.dx; dragged.ty = y - grab.dy;
     }
-    path.unshift([x, y]); path.length = Math.min(path.length, TRAIL * 6);
   });
-
-  stage.addEventListener('click', (e) => {
-    const el = e.target.closest('.cl-piece');
-    const it = el && [...tiles, ...trail].find((t) => t.el === el);
+  stage.addEventListener('pointerleave', () => { if (!dragged) pointer = null; });
+  stage.addEventListener('pointerdown', (e) => {
+    const it = find(e.target.closest('.cl-piece'));
     if (!it) return;
-    const t = it.p.target;
-    t.loading = 'eager';
-    t.scrollIntoView({ behavior: 'smooth', block: 'center' });
-    setTimeout(() => t.scrollIntoView({ behavior: 'smooth', block: 'center' }), 900);
+    const [x, y] = local(e);
+    dragged = it;
+    grab = { dx: x - it.x, dy: y - it.y, sx: x, sy: y, moved: false };
+    it.el.style.zIndex = ++zTop;
+    stage.setPointerCapture(e.pointerId);
+    stage.style.cursor = 'grabbing';
+    e.preventDefault();
   });
+  function release() {
+    if (!dragged) return;
+    const it = dragged, click = !grab.moved;
+    dragged = null; stage.style.cursor = '';
+    if (click) {
+      const t = it.p.target;
+      t.loading = 'eager';
+      t.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      setTimeout(() => t.scrollIntoView({ behavior: 'smooth', block: 'center' }), 900);
+    }
+  }
+  stage.addEventListener('pointerup', release);
+  stage.addEventListener('pointercancel', release);
 
   // Smooth motion: every poster eases towards its target and circles around it.
   let raf = 0, timer = null, visible = true, t0 = performance.now();
   function draw(now) {
     raf = requestAnimationFrame(draw);
     const t = (now - t0) / 1000;
-    trail.forEach((f, k) => { const p = path[Math.min(path.length - 1, k * 6)]; if (p) { f.tx = p[0]; f.ty = p[1]; } });
-    for (const it of [...tiles, ...trail]) {
-      const ease = it.r ? 0.035 : 0.12;   // base posters glide slowly, followers keep up with the hand
+    for (const it of tiles) {
+      const ease = it === dragged ? 0.35 : 0.035;   // a grabbed poster keeps up with the hand
       it.x += (it.tx - it.x) * ease; it.y += (it.ty - it.y) * ease; it.w += (it.tw - it.w) * ease;
-      const a = t * it.sp + it.ph;
-      const cx = it.x + Math.cos(a) * it.r, cy = it.y + Math.sin(a) * it.r * 0.8;
+      // Lean away from the cursor, softly, within a few hundred pixels.
+      let px = 0, py = 0;
+      if (pointer && it !== dragged) {
+        const dx = it.x - pointer[0], dy = it.y - pointer[1], d = Math.hypot(dx, dy) || 1, R = 420;
+        if (d < R) { const f = (1 - d / R) ** 2 * 120; px = dx / d * f; py = dy / d * f; }
+      }
+      it.px = (it.px || 0) + (px - (it.px || 0)) * 0.08; it.py = (it.py || 0) + (py - (it.py || 0)) * 0.08;
+      const a = t * it.sp + it.ph, r = it === dragged ? 0 : it.r;
+      const cx = it.x + it.px + Math.cos(a) * r, cy = it.y + it.py + Math.sin(a) * r * 0.8;
       it.el.style.width = it.w.toFixed(1) + 'px';
       it.el.style.transform = `translate(${(cx - it.w / 2).toFixed(1)}px, ${(cy - it.w / it.p.ar / 2).toFixed(1)}px)`;
     }

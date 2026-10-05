@@ -8,7 +8,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Arimo:ital,wght@0,400;0,700;1,400&family=Tinos:ital,wght@0,400;0,700;1,400;1,700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="../style.css?v=20261006c">
+<link rel="stylesheet" href="../style.css?v=20261006d">
 <script type="module" src="https://cdn.jsdelivr.net/npm/@google/model-viewer@4.1.0/dist/model-viewer.min.js"></script>
 <script>
   // Arriving from the intro: start under a white cover that slowly turns transparent.
@@ -58,11 +58,11 @@
   <a href="virtual-gap-year.html">Virtual Gap Year</a>
 </div></nav>
 
-<div class="cl-stage" id="collage" aria-label="Paper collage of posters and covers. Move the pointer to cut new pieces, click a piece to find its poster below.">
+<div class="cl-stage" id="collage" aria-label="Paper collage of posters and covers. Drag posters around, click one to find it below.">
   <div class="cl-ui">
     <span class="tl">Posters &amp; covers</span>
     <span class="tr">2021–2025</span>
-    <span class="br">move · click a piece</span>
+    <span class="br">drag · click to find</span>
   </div>
 </div>
 
@@ -210,7 +210,7 @@
 
 <script src="../site.js?v=20261005l"></script>
 <script type="module">
-  import { collage } from './collage.js?v=5';
+  import { collage } from './collage.js?v=6';
   collage(document.getElementById('collage'), [...document.querySelectorAll('#posters .gallery img')]);
 </script>
 </body>
