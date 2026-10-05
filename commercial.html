@@ -12,19 +12,20 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Arimo:ital,wght@0,400;0,700;1,400&family=Tinos:ital,wght@0,400;0,700;1,400;1,700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="style.css?v=20261006d">
+<link rel="stylesheet" href="style.css?v=20261006e">
 <script type="importmap">{"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.169.0/build/three.module.js","three/addons/":"https://cdn.jsdelivr.net/npm/three@0.169.0/examples/jsm/","cannon-es":"https://cdn.jsdelivr.net/npm/cannon-es@0.20.0/dist/cannon-es.js"}}</script>
 </head>
-<body class="intro-page">
+<body class="intro-page no-header">
 
-<nav class="topnav"><div class="in">
-  <a class="name" href="commercial.html">POLINA ZINZIVER</a>
-  <a href="https://zinziverpolina.github.io/Polina-CV/" target="_blank" rel="noopener">cv</a>
-  <a href="https://www.instagram.com/polina_zinziver_/" target="_blank" rel="noopener">instagram</a>
-</div>
-<div class="tabs">
+
+<div class="shr-hero" id="intro-stage" aria-label="Objects from Sacred Hyper Race, Nina Ricci, LOEWE SS22 and LOEWE Christmas floating in zero gravity. Hover to see the project, click an object to open it, drag to move.">
+  <canvas></canvas>
+  <div class="intro-center" id="intro-center">
+    <div class="intro-logo" id="intro-logo" aria-hidden="true"><img src="commercial/img/logo/zz-03.webp?v=3" alt="" decoding="async"></div>
+    <nav class="topnav intro-nav" aria-label="Projects">
+      <div class="tabs">
   <div class="dd">
-    <button class="dd-btn on" type="button" aria-expanded="false" aria-controls="dd-panel">all projects <span aria-hidden="true">▾</span></button>
+    <button class="dd-btn" type="button" aria-expanded="false" aria-controls="dd-panel">all projects <span aria-hidden="true">▾</span></button>
     <div class="dd-panel" id="dd-panel">
     <ol class="projects">
       <li><a href="commercial/nina-ricci.html"><img src="commercial/video/nina-ricci-1.jpg" alt="" loading="lazy" decoding="async"><span class="t">Nina Ricci</span><span class="y">2022</span><span class="w">animations for the Summer 22 collection</span></a></li>
@@ -48,16 +49,14 @@
   <a href="commercial/hypertrash.html">HYPERTRASH</a>
   <a href="commercial/carolina-sarria.html">CAROLINA SARRIA</a>
   <a href="commercial/posters.html">Posters &amp; covers</a>
-</div></nav>
-
-<div class="shr-hero" id="intro-stage" aria-label="Objects from Sacred Hyper Race, Nina Ricci, LOEWE SS22 and LOEWE Christmas floating in zero gravity. Hover to see the project, click an object to open it, drag to move.">
-  <canvas></canvas>
-  <div class="intro-logo" id="intro-logo" aria-hidden="true"><img src="commercial/img/logo/zz-03.webp?v=3" alt="" decoding="async"></div>
+        <span class="sep" aria-hidden="true">·</span>
+        <a href="https://zinziverpolina.github.io/Polina-CV/" target="_blank" rel="noopener">cv</a>
+        <a href="https://www.instagram.com/polina_zinziver_/" target="_blank" rel="noopener">instagram</a>
+      </div>
+    </nav>
+  </div>
   <div class="shr-frames"></div>
   <div class="shr-ui">
-    <span class="tl">Polina Zinziver</span>
-    <span class="tm">3D animation, CGI <br>and art direction</span>
-    <span class="tr">commercial</span>
     <span class="bl">Sacred Hyper Race · Nina Ricci · LOEWE · HOROSOAPS · Clara Luciani</span>
     <span class="br">drag · click to open</span>
   </div>
@@ -70,7 +69,7 @@
   // Centre logo: the picked versions cycle on their own, grouped by typeface (Robbery, Kinky, Saint, Mirabela),
   // a new one every 1.5 s; the mouse over the logo holds the current version.
   const logo = document.getElementById('intro-logo'), logoImg = logo.querySelector('img');
-  const ORDER = [3, 2, 7, 13, 14, 16, 17, 18, 20, 5, 8, 9, 10, 15, 4, 6, 1];   // final pick (17)
+  const ORDER = [3, 13, 14, 16, 17, 18, 20, 8, 9, 10, 4, 1];   // final pick (12)
   const N = ORDER.length, url = (i) => 'commercial/img/logo/zz-' + String(ORDER[i]).padStart(2, '0') + '.webp?v=3';
   let cur = 0, timer = 0, logoVisible = true, held = false;
   // Preload right away (not after the heavy 3D models): each version is ~50 KB.
@@ -86,6 +85,8 @@
   logo.addEventListener('pointermove', (e) => { if (e.pointerType === 'mouse' && !held) { held = true; stopLogo(); } });
   logo.addEventListener('pointerleave', (e) => { if (e.pointerType === 'mouse' && held) { held = false; startLogo(); } });
   startLogo();
+  // Links and the project menu under the logo: no drag / jiggle of the scene from here.
+  document.getElementById('intro-center').addEventListener('pointerdown', (e) => e.stopPropagation());
 })();
 </script>
 <script type="module">
@@ -118,7 +119,7 @@
     { url: 'commercial/models/hero/hs-soap.glb', norm: true, name: 'Soap', tag: 'HOROSOAPS', href: 'commercial/horosoaps.html', shine: 0.1 },
     { url: 'commercial/models/hero/cl-charm.glb', norm: true, name: 'Charm', tag: 'Clara Luciani', href: 'commercial/clara-luciani.html' },
     { url: 'commercial/models/xm-perfume.glb', norm: true, name: 'LOEWE 001', tag: 'LOEWE', href: 'commercial/loewe.html', weight: 2 },
-  ], { keepOut: document.getElementById('intro-logo') });
+  ], { keepOut: document.getElementById('intro-center') });
 </script>
 <script src="site.js?v=20261005l"></script>
 </body>
