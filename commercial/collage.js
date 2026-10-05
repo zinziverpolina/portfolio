@@ -11,6 +11,7 @@ export function collage(stage, sources) {
 
   const rnd = (a, b) => a + Math.random() * (b - a);
   const pool = [];
+  const total = Math.min(sources.length, 64);   // posters this page will have once loaded
   let ready = false;
 
   // Originals at full quality; a random selection is enough for the stage.
@@ -36,7 +37,10 @@ export function collage(stage, sources) {
   function buildLayouts() {
     const W = stage.clientWidth, H = stage.clientHeight;
     // Every poster gets about the same area, medium-sized, and always fits whole inside the stage.
-    const S = Math.min(H * 0.55, W * 0.42) * 0.5;
+    let S = Math.min(H * 0.55, W * 0.42) * 0.5;
+    // Few images on the page: fewer, larger posters instead of the same ones repeating.
+    const want = Math.max(2, Math.round(W / (S * 0.75))) * Math.max(2, Math.round(H / (S * 0.75)));
+    if (total < want) S *= Math.sqrt(want / Math.max(total, 4));
     const size = (p) => {
       let w = S * Math.sqrt(p.ar) * rnd(0.94, 1.06), h = w / p.ar;
       const k = Math.min(1, (H * 0.9) / h, (W * 0.7) / w);
