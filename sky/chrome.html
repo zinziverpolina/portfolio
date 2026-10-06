@@ -125,7 +125,7 @@ async function setSky(id) {
 }
 
 // ---------- the name ----------
-const chrome = new THREE.MeshPhysicalMaterial({ color: 0xf7f7fa, metalness: 1, roughness: 0.04, envMapIntensity: 1 });
+const chrome = new THREE.MeshPhysicalMaterial({ color: 0xf7f7fa, metalness: 1, roughness: 0, envMapIntensity: 1 });   // a clean mirror
 let nameObj = null;
 const nameP = new GLTFLoader().loadAsync('mirabela_chrome.glb').then(gltf => {
   const obj = nameObj = gltf.scene;
