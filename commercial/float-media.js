@@ -1,16 +1,16 @@
 // Floating media stages for the white project pages, in the manner of the 3D objects on the main page.
 // Every section of the page becomes a full-screen stage: its text (title, subtitle, description, credit,
-// links) in the middle, its videos, stills and 3D-model posters floating around it, tumbling slowly in 3D,
-// in the main page's frames (screen-space boxes). The stages follow one another as you scroll.
+// links) in the middle, its videos, stills and 3D-model posters drifting around it on a turbulent breeze (flat:
+// they move, they do not tilt), in the main page's frames. The stages follow one another as you scroll.
 // Hover: the frame turns navy and shows its tag. Drag: throw an item. Click on empty space or on the text:
-// everything jiggles and spins. Click on an item: a card opens with the video (sound on), the still or the
+// everything jiggles. Click on an item: a card opens with the video (sound on), the still or the
 // rotatable 3D model and its caption; ← → step through the section, Esc / × / a click outside closes it.
 // floatMedia() — no arguments: it reads the page itself.
 const MEDIA = 'img.zoom, video.clip, model-viewer[poster]';
 const MAX = 14;          // items on one stage
 const MAX_PLAY = 2;      // of them, videos playing as muted loops (the rest show their poster)
-const PERSP = 1400;      // stage perspective (px), as .fm-stage in style.css
-const TUMBLE = 18;       // degrees of the slow 3D wobble
+const TURB = 0.06;       // turbulence: drifting push, as a share of the stage width per s²
+const GUSTS = 0.35;      // random gusts per item per second
 const rnd = (a, b) => a + Math.random() * (b - a);
 
 export function floatMedia() {
@@ -92,7 +92,7 @@ function stage(sec, sources, card) {
       frame.querySelector('.tag').textContent = captionOf(node);
       frames.appendChild(frame);
       items.push({ el: box, media, frame, node, ar: pre.naturalWidth / pre.naturalHeight, x: 0, y: 0, vx: 0, vy: 0,
-        w: 1, h: 1, spinX: 0, spinY: 0, wX: 0, wY: 0, box: null, seed: rnd(0, 100), placed: false });
+        w: 1, h: 1, box: null, seed: rnd(0, 100), placed: false });
       if (ready) layout();
     };
     pre.src = stillOf(node);
@@ -189,11 +189,10 @@ function stage(sec, sources, card) {
   function jiggle() {
     for (const it of items) {
       it.vx += rnd(-1, 1) * 420; it.vy += rnd(-1, 1) * 420;
-      it.wX += rnd(-1, 1) * 420; it.wY += rnd(-1, 1) * 560;   // a spin (deg/s) that springs back
     }
   }
 
-  // ----- motion: wander + spring home, bounce off each other, the text and the edges; slow 3D tumble -----
+  // ----- motion: turbulence + spring home, bounce off each other, the text and the edges -----
   let raf = 0, last = 0, visible = false;
   function step(now) {
     raf = requestAnimationFrame(step);
@@ -203,9 +202,15 @@ function stage(sec, sources, card) {
       if (it === dragged) { it.vx = (pointer.x - it.x) * 14; it.vy = (pointer.y - it.y) * 14; }
       else {
         const p = home(i, it);
-        it.vx += (Math.sin(t / 6 + it.seed) * 22 + (p.x - it.x) * 0.9) * dt * 2;
-        it.vy += (Math.cos(t / 7 + it.seed * 2) * 22 + (p.y - it.y) * 0.9) * dt * 2;
-        it.vx *= 1 - 1.2 * dt; it.vy *= 1 - 1.2 * dt;
+        // Turbulence like the main page's objects: three drifting pushes of different speeds per item,
+        // a soft spring home, and now and then a gust.
+        const s = it.seed, push = W * TURB;
+        const fx = Math.sin(t * 0.37 + s) + 0.6 * Math.sin(t * 0.91 + s * 3.1) + 0.35 * Math.sin(t * 1.7 + s * 5.3);
+        const fy = Math.cos(t * 0.33 + s * 2) + 0.6 * Math.cos(t * 0.83 + s * 4.7) + 0.35 * Math.cos(t * 1.9 + s * 1.3);
+        it.vx += (fx * push + (p.x - it.x) * 0.9) * dt;
+        it.vy += (fy * push + (p.y - it.y) * 0.9) * dt;
+        if (Math.random() < dt * GUSTS) { it.vx += rnd(-1, 1) * push * 2; it.vy += rnd(-1, 1) * push * 2; }
+        it.vx *= 1 - 0.9 * dt; it.vy *= 1 - 0.9 * dt;
       }
       it.x += it.vx * dt; it.y += it.vy * dt;
     });
@@ -236,37 +241,17 @@ function stage(sec, sources, card) {
       const hw = it.w / 2, hh = it.h / 2;
       if (it.x < hw) { it.x = hw; it.vx = Math.abs(it.vx) * bounce; } else if (it.x > W - hw) { it.x = W - hw; it.vx = -Math.abs(it.vx) * bounce; }
       if (it.y < hh) { it.y = hh; it.vy = Math.abs(it.vy) * bounce; } else if (it.y > H - hh) { it.y = H - hh; it.vy = -Math.abs(it.vy) * bounce; }
-      draw(it, t, dt);
+      draw(it);
     }
   }
-  // Slow tumble in 3D: an own wobble per item, plus a spin from jiggles that springs back; then the frame
-  // as the screen box of the turned item (same maths as the CSS perspective from the stage centre).
-  function draw(it, t, dt) {
-    it.wX += -it.spinX * 9 * dt; it.wY += -it.spinY * 9 * dt;
-    it.wX *= 1 - 2.2 * dt; it.wY *= 1 - 2.2 * dt;
-    it.spinX += it.wX * dt; it.spinY += it.wY * dt;
-    const rx = Math.sin(t / 4.3 + it.seed) * TUMBLE * 0.7 + it.spinX;
-    const ry = Math.sin(t / 3.7 + it.seed * 1.7) * TUMBLE + it.spinY;
-    const rz = Math.sin(t / 5 + it.seed) * 2.2 + Math.max(-8, Math.min(8, it.vx * 0.01));
-    const tz = Math.sin(t / 6.1 + it.seed * 2.3) * 70;
-    it.el.style.transform = `translate3d(${(it.x - it.w / 2).toFixed(1)}px, ${(it.y - it.h / 2).toFixed(1)}px, ${tz.toFixed(1)}px) ` +
-      `rotateX(${rx.toFixed(2)}deg) rotateY(${ry.toFixed(2)}deg) rotateZ(${rz.toFixed(2)}deg)`;
-    const d = Math.PI / 180, cX = Math.cos(rx * d), sX = Math.sin(rx * d), cY = Math.cos(ry * d), sY = Math.sin(ry * d), cZ = Math.cos(rz * d), sZ = Math.sin(rz * d);
-    let x0 = Infinity, y0 = Infinity, x1 = -Infinity, y1 = -Infinity;
-    for (const [u, v] of [[-1, -1], [1, -1], [1, 1], [-1, 1]]) {
-      // rotateX · rotateY · rotateZ on the corner (CSS order: the rightmost acts first)
-      let px = u * it.w / 2, py = v * it.h / 2, pz = 0;
-      [px, py] = [px * cZ - py * sZ, px * sZ + py * cZ];
-      [px, pz] = [px * cY + pz * sY, -px * sY + pz * cY];
-      [py, pz] = [py * cX - pz * sX, py * sX + pz * cX];
-      const k = PERSP / (PERSP - (pz + tz));
-      const sx = W / 2 + (it.x + px - W / 2) * k, sy = H / 2 + (it.y + py - H / 2) * k;
-      x0 = Math.min(x0, sx); x1 = Math.max(x1, sx); y0 = Math.min(y0, sy); y1 = Math.max(y1, sy);
-    }
-    it.box = { x0, y0, x1, y1 };
+  // Flat: the item only moves (no tilt, no turn); its frame is its own box.
+  function draw(it) {
+    const x0 = it.x - it.w / 2, y0 = it.y - it.h / 2;
+    it.el.style.transform = `translate(${x0.toFixed(1)}px, ${y0.toFixed(1)}px)`;
+    it.box = { x0, y0, x1: x0 + it.w, y1: y0 + it.h };
     const f = it.frame.style, pad = 7;
     f.transform = `translate(${(x0 - pad).toFixed(1)}px, ${(y0 - pad).toFixed(1)}px)`;
-    f.width = (x1 - x0 + pad * 2).toFixed(1) + 'px'; f.height = (y1 - y0 + pad * 2).toFixed(1) + 'px';
+    f.width = (it.w + pad * 2).toFixed(1) + 'px'; f.height = (it.h + pad * 2).toFixed(1) + 'px';
   }
   function run() {
     const want = ready && visible && !document.hidden;

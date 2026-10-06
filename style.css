@@ -480,7 +480,7 @@ body:not(.page-dark) .topnav .dd-panel .projects a { border-bottom-color: var(--
 
 /* White project pages: floating media stage (float-media.js). The first section's text sits in the middle,
    the page's videos and stills float around it in the main page's frames. */
-.fm-stage { position: relative; min-height: 480px; overflow: hidden; perspective: 1400px; perspective-origin: 50% 50%; background: #fff; user-select: none; -webkit-user-select: none; touch-action: pan-y; border-bottom: 1px solid var(--sky-line, #eee); }
+.fm-stage { position: relative; min-height: 480px; overflow: hidden; background: #fff; user-select: none; -webkit-user-select: none; touch-action: pan-y; border-bottom: 1px solid var(--sky-line, #eee); }
 .fm-text { position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%); width: min(600px, 84%); text-align: center; z-index: 2; }
 .fm-text h2 { font-size: clamp(34px, 4.4vw, 60px); }
 .fm-text .meta, .fm-text .credit { margin: 10px 0 0; }
