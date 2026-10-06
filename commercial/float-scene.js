@@ -51,7 +51,8 @@ export function floatScene(hero, MODELS, opts = {}) {
 
   // Optional keep-out boxes (the intro logo's letters, ALL PROJECTS): one static block the models bump against.
   // zone = the boxes' union (home cells move off it); pullTo = centre of the first box (click pull target).
-  const keepEls = opts.keepOut ? [].concat(opts.keepOut) : [];
+  // Each entry: an element, or { el, pad } with extra page px of clearance around it.
+  const keepEls = (opts.keepOut ? [].concat(opts.keepOut) : []).map((k) => (k instanceof Element ? { el: k, pad: 0 } : k));
   const zone = { x: 0, y: 0, hw: 0, hh: 0 }, pullTo = { x: 0, y: 0 };
   const block = keepEls.length ? new CANNON.Body({ type: CANNON.Body.STATIC }) : null;
   if (block) world.addBody(block);
@@ -73,10 +74,10 @@ export function floatScene(hero, MODELS, opts = {}) {
     let free = 1;
     if (block) {
       const hr = hero.getBoundingClientRect();
-      const boxes = keepEls.map((el) => {
-        const r = el.getBoundingClientRect();
+      const boxes = keepEls.map(({ el, pad = 0 }) => {
+        const r = el.getBoundingClientRect(), p = pad * zoomOf();
         return { x: ((r.left + r.width / 2 - hr.left) / hr.width - 0.5) * W, y: (0.5 - (r.top + r.height / 2 - hr.top) / hr.height) * H,
-          hw: r.width / hr.width * W / 2, hh: r.height / hr.height * H / 2 };
+          hw: (r.width / 2 + p) / hr.width * W, hh: (r.height / 2 + p) / hr.height * H };
       }).filter((b) => b.hw > 0 && b.hh > 0);
       block.shapes = []; block.shapeOffsets = []; block.shapeOrientations = [];
       if (boxes.length) {

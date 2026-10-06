@@ -13,7 +13,7 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Arimo:ital,wght@0,400;0,700;1,400&family=Tinos:ital,wght@0,400;0,700;1,400;1,700&display=swap" rel="stylesheet">
 <script src="zoom.js?v=1"></script>
-<link rel="stylesheet" href="style.css?v=20261006o">
+<link rel="stylesheet" href="style.css?v=20261006p">
 <script type="importmap">{"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.169.0/build/three.module.js","three/addons/":"https://cdn.jsdelivr.net/npm/three@0.169.0/examples/jsm/","cannon-es":"https://cdn.jsdelivr.net/npm/cannon-es@0.20.0/dist/cannon-es.js"}}</script>
 </head>
 <body class="intro-page no-header">
@@ -75,7 +75,7 @@
 })();
 </script>
 <script type="module">
-  import { floatScene } from './commercial/float-scene.js?v=20261006q';
+  import { floatScene } from './commercial/float-scene.js?v=20261006r';
   const scene = floatScene(document.getElementById('intro-stage'), [
     { url: 'commercial/models/hero/shr-sun-man.glb', name: 'Sun Man', tag: 'Sacred Hyper Race', href: 'commercial/sacred-hyper-race.html', weight: 1.5 },
     { url: 'commercial/models/hero/nr-bag.glb', name: 'Bag', tag: 'Nina Ricci', href: 'commercial/nina-ricci.html' },
@@ -104,7 +104,7 @@
     { url: 'commercial/models/hero/hs-soap.glb', norm: true, name: 'Soap', tag: 'HOROSOAPS', href: 'commercial/horosoaps.html', shine: 0.1 },
     { url: 'commercial/models/hero/cl-charm.glb', norm: true, name: 'Charm', tag: 'Clara Luciani', href: 'commercial/clara-luciani.html' },
     { url: 'commercial/models/xm-perfume.glb', norm: true, name: 'LOEWE 001', tag: 'LOEWE', href: 'commercial/loewe.html', weight: 2 },
-  ], { keepOut: [document.querySelector('#intro-logo .logo-core'), document.querySelector('.intro-nav .dd-btn')] });
+  ], { keepOut: [document.querySelector('#intro-logo .logo-core'), { el: document.querySelector('.intro-nav .dd-btn'), pad: 18 }] });
   // Click on the logo: the objects rush to it for a moment, then float back.
   document.getElementById('intro-logo').addEventListener('click', () => scene.pull(1.1));
 </script>

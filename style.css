@@ -207,7 +207,11 @@ body.no-header .shr-hero { height: calc(100vh / var(--z, 1)); height: calc(100sv
 .topnav.intro-nav { position: relative; top: auto; z-index: auto; background: none; backdrop-filter: none; border: 0; width: 100%; margin-top: calc(var(--lw) * -0.032); }
 /* ALL PROJECTS uses the same type and dark tower blue as the hovered 3D-object frame tags; the project names in its list use that type in black */
 .topnav.intro-nav .tabs { max-width: none; padding: 0; justify-content: center; overflow: visible; font: 500 clamp(11px, 1.19vw, 17.5px)/1 var(--sans); }
-.topnav.intro-nav .dd-panel .projects .t { font: 500 clamp(11px, 1.19vw, 17.5px)/1.05 var(--sans); letter-spacing: -.02em; text-transform: uppercase; color: #111; }
+.topnav.intro-nav .dd-panel .projects .t { font: 500 clamp(11px, 1.19vw, 17.5px)/1.05 var(--sans); letter-spacing: -.02em; text-transform: uppercase; color: #2a27a6; }
+/* Main-page project list: the frame blue (#3d85c6 at the frames' 55 %) instead of greys */
+.topnav.intro-nav .dd-panel .projects .y { color: #3d85c6; }
+.topnav.intro-nav .dd-panel .projects a { border-bottom-color: rgba(61,133,198,.55); }
+.topnav.intro-nav .dd-panel.dd-panel { border-color: rgba(61,133,198,.55); }
 .topnav.intro-nav .dd-btn, .topnav.intro-nav .dd:hover .dd-btn, .topnav.intro-nav .dd.open .dd-btn { font-style: normal; letter-spacing: -.02em; text-transform: uppercase; color: #2a27a6; }
 .topnav.intro-nav .dd-panel { top: calc(100% + 10px); left: 50%; right: auto; width: min(92vw, 1060px); margin-left: calc(min(92vw, 1060px) / -2); max-height: calc(44vh / var(--z, 1)); text-align: left; border: 1px solid #eee; }
 .shr-frame { --c: #3d85c6; position: absolute; left: 0; top: 0; border: 1px solid var(--c); opacity: .55; transition: opacity .2s; will-change: transform; }
