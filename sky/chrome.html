@@ -43,7 +43,7 @@
 </nav>
 
 <div class="proto" id="proto"></div>
-<div class="hint" id="hint">scroll to fly through · move to turn the sky</div>
+<div class="hint" id="hint">click the name to turn it<br>scroll to fly through · move to turn the sky</div>
 
 <script type="module">
 // The Cinema 4D scene zinziver_fonts_extrude.c4d, camera "Mirabela camera", rebuilt for the web:
@@ -126,8 +126,9 @@ async function setSky(id) {
 
 // ---------- the name ----------
 const chrome = new THREE.MeshPhysicalMaterial({ color: 0xf7f7fa, metalness: 1, roughness: 0.04, envMapIntensity: 1 });
+let nameObj = null;
 const nameP = new GLTFLoader().loadAsync('mirabela_chrome.glb').then(gltf => {
-  const obj = gltf.scene;
+  const obj = nameObj = gltf.scene;
   obj.traverse(o => { if (o.isMesh) o.material = chrome; });
   obj.position.copy(NAME_CENTER);
   scene.add(obj);
@@ -143,7 +144,7 @@ const el = renderer.domElement;
 const clampFly = v => Math.min(FLY.max, Math.max(FLY.min, v));
 
 const hint = document.getElementById('hint');
-if (matchMedia('(pointer: coarse)').matches) hint.textContent = 'pinch to fly through · drag to turn the sky';
+if (matchMedia('(pointer: coarse)').matches) hint.innerHTML = 'tap the name to turn it<br>pinch to fly through · drag to turn the sky';
 const used = () => { hint.classList.add('gone'); };
 addEventListener('wheel', e => {
   e.preventDefault(); used();
@@ -151,10 +152,24 @@ addEventListener('wheel', e => {
   fly.target = clampFly(fly.target - step * 0.006 * (1 + Math.abs(fly.target) * 0.08));
 }, { passive: false });
 
+// clicking the name turns it half round (spring, with a little lift), so both sides can be seen
+const spin = { a: 0, v: 0, target: 0 };
+const ray = new THREE.Raycaster(), ndc = new THREE.Vector2();
+function onName(e) {
+  if (!nameObj) return false;
+  ndc.set(e.clientX / innerWidth * 2 - 1, -(e.clientY / innerHeight) * 2 + 1);
+  ray.setFromCamera(ndc, camera);
+  return ray.intersectObject(nameObj, true).length > 0;
+}
+
 const pointers = new Map();
-let pinch = 0;
+let pinch = 0, press = null, hoverT = 0;
 addEventListener('pointermove', e => {
-  if (e.pointerType === 'mouse') sky.swing = -(e.clientX / innerWidth * 2 - 1) * SKY_SWING;
+  if (e.pointerType === 'mouse') {
+    sky.swing = -(e.clientX / innerWidth * 2 - 1) * SKY_SWING;
+    const now = performance.now();
+    if (!pointers.size && now - hoverT > 60) { hoverT = now; el.style.cursor = onName(e) ? 'pointer' : ''; }
+  }
   const p = pointers.get(e.pointerId);
   if (!p) return;
   if (pointers.size === 1) { sky.drag -= (e.clientX - p.x) * 0.004; used(); }   // one finger / mouse drag: keep turning the sky
@@ -167,10 +182,15 @@ addEventListener('pointermove', e => {
 });
 el.addEventListener('pointerdown', e => {
   pointers.set(e.pointerId, { x: e.clientX, y: e.clientY }); pinch = 0;
+  press = pointers.size === 1 ? { x: e.clientX, y: e.clientY, t: performance.now() } : null;
   el.setPointerCapture(e.pointerId);
 });
 const lift = e => { pointers.delete(e.pointerId); pinch = 0; };
-addEventListener('pointerup', lift);
+addEventListener('pointerup', e => {
+  const click = press && Math.hypot(e.clientX - press.x, e.clientY - press.y) < 7 && performance.now() - press.t < 500;
+  press = null; lift(e);
+  if (click && onName(e)) { spin.target += Math.PI; used(); }
+});
 addEventListener('pointercancel', lift);
 
 addEventListener('resize', () => {
@@ -198,6 +218,15 @@ renderer.setAnimationLoop(() => {
   sky.a += (sky.swing + sky.drag - sky.a) * (1 - Math.pow(0.01, dt));
   scene.environmentRotation.y = SKY_TURN + sky.a;
   skyMat.uniforms.turn.value = -(SKY_TURN + sky.a);   // three.js reads environmentRotation mirrored; the sphere follows it
+  // the name's half turn: a spring that overshoots a little, lifting the word while it turns
+  if (nameObj) {
+    spin.v += (spin.target - spin.a) * 24 * dt;
+    spin.v *= Math.exp(-4.6 * dt);
+    spin.a += spin.v * dt;
+    nameObj.rotation.y = spin.a;
+    const left = Math.min(1, Math.abs(spin.target - spin.a) / Math.PI);
+    nameObj.position.y = NAME_CENTER.y + Math.sin(left * Math.PI) * 0.22;
+  }
   renderer.render(scene, camera);
 });
 
