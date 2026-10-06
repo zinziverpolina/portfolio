@@ -13,7 +13,7 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Arimo:ital,wght@0,400;0,700;1,400&family=Tinos:ital,wght@0,400;0,700;1,400;1,700&display=swap" rel="stylesheet">
 <script src="zoom.js?v=1"></script>
-<link rel="stylesheet" href="style.css?v=20261006m">
+<link rel="stylesheet" href="style.css?v=20261006n">
 <script type="importmap">{"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.169.0/build/three.module.js","three/addons/":"https://cdn.jsdelivr.net/npm/three@0.169.0/examples/jsm/","cannon-es":"https://cdn.jsdelivr.net/npm/cannon-es@0.20.0/dist/cannon-es.js"}}</script>
 </head>
 <body class="intro-page no-header">
@@ -55,31 +55,28 @@
 <script>
 (function () {
   // Centre logo: the picked versions cycle on their own, grouped by typeface (Robbery, Kinky, Saint, Mirabela),
-  // a new one every 1 s; the mouse over the logo holds the current version.
+  // a new one every 1 s. A click on the logo draws the 3D objects to it (see the module below).
   const logo = document.getElementById('intro-logo'), logoImg = logo.querySelector('img');
   const ORDER = [3, 13, 14, 16, 17, 18, 20, 8, 9, 10, 4, 1];   // final pick (12)
   const N = ORDER.length, url = (i) => 'commercial/img/logo/zz-' + String(ORDER[i]).padStart(2, '0') + '.webp?v=3';
-  let cur = 0, timer = 0, logoVisible = true, held = false;
+  let cur = 0, timer = 0, logoVisible = true;
   // Preload right away (not after the heavy 3D models): each version is ~50 KB.
   const pics = ORDER.map((_, i) => { const im = new Image(); im.src = url(i); return im; });
   function startLogo() {
-    if (timer || held || !logoVisible || document.hidden) return;
+    if (timer || !logoVisible || document.hidden) return;
     timer = setInterval(() => { cur = (cur + 1) % N; logoImg.src = pics[cur].src; }, 1000);
   }
   function stopLogo() { clearInterval(timer); timer = 0; }
   new IntersectionObserver((e) => { logoVisible = e[0].isIntersecting; logoVisible ? startLogo() : stopLogo(); }).observe(logo);
   document.addEventListener('visibilitychange', () => document.hidden ? stopLogo() : startLogo());
-  // Hold only while the mouse really moves over the logo (a resting cursor under it doesn't count).
-  logo.addEventListener('pointermove', (e) => { if (e.pointerType === 'mouse' && !held) { held = true; stopLogo(); } });
-  logo.addEventListener('pointerleave', (e) => { if (e.pointerType === 'mouse' && held) { held = false; startLogo(); } });
   startLogo();
   // Links and the project menu under the logo: no drag / jiggle of the scene from here.
   document.getElementById('intro-center').addEventListener('pointerdown', (e) => e.stopPropagation());
 })();
 </script>
 <script type="module">
-  import { floatScene } from './commercial/float-scene.js?v=20261006z';
-  floatScene(document.getElementById('intro-stage'), [
+  import { floatScene } from './commercial/float-scene.js?v=20261006p';
+  const scene = floatScene(document.getElementById('intro-stage'), [
     { url: 'commercial/models/hero/shr-sun-man.glb', name: 'Sun Man', tag: 'Sacred Hyper Race', href: 'commercial/sacred-hyper-race.html', weight: 1.5 },
     { url: 'commercial/models/hero/nr-bag.glb', name: 'Bag', tag: 'Nina Ricci', href: 'commercial/nina-ricci.html' },
     { url: 'commercial/models/hero/shr-mouth-arch.glb', name: 'Mouth Arch', tag: 'Sacred Hyper Race', href: 'commercial/sacred-hyper-race.html', weight: 0.75 },
@@ -108,6 +105,8 @@
     { url: 'commercial/models/hero/cl-charm.glb', norm: true, name: 'Charm', tag: 'Clara Luciani', href: 'commercial/clara-luciani.html' },
     { url: 'commercial/models/xm-perfume.glb', norm: true, name: 'LOEWE 001', tag: 'LOEWE', href: 'commercial/loewe.html', weight: 2 },
   ], { keepOut: document.getElementById('intro-center') });
+  // Click on the logo: the objects rush to it for a moment, then float back.
+  document.getElementById('intro-logo').addEventListener('click', () => scene.pull(1.1));
 </script>
 <script src="site.js?v=20261005l"></script>
 </body>

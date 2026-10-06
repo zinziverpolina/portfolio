@@ -266,6 +266,7 @@ export function floatScene(hero, MODELS, opts = {}) {
   const corner = new THREE.Vector3();
   const bounds = new THREE.Box3();
   let running = true;
+  let pullUntil = 0;   // clock time until which the models are drawn to the logo
 
   function frameRect(it) {
     // Screen-space box around the model: project the corners of its world bounding box.
@@ -289,10 +290,11 @@ export function floatScene(hero, MODELS, opts = {}) {
     for (const it of items) {
       const b = it.body, s = it.seed;
       // Slow wandering force + a soft spring back to its home spot and the middle layer.
-      const h0 = home(it.i);
+      // While pulled (click on the logo), the target is the keep-out box instead of its home spot.
+      const pulling = t < pullUntil && block, h0 = pulling ? zone : home(it.i), k = pulling ? 3 : 0.35;
       b.applyForce(new CANNON.Vec3(
-        Math.sin(t / 6 + s) * 0.5 + (h0.x - b.position.x) * 0.35,
-        Math.cos(t / 7 + s * 2) * 0.5 + (h0.y - b.position.y) * 0.35,
+        Math.sin(t / 6 + s) * 0.5 + (h0.x - b.position.x) * k,
+        Math.cos(t / 7 + s * 2) * 0.5 + (h0.y - b.position.y) * k,
         -b.position.z * 0.6));
       b.applyTorque(new CANNON.Vec3(Math.sin(t / 9 + s) * 0.08, Math.cos(t / 8 + s) * 0.12, Math.sin(t / 11 + s) * 0.04));
       if (it === dragged) {
@@ -333,4 +335,9 @@ export function floatScene(hero, MODELS, opts = {}) {
   new ResizeObserver(resize).observe(hero);
   resize();
   tick();
+
+  return {
+    // Draw every model towards the keep-out box (the logo) for `sec` seconds; then they drift home.
+    pull(sec = 1) { pullUntil = clock.elapsedTime + sec; },
+  };
 }
