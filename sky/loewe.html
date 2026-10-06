@@ -342,7 +342,7 @@ Object.entries(SKIES).forEach(([id, label]) => {
 });
 
 // ---------- the view lives in the address: #v=sky,fly,qx,qy,qz,qw,word,skyId (send it to make it the opening view) ----------
-const DEFAULT_VIEW = '';
+const DEFAULT_VIEW = '-0.114,-0.594,0.000,0.000,0.000,1.000,2,sky6';   // Polina's chosen opening view (2026-10-06): Loewe, a step back, sky turned a little
 function applyView(v) {
   const a = (v || '').split(',');
   if (a.length < 8) return;
