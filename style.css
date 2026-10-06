@@ -480,20 +480,39 @@ body:not(.page-dark) .topnav .dd-panel .projects a { border-bottom-color: var(--
 
 /* White project pages: floating media stage (float-media.js). The first section's text sits in the middle,
    the page's videos and stills float around it in the main page's frames. */
-.fm-stage { position: relative; min-height: 480px; overflow: hidden; background: #fff; user-select: none; -webkit-user-select: none; touch-action: pan-y; border-bottom: 1px solid var(--sky-line, #eee); }
-.fm-text { position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%); width: min(600px, 84%); text-align: center; z-index: 2; cursor: pointer; }
+.fm-stage { position: relative; min-height: 480px; overflow: hidden; perspective: 1400px; perspective-origin: 50% 50%; background: #fff; user-select: none; -webkit-user-select: none; touch-action: pan-y; border-bottom: 1px solid var(--sky-line, #eee); }
+.fm-text { position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%); width: min(600px, 84%); text-align: center; z-index: 2; }
 .fm-text h2 { font-size: clamp(34px, 4.4vw, 60px); }
 .fm-text .meta, .fm-text .credit { margin: 10px 0 0; }
 .fm-text h2 .meta.inline { display: block; margin: 12px 0 0; text-transform: none; letter-spacing: 0; font-weight: 400; }
 .fm-text .body { margin-top: 18px; font-size: 15px; line-height: 1.5; }
 .fm-text .body p { margin: 0 0 .6em; }
 .fm-text .subnav { justify-content: center; margin: 18px 0 0; font-size: 17px; }
-.fm-item { position: absolute; left: 0; top: 0; z-index: 1; will-change: transform; }
+.fm-item { position: absolute; left: 0; top: 0; z-index: 1; will-change: transform; backface-visibility: visible; }
+.fm-frames { position: absolute; inset: 0; z-index: 4; pointer-events: none; }
 .fm-item.hot { z-index: 3; }
 .fm-media { display: block; width: 100%; height: 100%; object-fit: cover; pointer-events: none; }
-.shr-frame.fm-frame { inset: -7px; pointer-events: none; will-change: auto; }
+.shr-frame.fm-frame { pointer-events: none; }
 .fm-found { outline: 3px solid var(--navy, #2a27a6); outline-offset: 4px; animation: cl-found 1.6s ease-out forwards; }
-/* …and the text of the sections below is centred too */
-.fm-page .slide > h2, .fm-page .slide > .meta, .fm-page .slide > .body, .fm-page .slide > .credit, .fm-page .slide > .label { text-align: center; margin-left: auto; margin-right: auto; }
-.fm-page .slide > .body { max-width: 760px; }
 @media (max-width: 820px) { .fm-text { width: 90%; } .fm-text .body { font-size: 13px; } .fm-text h2 { font-size: 30px; } }
+/* Every white section is a stage; the old grids stay in the page for the cards but out of sight;
+   stages snap gently one after another while scrolling */
+.fm-src { display: none; }
+html.fm-snap { scroll-snap-type: y proximity; }
+.fm-stage { scroll-snap-align: start; }
+/* The card that opens on a click on a floating item */
+.fm-card { position: fixed; inset: 0; z-index: 60; display: flex; align-items: center; justify-content: center; padding: 24px; background: rgba(255,255,255,.82); backdrop-filter: blur(6px); }
+.fm-card[hidden] { display: none; }
+.fm-card-box { position: relative; display: flex; flex-direction: column; gap: 12px; max-width: min(1100px, 100%); padding: 18px 18px 16px; background: #fff; border: 1px solid var(--navy, #2a27a6); box-shadow: 0 18px 50px rgba(42,39,166,.12); }
+.fm-card-media { display: flex; justify-content: center; min-height: 0; }
+.fm-card-m { display: block; width: auto; height: auto; max-width: 100%; max-height: calc(100svh / var(--z, 1) - 190px); object-fit: contain; }
+model-viewer.fm-card-m { width: min(80vw, 900px); height: calc(100svh / var(--z, 1) - 220px); background: #fff; }
+.fm-card-t { font: 500 clamp(11px, 1.19vw, 17.5px)/1.1 var(--sans); letter-spacing: -.02em; text-transform: uppercase; color: var(--navy, #2a27a6); padding-right: 40px; }
+.fm-card-c { font: italic 17px/1.3 var(--serif); color: var(--sky, #5d8ab6); margin-top: 4px; }
+.fm-card-nav { display: flex; gap: 18px; align-items: baseline; margin-top: 10px; font: 500 13px var(--sans); letter-spacing: -.01em; text-transform: uppercase; }
+.fm-card-nav[hidden] { display: none; }
+.fm-card-nav button, .fm-card-x { font: inherit; text-transform: inherit; color: var(--navy, #2a27a6); background: none; border: 0; padding: 0; cursor: pointer; }
+.fm-card-nav button:hover, .fm-card-x:hover { color: var(--sky, #5d8ab6); }
+.fm-card-nav .n { color: var(--sky, #5d8ab6); }
+.fm-card-x { position: absolute; right: 12px; top: 6px; font: 300 32px/1 var(--sans); }
+.fm-card-x:focus:not(:focus-visible) { outline: none; }
