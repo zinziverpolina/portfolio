@@ -516,3 +516,6 @@ model-viewer.fm-card-m { width: min(80vw, 900px); height: calc(100svh / var(--z,
 .fm-card-nav .n { color: var(--sky, #5d8ab6); }
 .fm-card-x { position: absolute; right: 12px; top: 6px; font: 300 32px/1 var(--sans); }
 .fm-card-x:focus:not(:focus-visible) { outline: none; }
+/* Header rows run the full width: the white-group projects from the left, the two black ones (Posters, HYPERTRASH) pushed right */
+.topnav:not(.intro-nav) .in, .topnav:not(.intro-nav) .tabs { max-width: none; }
+.topnav .tabs .tabs-gap { margin-left: auto; }
