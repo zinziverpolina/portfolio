@@ -32,7 +32,7 @@ export function floatScene(hero, MODELS, opts = {}) {
 
   const world = new CANNON.World({ gravity: new CANNON.Vec3(0, 0, 0) });
   world.defaultContactMaterial.friction = 0.05;
-  world.defaultContactMaterial.restitution = 0.4;
+  world.defaultContactMaterial.restitution = 0.6;
 
   // Six walls around the visible area; resized with the window.
   const walls = [
@@ -49,9 +49,11 @@ export function floatScene(hero, MODELS, opts = {}) {
     return b;
   });
 
-  // Optional keep-out box (the intro logo): a static block the models bump against.
-  const zone = { x: 0, y: 0, hw: 0, hh: 0 };
-  const block = opts.keepOut ? new CANNON.Body({ type: CANNON.Body.STATIC }) : null;
+  // Optional keep-out boxes (the intro logo's letters, ALL PROJECTS): one static block the models bump against.
+  // zone = the boxes' union (home cells move off it); pullTo = centre of the first box (click pull target).
+  const keepEls = opts.keepOut ? [].concat(opts.keepOut) : [];
+  const zone = { x: 0, y: 0, hw: 0, hh: 0 }, pullTo = { x: 0, y: 0 };
+  const block = keepEls.length ? new CANNON.Body({ type: CANNON.Body.STATIC }) : null;
   if (block) world.addBody(block);
 
   let W = 1, H = VIEW_H, unit = 1;
@@ -70,14 +72,23 @@ export function floatScene(hero, MODELS, opts = {}) {
     walls[5].position.set(0, 0, DEPTH);
     let free = 1;
     if (block) {
-      const hr = hero.getBoundingClientRect(), r = opts.keepOut.getBoundingClientRect();
-      zone.hw = r.width / hr.width * W / 2; zone.hh = r.height / hr.height * H / 2;
-      zone.x = ((r.left + r.width / 2 - hr.left) / hr.width - 0.5) * W; zone.y = (0.5 - (r.top + r.height / 2 - hr.top) / hr.height) * H;
+      const hr = hero.getBoundingClientRect();
+      const boxes = keepEls.map((el) => {
+        const r = el.getBoundingClientRect();
+        return { x: ((r.left + r.width / 2 - hr.left) / hr.width - 0.5) * W, y: (0.5 - (r.top + r.height / 2 - hr.top) / hr.height) * H,
+          hw: r.width / hr.width * W / 2, hh: r.height / hr.height * H / 2 };
+      }).filter((b) => b.hw > 0 && b.hh > 0);
       block.shapes = []; block.shapeOffsets = []; block.shapeOrientations = [];
-      if (zone.hw > 0 && zone.hh > 0) block.addShape(new CANNON.Box(new CANNON.Vec3(zone.hw, zone.hh, DEPTH)));
+      if (boxes.length) {
+        const x0 = Math.min(...boxes.map((b) => b.x - b.hw)), x1 = Math.max(...boxes.map((b) => b.x + b.hw));
+        const y0 = Math.min(...boxes.map((b) => b.y - b.hh)), y1 = Math.max(...boxes.map((b) => b.y + b.hh));
+        Object.assign(zone, { x: (x0 + x1) / 2, y: (y0 + y1) / 2, hw: (x1 - x0) / 2, hh: (y1 - y0) / 2 });
+        Object.assign(pullTo, { x: boxes[0].x, y: boxes[0].y });
+        for (const b of boxes) block.addShape(new CANNON.Box(new CANNON.Vec3(b.hw, b.hh, DEPTH)), new CANNON.Vec3(b.x - zone.x, b.y - zone.y, 0));
+      }
       block.position.set(zone.x, zone.y, 0);
       block.updateMassProperties(); block.aabbNeedsUpdate = true;
-      free = Math.max(0.45, 1 - (4 * zone.hw * zone.hh) / (W * H));
+      free = Math.max(0.45, 1 - boxes.reduce((a, b) => a + 4 * b.hw * b.hh, 0) / (W * H));
     }
     unit = Math.min(Math.sqrt(W * H * free / MODELS.length) * 0.62, Math.min(W, H) * 0.4);
     items.forEach(fit);
@@ -291,7 +302,7 @@ export function floatScene(hero, MODELS, opts = {}) {
       const b = it.body, s = it.seed;
       // Slow wandering force + a soft spring back to its home spot and the middle layer.
       // While pulled (click on the logo), the target is the keep-out box instead of its home spot.
-      const pulling = t < pullUntil && block, h0 = pulling ? zone : home(it.i), k = pulling ? 3 : 0.35;
+      const pulling = t < pullUntil && block, h0 = pulling ? pullTo : home(it.i), k = pulling ? 2 : 0.35;
       b.applyForce(new CANNON.Vec3(
         Math.sin(t / 6 + s) * 0.5 + (h0.x - b.position.x) * k,
         Math.cos(t / 7 + s * 2) * 0.5 + (h0.y - b.position.y) * k,
