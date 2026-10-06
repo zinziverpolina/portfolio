@@ -1,0 +1,181 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Polina Zinziver</title>
+<meta name="description" content="Polina Zinziver — multimedia artist working with CGI, mediated installations and a/v performances.">
+<style>
+  :root { --ink: #fff; --bg: #cfe3ea; }
+  html, body { margin: 0; height: 100%; overflow: hidden; background: var(--bg); }
+  canvas { display: block; position: fixed; inset: 0; touch-action: none; cursor: grab; opacity: 0; transition: opacity 1.6s ease; }
+  canvas.ready { opacity: 1; }
+  canvas:active { cursor: grabbing; }
+  nav { position: fixed; top: 22px; right: 28px; display: flex; gap: 22px; z-index: 2;
+        font: italic 17px/1 "Times New Roman", Tinos, serif; }
+  nav a { color: var(--ink); text-decoration: none; text-shadow: 0 0 12px rgba(0,0,0,.18); }
+  nav a:hover { text-decoration: underline; text-underline-offset: 4px; }
+  /* sky switcher (temporary, while choosing) */
+  .proto { position: fixed; left: 16px; bottom: 14px; z-index: 2; display: flex; gap: 6px; flex-wrap: wrap;
+           font: 12px/1 Arial, sans-serif; }
+  .proto button { background: rgba(255,255,255,.18); color: #fff; border: 1px solid rgba(255,255,255,.45);
+                  border-radius: 20px; padding: 6px 10px; cursor: pointer; backdrop-filter: blur(6px); }
+  .proto button.on { background: rgba(255,255,255,.75); color: #222; }
+  @media (max-width: 600px) { nav { top: 16px; right: 16px; gap: 14px; font-size: 15px; } }
+</style>
+<script type="importmap">
+{ "imports": {
+  "three": "https://cdn.jsdelivr.net/npm/three@0.169.0/build/three.module.js",
+  "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.169.0/examples/jsm/"
+} }
+</script>
+</head>
+<body>
+
+<nav>
+  <a href="../index.html">artistic</a>
+  <a href="../commercial.html">commercial</a>
+  <a href="https://zinziverpolina.github.io/Polina-CV/" target="_blank" rel="noopener">cv</a>
+  <a href="https://www.instagram.com/polina_zinziver_/" target="_blank" rel="noopener">instagram</a>
+</nav>
+
+<div class="proto" id="proto"></div>
+
+<script type="module">
+// The Cinema 4D scene zinziver_fonts_extrude.c4d, camera "Mirabela camera", rebuilt for the web:
+// the name in Mirabela, silver chrome, inside a 10 m sphere that carries the sky.
+// C4D → three.js: centimetres → metres and z flipped (C4D is left-handed).
+import * as THREE from 'three';
+import { RGBELoader } from 'three/addons/loaders/RGBELoader.js';
+import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
+
+const SKIES = { sky6: 'pink clouds', sky7: 'sky 7', s453: 'beach' };
+const params = new URLSearchParams(location.search);
+let skyId = SKIES[params.get('sky')] ? params.get('sky') : 'sky6';
+
+const CAM = {   // "Mirabela camera": 36 mm lens on a 36 mm film back → 53.1° horizontal field of view
+  pos: new THREE.Vector3(-0.56576, -0.91331, 8.89078),
+  dir: new THREE.Vector3(0.061, -0.097, -0.993),
+  up: new THREE.Vector3(0.006, 0.995, -0.097),
+  hfov: 2 * Math.atan(18 / 36),
+};
+const NAME_CENTER = new THREE.Vector3(0, -1.7975, -0.1);
+const SPHERE = { center: new THREE.Vector3(0, -1.9, -0.1), r: 10 };
+const SKY_TURN = Math.PI;   // the panorama sits half a turn round compared with three.js' equirect convention
+
+// ---------- renderer / scene ----------
+const renderer = new THREE.WebGLRenderer({ antialias: true });
+renderer.setPixelRatio(Math.min(devicePixelRatio, 2));
+renderer.setSize(innerWidth, innerHeight);
+renderer.toneMapping = THREE.ACESFilmicToneMapping;   // C4D renders through OCIO "ACES 1.0 SDR-video"
+renderer.toneMappingExposure = 0.6;                   // three.js ACES at 0.6 matches it (the sky jpgs are baked the same way)
+document.body.prepend(renderer.domElement);
+
+const scene = new THREE.Scene();
+scene.environmentRotation.y = SKY_TURN;
+const camera = new THREE.PerspectiveCamera(40, innerWidth / innerHeight, 0.05, 100);
+camera.up.copy(CAM.up);
+const pmrem = new THREE.PMREMGenerator(renderer);
+
+// the sky sphere around the name: the camera is inside it, close to its wall, as in C4D
+const skyMat = new THREE.ShaderMaterial({
+  side: THREE.BackSide, depthWrite: false, toneMapped: false,
+  uniforms: { sky: { value: null }, center: { value: SPHERE.center }, turn: { value: SKY_TURN } },
+  vertexShader: `varying vec3 vWorld;
+    void main(){ vec4 w = modelMatrix * vec4(position, 1.); vWorld = w.xyz; gl_Position = projectionMatrix * viewMatrix * w; }`,
+  fragmentShader: `uniform sampler2D sky; uniform vec3 center; uniform float turn; varying vec3 vWorld;
+    #define PI 3.141592653589793
+    void main(){
+      vec3 d = normalize(vWorld - center);
+      float c = cos(turn), s = sin(turn);
+      d = vec3(c * d.x + s * d.z, d.y, -s * d.x + c * d.z);
+      vec2 uv = vec2(atan(d.z, d.x) / (2. * PI) + .5, asin(clamp(d.y, -1., 1.)) / PI + .5);
+      gl_FragColor = vec4(texture2D(sky, uv).rgb, 1.);
+      #include <colorspace_fragment>
+    }`,
+});
+const skyMesh = new THREE.Mesh(new THREE.SphereGeometry(SPHERE.r, 96, 48), skyMat);
+skyMesh.position.copy(SPHERE.center);
+scene.add(skyMesh);
+
+// ---------- skies: jpg on the sphere (made from the HDR as C4D shows it), 2K HDR for the reflections ----------
+const texLoader = new THREE.TextureLoader(), hdrLoader = new RGBELoader();
+const skyCache = {};
+function loadSky(id) {
+  if (!skyCache[id]) skyCache[id] = Promise.all([texLoader.loadAsync(`${id}_sphere.jpg`), hdrLoader.loadAsync(`${id}_2k.hdr`)])
+    .then(([bg, hdr]) => {
+      bg.colorSpace = THREE.SRGBColorSpace;
+      bg.anisotropy = renderer.capabilities.getMaxAnisotropy();
+      hdr.mapping = THREE.EquirectangularReflectionMapping;
+      const env = pmrem.fromEquirectangular(hdr).texture;
+      hdr.dispose();
+      return { bg, env };
+    });
+  return skyCache[id];
+}
+async function setSky(id) {
+  const { bg, env } = await loadSky(id);
+  skyMat.uniforms.sky.value = bg;
+  scene.environment = env;
+  skyId = id; syncButtons();
+}
+
+// ---------- the name ----------
+const chrome = new THREE.MeshPhysicalMaterial({ color: 0xf7f7fa, metalness: 1, roughness: 0.04, envMapIntensity: 1 });
+const nameP = new GLTFLoader().loadAsync('mirabela_chrome.glb').then(gltf => {
+  const obj = gltf.scene;
+  obj.traverse(o => { if (o.isMesh) o.material = chrome; });
+  obj.position.copy(NAME_CENTER);
+  scene.add(obj);
+});
+
+// ---------- camera: opens exactly at the C4D view; the mouse turns the head a little, drag looks further ----------
+const look = { yaw: 0, pitch: 0, ty: 0, tp: 0, drag: 0, dragging: false, lastX: 0, idle: 0 };
+const el = renderer.domElement;
+addEventListener('pointermove', e => {
+  if (look.dragging) { look.drag += (e.clientX - look.lastX) * 0.003; look.lastX = e.clientX; }
+  look.ty = -(e.clientX / innerWidth * 2 - 1) * 0.07;
+  look.tp = -(e.clientY / innerHeight * 2 - 1) * 0.04;
+  look.idle = 0;
+});
+el.addEventListener('pointerdown', e => { look.dragging = true; look.lastX = e.clientX; el.setPointerCapture(e.pointerId); });
+addEventListener('pointerup', () => { look.dragging = false; });
+
+addEventListener('resize', () => {
+  camera.aspect = innerWidth / innerHeight;
+  // keep the C4D horizontal field of view, so the name always spans the screen the same way
+  camera.fov = THREE.MathUtils.radToDeg(2 * Math.atan(Math.tan(CAM.hfov / 2) / camera.aspect));
+  camera.updateProjectionMatrix();
+  renderer.setSize(innerWidth, innerHeight);
+});
+dispatchEvent(new Event('resize'));
+
+const right = new THREE.Vector3().crossVectors(CAM.dir, CAM.up).normalize();
+const q = new THREE.Quaternion(), dir = new THREE.Vector3(), target = new THREE.Vector3();
+const clock = new THREE.Clock();
+camera.position.copy(CAM.pos);
+renderer.setAnimationLoop(() => {
+  const dt = Math.min(clock.getDelta(), 0.05), t = clock.elapsedTime;
+  look.idle += dt;
+  if (look.idle > 5 && !look.dragging) look.drag *= Math.pow(0.5, dt);   // after a pause, back to the C4D view
+  const ease = 1 - Math.pow(0.003, dt);
+  look.yaw += (look.drag + look.ty + Math.sin(t * 0.17) * 0.012 - look.yaw) * ease;
+  look.pitch += (look.tp + Math.sin(t * 0.11) * 0.006 - look.pitch) * ease;
+  dir.copy(CAM.dir).applyQuaternion(q.setFromAxisAngle(CAM.up, look.yaw)).applyQuaternion(q.setFromAxisAngle(right, look.pitch));
+  camera.lookAt(target.copy(CAM.pos).add(dir));
+  renderer.render(scene, camera);
+});
+
+// ---------- sky switcher (temporary) ----------
+const proto = document.getElementById('proto');
+function syncButtons() { proto.querySelectorAll('button').forEach(b => b.classList.toggle('on', b.dataset.sky === skyId)); }
+Object.entries(SKIES).forEach(([id, label]) => {
+  const b = document.createElement('button'); b.textContent = label; b.dataset.sky = id;
+  b.onclick = () => setSky(id); proto.append(b);
+});
+
+await Promise.all([setSky(skyId), nameP]);
+el.classList.add('ready');
+</script>
+</body>
+</html>
