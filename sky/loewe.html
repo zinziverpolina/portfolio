@@ -9,6 +9,8 @@
   :root { --ink: #fff; --bg: #cfe3ea; }
   html, body { margin: 0; height: 100%; overflow: hidden; background: var(--bg); }
   canvas { display: block; position: fixed; inset: 0; touch-action: none; cursor: grab; opacity: 0; transition: opacity 1.6s ease; }
+  .embed canvas { touch-action: pan-y; }
+  .embed .hint { display: none; }
   canvas.ready { opacity: 1; }
   canvas:active { cursor: grabbing; }
   nav { position: fixed; top: 22px; right: 28px; display: flex; gap: 22px; z-index: 2;
@@ -35,12 +37,6 @@
 </head>
 <body>
 
-<nav>
-  <a href="../index.html">artistic</a>
-  <a href="../commercial.html">commercial</a>
-  <a href="https://zinziverpolina.github.io/Polina-CV/" target="_blank" rel="noopener">cv</a>
-  <a href="https://www.instagram.com/polina_zinziver_/" target="_blank" rel="noopener">instagram</a>
-</nav>
 
 <div class="proto" id="proto"></div>
 <div class="hint" id="hint">click for the next word · drag the word to turn it<br>scroll to fly through · move to turn the sky</div>
@@ -54,8 +50,12 @@ import * as THREE from 'three';
 import { RGBELoader } from 'three/addons/loaders/RGBELoader.js';
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 
-const SKIES = { sky6: 'pink clouds', sky7: 'sky 7', s453: 'beach' };
+const SKIES = { sky6: 'pink clouds', sky7: 'sky 7' };
 const params = new URLSearchParams(location.search);
+// ?embed: shown inside the LOEWE project page — no hint overlay (the controls are written under the block),
+// the wheel only flies after a click on the scene, and vertical swipes still scroll the page
+const EMBED = params.has('embed');
+if (EMBED) document.documentElement.classList.add('embed');
 let skyId = SKIES[params.get('sky')] ? params.get('sky') : 'sky6';
 
 const CAM = {   // "Mirabela camera": 36 mm lens on a 36 mm film back → 53.1° horizontal field of view
@@ -213,7 +213,11 @@ const clampFly = v => Math.min(FLY.max, Math.max(FLY.min, v));
 const hint = document.getElementById('hint');
 if (matchMedia('(pointer: coarse)').matches) hint.innerHTML = 'tap for the next word · drag the word to turn it<br>pinch to fly through · drag the sky to turn it';
 const used = () => { hint.classList.add('gone'); };
+let active = !EMBED;                       // embedded: the wheel scrolls the page until the scene is clicked
+addEventListener('pointerdown', () => { active = true; });
+document.documentElement.addEventListener('mouseleave', () => { if (EMBED) active = false; });
 addEventListener('wheel', e => {
+  if (!active) return;
   e.preventDefault(); used();
   const step = e.deltaMode === 1 ? e.deltaY * 16 : e.deltaY;          // lines → pixels
   fly.target = clampFly(fly.target - step * 0.006 * (1 + Math.abs(fly.target) * 0.08));
@@ -337,7 +341,30 @@ Object.entries(SKIES).forEach(([id, label]) => {
   b.onclick = () => setSky(id); proto.append(b);
 });
 
+// ---------- the view lives in the address: #v=sky,fly,qx,qy,qz,qw,word,skyId (send it to make it the opening view) ----------
+const DEFAULT_VIEW = '';
+function applyView(v) {
+  const a = (v || '').split(',');
+  if (a.length < 8) return;
+  const n = a.slice(0, 7).map(Number);
+  if (n.some(isNaN)) return;
+  sky.drag = n[0]; sky.a = n[0]; sky.swing = 0;
+  fly.t = fly.target = clampFly(n[1]);
+  held.q.set(n[2], n[3], n[4], n[5]).normalize();
+  pendingWord = n[6] | 0;
+  if (SKIES[a[7]]) skyId = a[7];
+}
+let pendingWord = null, lastView = '';
+applyView((location.hash.match(/v=([^&]+)/) || [])[1] || DEFAULT_VIEW);
+setInterval(() => {
+  if (EMBED || !anim) return;
+  const q = held.q, v = [sky.a, fly.t, q.x, q.y, q.z, q.w].map(x => x.toFixed(3)).concat(stopAt, skyId).join(',');
+  if (v !== lastView) { lastView = v; history.replaceState(null, '', '#v=' + v); }
+}, 700);
+
 await Promise.all([setSky(skyId), nameP]);
+if (pendingWord != null && stops.length === 0) { findStops(); }
+if (pendingWord != null) { stopAt = pendingWord % stops.length; animT = stops[stopAt]; }
 el.classList.add('ready');
 </script>
 </body>

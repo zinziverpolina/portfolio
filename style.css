@@ -466,3 +466,11 @@ body:not(.page-dark) .topnav .dd.open .dd-btn, body:not(.page-dark) .topnav .dd-
 body:not(.page-dark) .topnav .dd-panel { border-bottom-color: var(--sky-line); }
 body:not(.page-dark) .topnav .dd-panel .projects .y { color: var(--sky); }
 body:not(.page-dark) .topnav .dd-panel .projects a { border-bottom-color: var(--sky-line); }
+/* LOEWE page: the Sky words scene (sky/loewe.html?embed), full width under the header like the Sacred Hyper Race walk */
+.lw-sky { position: relative; height: calc(100vh / var(--z, 1) - 92px); height: calc(100svh / var(--z, 1) - 92px); min-height: 440px; overflow: hidden; background: #cfe3ea; }
+.lw-sky iframe { position: absolute; inset: 0; width: 100%; height: 100%; border: 0; display: block; }
+.lw-sky-help { max-width: var(--w); margin: 0 auto; padding: 12px 48px 0; font: 13px/1.5 var(--sans); color: var(--text); }
+.lw-sky-help p { margin: 0; } .lw-sky-help b { font-weight: 700; }
+.lw-sky-help .tap { display: none; }
+@media (hover: none) { .lw-sky-help .desk { display: none; } .lw-sky-help .tap { display: block; } }
+@media (max-width: 820px) { .lw-sky { height: calc(100vh / var(--z, 1) - 82px); height: calc(100svh / var(--z, 1) - 82px); } .lw-sky-help { padding: 10px 16px 0; } }
