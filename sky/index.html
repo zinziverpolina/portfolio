@@ -1,0 +1,251 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Polina Zinziver</title>
+<meta name="description" content="Polina Zinziver — multimedia artist working with CGI, mediated installations and a/v performances.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Tinos:ital@0;1&display=swap" rel="stylesheet">
+<style>
+  :root { --ink: #fff; --bg: #cfe3ea; }
+  html, body { margin: 0; height: 100%; overflow: hidden; background: var(--bg); }
+  canvas { display: block; position: fixed; inset: 0; touch-action: none; cursor: grab; opacity: 0; transition: opacity 1.6s ease; }
+  canvas.ready { opacity: 1; }
+  canvas:active { cursor: grabbing; }
+  nav { position: fixed; top: 22px; right: 28px; display: flex; gap: 22px; z-index: 2;
+        font: italic 17px/1 "Times New Roman", Tinos, serif; }
+  nav a { color: var(--ink); text-decoration: none; text-shadow: 0 0 12px rgba(0,0,0,.18); }
+  nav a:hover { text-decoration: underline; text-underline-offset: 4px; }
+  /* sky switcher (temporary, while choosing) */
+  .proto { position: fixed; left: 16px; bottom: 14px; z-index: 2; display: flex; gap: 6px; flex-wrap: wrap;
+           font: 12px/1 Arial, sans-serif; }
+  .proto button { background: rgba(255,255,255,.18); color: #fff; border: 1px solid rgba(255,255,255,.45);
+                  border-radius: 20px; padding: 6px 10px; cursor: pointer; backdrop-filter: blur(6px); }
+  .proto button.on { background: rgba(255,255,255,.75); color: #222; }
+  @media (max-width: 600px) { nav { top: 16px; right: 16px; gap: 14px; font-size: 15px; } }
+</style>
+<script type="importmap">
+{ "imports": {
+  "three": "https://cdn.jsdelivr.net/npm/three@0.169.0/build/three.module.js",
+  "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.169.0/examples/jsm/"
+} }
+</script>
+</head>
+<body>
+
+<nav>
+  <a href="../index.html">artistic</a>
+  <a href="../commercial.html">commercial</a>
+  <a href="https://zinziverpolina.github.io/Polina-CV/" target="_blank" rel="noopener">cv</a>
+  <a href="https://www.instagram.com/polina_zinziver_/" target="_blank" rel="noopener">instagram</a>
+</nav>
+
+<div class="proto" id="proto"></div>
+
+<script type="module">
+import * as THREE from 'three';
+import { RGBELoader } from 'three/addons/loaders/RGBELoader.js';
+import { TTFLoader } from 'three/addons/loaders/TTFLoader.js';
+import { Font } from 'three/addons/loaders/FontLoader.js';
+import { TessellateModifier } from 'three/addons/modifiers/TessellateModifier.js';
+import { mergeGeometries } from 'three/addons/utils/BufferGeometryUtils.js';
+
+const SKIES = { sky6: 'pink clouds', sky7: 'sky 7', s453: 'beach' };
+const NAME = 'POLINA ZINZIVER';     // as the header logo: Times bold, caps, tracking .02em
+const params = new URLSearchParams(location.search);
+let skyId = SKIES[params.get('sky')] ? params.get('sky') : 'sky6';
+
+const R = 10;   // radius of the sky sphere the letters sit on
+
+// ---------- renderer / scene ----------
+const renderer = new THREE.WebGLRenderer({ antialias: true });
+renderer.setPixelRatio(Math.min(devicePixelRatio, 2));
+renderer.setSize(innerWidth, innerHeight);
+renderer.toneMapping = THREE.ACESFilmicToneMapping;
+renderer.toneMappingExposure = 1.0;
+document.body.prepend(renderer.domElement);
+
+const scene = new THREE.Scene();
+const camera = new THREE.PerspectiveCamera(62, innerWidth / innerHeight, 0.05, 200);
+camera.rotation.order = 'YXZ';
+const pmrem = new THREE.PMREMGenerator(renderer);
+
+const chrome = new THREE.MeshPhysicalMaterial({
+  color: 0xffffff, metalness: 1, roughness: 0.025,
+  clearcoat: 1, clearcoatRoughness: 0.02, envMapIntensity: 1,
+});
+
+// ---------- sky ----------
+// The background is the sky as it is. The reflections get a "studio" version of it:
+// same sky above, a dark ground below the horizon and a few hot softboxes,
+// which is what makes chrome read as chrome in C4D.
+const envMat = new THREE.ShaderMaterial({
+  side: THREE.BackSide, depthWrite: false,
+  uniforms: { sky: { value: null }, gain: { value: 1.6 } },
+  vertexShader: `varying vec3 vDir; void main(){ vDir = position; gl_Position = projectionMatrix * modelViewMatrix * vec4(position,1.); }`,
+  fragmentShader: `
+    uniform sampler2D sky; uniform float gain; varying vec3 vDir;
+    #define PI 3.141592653589793
+    void main(){
+      vec3 d = normalize(vDir);
+      vec2 uv = vec2(atan(d.z, d.x) / (2.*PI) + .5, asin(clamp(d.y,-1.,1.)) / PI + .5);
+      vec3 c = texture2D(sky, uv).rgb * gain;
+      float above = smoothstep(-.035, .015, d.y);                 // crisp horizon line
+      vec3 ground = mix(vec3(.05,.045,.06), vec3(.004,.004,.007), smoothstep(-.02,-.5,d.y));
+      gl_FragColor = vec4(mix(ground, c, above), 1.);
+    }`,
+});
+const envScene = new THREE.Scene();
+envScene.add(new THREE.Mesh(new THREE.SphereGeometry(50, 64, 32), envMat));
+const boxMat = new THREE.MeshBasicMaterial({ color: new THREE.Color(1, 1, 1).multiplyScalar(14), side: THREE.DoubleSide });
+for (const [w, h, x, y, z] of [
+  [34, 2.2, 0, 18, 30],     // long strip behind and above the viewer: the bright band on the letter faces
+  [10, 10, -32, 14, 10],    // side boxes: hot edges on the bevels
+  [10, 10, 32, 14, 10],
+  [26, 1.4, 0, 30, -20],    // top strip in front
+]) {
+  const m = new THREE.Mesh(new THREE.PlaneGeometry(w, h), boxMat);
+  m.position.set(x, y, z); m.lookAt(0, 0, 0); envScene.add(m);
+}
+
+const texLoader = new THREE.TextureLoader();
+const hdrLoader = new RGBELoader();
+const skyCache = {};
+function loadSky(id) {
+  if (!skyCache[id]) skyCache[id] = Promise.all([
+    texLoader.loadAsync(`${id}.jpg`),
+    hdrLoader.loadAsync(`${id}.hdr`),
+  ]).then(([bg, hdr]) => {
+    bg.mapping = THREE.EquirectangularReflectionMapping;
+    bg.colorSpace = THREE.SRGBColorSpace;
+    bg.anisotropy = renderer.capabilities.getMaxAnisotropy();
+    envMat.uniforms.sky.value = hdr;
+    const env = pmrem.fromScene(envScene, 0, 0.1, 200).texture;
+    hdr.dispose();
+    return { bg, env };
+  });
+  return skyCache[id];
+}
+async function setSky(id) {
+  const { bg, env } = await loadSky(id);
+  scene.background = bg;
+  scene.environment = env;
+  skyId = id; syncButtons();
+}
+
+// ---------- name, bent onto the inside of the sphere ----------
+const fontP = new TTFLoader().loadAsync('tinos-latin-700.woff').then(json => new Font(json));
+
+function buildName(font, span) {
+  const size = 2.2, res = font.data.resolution, tracking = 0.02 * size;
+  const opts = { depth: 0.5, curveSegments: 20,
+                 bevelEnabled: true, bevelThickness: 0.24, bevelSize: 0.07, bevelSegments: 10 };
+  const geos = [];
+  let x = 0;
+  for (const ch of NAME) {
+    const g = font.data.glyphs[ch];
+    if (ch !== ' ') geos.push(new THREE.ExtrudeGeometry(font.generateShapes(ch, size), opts).translate(x, 0, 0));
+    x += g.ha / res * size + tracking;
+  }
+  let geo = mergeGeometries(geos);
+  geo.computeBoundingBox();
+  const c = new THREE.Vector3(); geo.boundingBox.getCenter(c);
+  geo.translate(-c.x, -c.y, -geo.boundingBox.max.z);   // front face at z = 0, depth goes into -z
+  geo = new TessellateModifier(size * 0.1, 8).modify(geo);
+  geo.computeBoundingBox();
+  const k = (span * R) / (geo.boundingBox.max.x - geo.boundingBox.min.x);
+
+  const pos = geo.attributes.position, nor = geo.attributes.normal;
+  const p = new THREE.Vector3(), n = new THREE.Vector3();
+  const ex = new THREE.Vector3(), ey = new THREE.Vector3(), ez = new THREE.Vector3();
+  for (let i = 0; i < pos.count; i++) {
+    p.fromBufferAttribute(pos, i).multiplyScalar(k);
+    n.fromBufferAttribute(nor, i);
+    const az = p.x / R, el = p.y / R, r = R - p.z;       // the back of the letters sits further out
+    const ca = Math.cos(az), sa = Math.sin(az), ce = Math.cos(el), se = Math.sin(el);
+    pos.setXYZ(i, r * sa * ce, r * se, -r * ca * ce);
+    // local frame on the sphere: east, north, towards the centre
+    ex.set(ca, 0, sa);
+    ey.set(-sa * se, ce, ca * se);
+    ez.set(-sa * ce, -se, ca * ce);
+    const nx = n.x, ny = n.y, nz = n.z;
+    n.set(0, 0, 0).addScaledVector(ex, nx).addScaledVector(ey, ny).addScaledVector(ez, nz).normalize();
+    nor.setXYZ(i, n.x, n.y, n.z);
+  }
+  geo.computeBoundingSphere();
+  return geo;
+}
+
+// the name fills ~78% of the screen width, whatever the screen
+function nameSpan() {
+  const hfov = 2 * Math.atan(Math.tan(THREE.MathUtils.degToRad(camera.fov) / 2) * camera.aspect);
+  return Math.min(hfov * 0.78, THREE.MathUtils.degToRad(100));
+}
+const nameMesh = new THREE.Mesh(new THREE.BufferGeometry(), chrome);
+scene.add(nameMesh);
+let builtSpan = 0;
+async function rebuildName() {
+  const span = nameSpan();
+  if (Math.abs(span - builtSpan) < 0.03) return;
+  const font = await fontP;
+  nameMesh.geometry.dispose();
+  nameMesh.geometry = buildName(font, span);
+  builtSpan = span;
+}
+
+// ---------- looking around: mouse steers, drag spins, idle sways back to the name ----------
+const look = { yaw: 0, pitch: 0, baseYaw: 0, ty: 0, tp: 0, dragging: false, lastX: 0, idle: 0 };
+const el = renderer.domElement;
+addEventListener('pointermove', e => {
+  const mx = e.clientX / innerWidth * 2 - 1, my = e.clientY / innerHeight * 2 - 1;
+  if (look.dragging) { look.baseYaw += (e.clientX - look.lastX) * 0.004; look.lastX = e.clientX; }
+  look.ty = -mx * 0.5;
+  look.tp = -my * 0.3;
+  look.idle = 0;
+});
+el.addEventListener('pointerdown', e => { look.dragging = true; look.lastX = e.clientX; el.setPointerCapture(e.pointerId); });
+addEventListener('pointerup', () => { look.dragging = false; });
+
+let resizeT;
+addEventListener('resize', () => {
+  camera.aspect = innerWidth / innerHeight;
+  camera.fov = innerWidth < innerHeight ? 80 : 62;
+  camera.updateProjectionMatrix();
+  renderer.setSize(innerWidth, innerHeight);
+  clearTimeout(resizeT); resizeT = setTimeout(rebuildName, 200);
+});
+dispatchEvent(new Event('resize'));
+
+const clock = new THREE.Clock();
+renderer.setAnimationLoop(() => {
+  const dt = Math.min(clock.getDelta(), 0.05), t = clock.elapsedTime;
+  look.idle += dt;
+  if (look.idle > 6 && !look.dragging) {   // after a pause, drift back to face the name
+    const home = Math.round(look.baseYaw / (2 * Math.PI)) * 2 * Math.PI;
+    look.baseYaw += (home - look.baseYaw) * (1 - Math.pow(0.6, dt));
+  }
+  const sway = Math.sin(t * 0.17) * 0.07;
+  const ease = 1 - Math.pow(0.0025, dt);
+  look.yaw += (look.baseYaw + look.ty + sway - look.yaw) * ease;
+  look.pitch += (look.tp + Math.sin(t * 0.11) * 0.025 - look.pitch) * ease;
+  camera.rotation.set(look.pitch, look.yaw, 0);
+  renderer.render(scene, camera);
+});
+
+// ---------- sky switcher (temporary) ----------
+const proto = document.getElementById('proto');
+function syncButtons() {
+  proto.querySelectorAll('button').forEach(b => b.classList.toggle('on', b.dataset.sky === skyId));
+}
+Object.entries(SKIES).forEach(([id, label]) => {
+  const b = document.createElement('button'); b.textContent = label; b.dataset.sky = id;
+  b.onclick = () => setSky(id); proto.append(b);
+});
+
+await Promise.all([setSky(skyId), rebuildName()]);
+el.classList.add('ready');
+</script>
+</body>
+</html>
