@@ -43,7 +43,7 @@
 </nav>
 
 <div class="proto" id="proto"></div>
-<div class="hint" id="hint">drag the word to turn it · click to see its back<br>scroll to fly through · move to turn the sky</div>
+<div class="hint" id="hint">click for the next word · drag the word to turn it<br>scroll to fly through · move to turn the sky</div>
 
 <script type="module">
 // LOEWE SS22 "Sky" (D:_ZINZIVER ART- LOEWE _SS22\SKY\Sky_2.c4d): Live, Laugh, Loewe turning in the sky.
@@ -156,8 +156,37 @@ const nameP = Promise.all([new GLTFLoader().loadAsync('loewe_words.glb'), fetch(
   });
 
 // play the baked frames (linear in between — the turn is ~2° a frame)
+// The words wait facing the viewer; a click plays the C4D turn + word change, fast, to the next word.
+const TURN_TIME = 0.95;     // seconds for one turn (≈ 4× the video's pace)
+let stops = [], stopAt = 0, turn = null;
+function findStops() {      // for each word: the frame where it faces the camera most squarely
+  for (const w of words) {
+    let best = -1, bf = 0;
+    w.frames.forEach((m, f) => {
+      const sc = Math.hypot(m[0], m[1], m[2]);
+      if (sc > 0.01 && Math.abs(m[0]) / sc > best) { best = Math.abs(m[0]) / sc; bf = f; }
+    });
+    stops.push(bf);
+  }
+  stops.sort((a, b) => a - b);
+  animT = stops[0];
+}
+function nextWord() {
+  const N = anim.frames, from = animT;
+  stopAt = (stopAt + 1) % stops.length;
+  let span = (stops[stopAt] - from + N) % N;
+  if (span < 1) span += N;   // already there: go round once more
+  turn = { from, span, t: 0, dur: TURN_TIME * (turn ? 0.75 : 1) };   // clicking again mid-turn hurries on
+}
+const ease = u => u < 0.5 ? 4 * u * u * u : 1 - Math.pow(-2 * u + 2, 3) / 2;
 function playWords(dt) {
-  animT = (animT + dt * anim.fps) % anim.frames;
+  if (!stops.length) findStops();
+  if (turn) {
+    turn.t += dt;
+    const u = Math.min(1, turn.t / turn.dur);
+    animT = (turn.from + ease(u) * turn.span) % anim.frames;
+    if (u >= 1) turn = null;
+  }
   const f0 = Math.floor(animT), f1 = (f0 + 1) % anim.frames, k = animT - f0;
   for (const w of words) {
     const A = w.frames[f0], B = w.frames[f1], e = w.mesh.matrix.elements;
@@ -181,7 +210,7 @@ const el = renderer.domElement;
 const clampFly = v => Math.min(FLY.max, Math.max(FLY.min, v));
 
 const hint = document.getElementById('hint');
-if (matchMedia('(pointer: coarse)').matches) hint.innerHTML = 'drag the word to turn it · tap to see its back<br>pinch to fly through · drag the sky to turn it';
+if (matchMedia('(pointer: coarse)').matches) hint.innerHTML = 'tap for the next word · drag the word to turn it<br>pinch to fly through · drag the sky to turn it';
 const used = () => { hint.classList.add('gone'); };
 addEventListener('wheel', e => {
   e.preventDefault(); used();
@@ -252,7 +281,7 @@ function turnHeld(ay, ax) {
 addEventListener('pointerup', e => {
   const click = press && Math.hypot(e.clientX - press.x, e.clientY - press.y) < 7 && performance.now() - press.t < 500;
   press = null; lift(e);
-  if (click && onName(e)) { spin.target += Math.PI; used(); }
+  if (click) { nextWord(); used(); }   // a click anywhere: turn to the next word
 });
 addEventListener('pointercancel', lift);
 
