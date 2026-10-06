@@ -366,7 +366,7 @@ html.picking section.slide img.kept, html.picking section.slide video.kept { out
 
 /* Posters & covers: paper-collage stage */
 .cl-stage { position: relative; height: calc(100vh / var(--z, 1) - 92px); height: calc(100svh / var(--z, 1) - 92px); min-height: 420px; overflow: hidden; background: #111; border-bottom: 1px solid #eee; touch-action: pan-y; }
-.cl-piece { position: absolute; left: 0; top: 0; display: block; height: auto; max-width: none; cursor: grab; user-select: none; -webkit-user-drag: none; box-shadow: 0 2px 8px rgba(0,0,0,.3); will-change: transform; }
+.cl-piece { position: absolute; left: 0; top: 0; transform-origin: 0 0; display: block; height: auto; max-width: none; cursor: grab; user-select: none; -webkit-user-drag: none; box-shadow: 0 2px 8px rgba(0,0,0,.3); will-change: transform; }
 .cl-ui { position: absolute; inset: 0; pointer-events: none; z-index: 10000; }
 .cl-ui span { position: absolute; font: 15px/1.2 var(--sans); color: #111; background: #fff; padding: 2px 6px; }
 .cl-ui .tl { left: 42px; top: 18px; font: 500 clamp(22px, 3vw, 40px)/1 var(--sans); letter-spacing: -.02em; text-transform: uppercase; }
@@ -392,6 +392,9 @@ body.page-dark .cl-ui span { background: #000; color: #eee; }
 body.page-dark .cl-ui .br { color: #999; }
 body.page-dark footer { color: #777; }
 .cl-stage { isolation: isolate; z-index: 0; }
+/* Dive-in corridor (collage.js): a tall scroll stretch keeps the stage pinned while the camera travels in */
+.cl-scroll { position: relative; }
+.cl-stage.cl-deep { position: sticky; }
 .cl-stage video.cl-piece { object-fit: contain; background: #000; }
 
 /* Collapsible stacks: a pile shown as one picture; click opens the full grid below */

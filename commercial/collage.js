@@ -4,6 +4,8 @@
 // place in the next layout and lands on top, so the collage keeps rebuilding itself in a loop.
 // Posters near the cursor are carried along its path, can be dragged around, and a click scrolls to that poster in
 // the gallery below.
+// Scrolling dives in: the stage stays pinned while the posters fold out onto the walls, floor and ceiling of a
+// corridor and the camera travels through it; at its far end the page carries on to the gallery below.
 // collage(stageElement, galleryImages)
 export function collage(stage, sources) {
   const LAYOUTS = 4;       // layouts the base layer loops through
@@ -11,6 +13,73 @@ export function collage(stage, sources) {
 
   const rnd = (a, b) => a + Math.random() * (b - a);
   const pool = [];
+
+  // ----- dive-in corridor (scroll-driven) -----
+  const deep = !matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const ui = stage.querySelector('.cl-ui');
+  let wrap = null, depthM = 0, slots = null, corridorLen = 1;
+  if (deep) {
+    wrap = document.createElement('div');
+    wrap.className = 'cl-scroll';
+    stage.before(wrap); wrap.appendChild(stage);
+    stage.classList.add('cl-deep');
+    const fit = () => {
+      const nav = document.querySelector('.topnav'), h = nav ? nav.offsetHeight : 0;
+      stage.style.top = h + 'px';
+      stage.style.height = `calc(100svh / var(--z, 1) - ${h}px)`;
+      wrap.style.height = `calc(100svh / var(--z, 1) * 3.6 - ${h}px)`;
+    };
+    fit(); addEventListener('resize', fit);
+    const hint = ui && ui.querySelector('.br');
+    if (hint) hint.textContent += ' · scroll to go inside';
+  }
+  // 0 at the top of the pinned stretch, 1 at its end.
+  function progress() {
+    if (!wrap) return 0;
+    const r = wrap.getBoundingClientRect(), s = stage.getBoundingClientRect(), span = r.height - s.height;
+    return span > 0 ? Math.min(1, Math.max(0, (s.top - r.top) / span)) : 0;
+  }
+  const smooth = (a, b, x) => { const t = Math.min(1, Math.max(0, (x - a) / (b - a))); return t * t * (3 - 2 * t); };
+  // A place on the corridor for every poster: centre (x, y, z), its width and height directions (U, V), size.
+  // Corridor = the stage's own cross-section; z runs into the screen (negative = farther away).
+  function corridor() {
+    const W = stage.clientWidth, H = stage.clientHeight, gap = () => H * rnd(0.06, 0.16);
+    const cur = [-H * 0.12, -H * 0.12 - W * 0.18, -H * 0.4, -H * 0.4 - W * 0.12];
+    const WALL = [0, 1, 2, 0, 1, 3];   // left, right, floor, left, right, ceiling
+    const out = tiles.map((it, i) => {
+      const k = WALL[i % WALL.length], ar = it.p.ar;
+      if (k < 2) {   // side walls: images stand along the corridor
+        let h = H * rnd(0.42, 0.62), w = h * ar;
+        if (w > H * 1.1) { w = H * 1.1; h = w / ar; }
+        const z = cur[k] - w / 2; cur[k] -= w + gap();
+        return { x: k === 0 ? 0 : W, y: rnd(h / 2 + H * 0.06, H - h / 2 - H * 0.06), z, w, h,
+          U: [0, 0, k === 0 ? -1 : 1], V: [0, 1, 0] };
+      }
+      let w = W * rnd(0.3, 0.46), h = w / ar;   // floor / ceiling: images lie flat, top edge away from you
+      if (h > W * 0.6) { h = W * 0.6; w = h * ar; }
+      const z = cur[k] - h / 2; cur[k] -= h + gap();
+      return { x: rnd(w / 2 + W * 0.05, W - w / 2 - W * 0.05), y: k === 2 ? H : 0, z, w, h,
+        U: [1, 0, 0], V: [0, 0, k === 2 ? 1 : -1] };
+    });
+    corridorLen = -Math.min(...cur);
+    return out;
+  }
+  // matrix3d that draws an element's w x h box as the rectangle with top-left corner C and edge vectors
+  // U*sw, V*sh, seen through a perspective P from the stage centre (O). Returns null if it reaches the camera.
+  function project(C, U, V, w, h, sw, sh, P, O) {
+    const ux = U[0] * sw / w, uy = U[1] * sw / w, uz = U[2] * sw / w;
+    const vx = V[0] * sh / h, vy = V[1] * sh / h, vz = V[2] * sh / h;
+    const corners = [C[2], C[2] + uz * w, C[2] + vz * h, C[2] + uz * w + vz * h];
+    const near = Math.min(...corners.map((z) => 1 - z / P));
+    if (near < 0.06) return null;
+    const m = [
+      ux - O[0] * uz / P, uy - O[1] * uz / P, 0, -uz / P,
+      vx - O[0] * vz / P, vy - O[1] * vz / P, 0, -vz / P,
+      0, 0, 1, 0,
+      C[0] - O[0] * C[2] / P, C[1] - O[1] * C[2] / P, 0, 1 - C[2] / P,
+    ];
+    return { css: `matrix3d(${m.join(',')})`, near, depth: 1 - (C[2] + (uz * w + vz * h) / 2) / P };
+  }
   const total = Math.min(sources.length, 64);   // posters this page will have once loaded
   let ready = false;
 
@@ -41,7 +110,7 @@ export function collage(stage, sources) {
     const el = element(p);
     stage.appendChild(el);
     const it = { el, p: null, x, y, w, tx: x, ty: y, tw: w, r: rnd(6, 16), ph: rnd(0, Math.PI * 2), sp: rnd(0.06, 0.15) * (Math.random() < 0.5 ? -1 : 1) };
-    setPoster(it, p); it.el.style.zIndex = z;
+    setPoster(it, p); it.zi = z; it.el.style.zIndex = z;
     return it;
   }
   function setPoster(it, p) {
@@ -101,12 +170,13 @@ export function collage(stage, sources) {
   // The loop through layouts: one poster at a time glides to its place in the next layout.
   let layout = 0, queue = [];
   function swap() {
+    if (depthM > 0 || slots) return;   // the collage stays put while you are inside the corridor
     if (!queue.length) { layout = (layout + 1) % LAYOUTS; queue = tiles.map((_, i) => i).sort(() => Math.random() - 0.5); }
     const i = queue.pop(), s = layouts[layout][i], t = tiles[i];
     if (!s || !t) return;
     if (t === dragged) return;
     if (!usable(s.p, t)) return;   // too many loops playing: this one waits for its next turn
-    setPoster(t, s.p); t.tx = s.x; t.ty = s.y; t.tw = s.w; t.el.style.zIndex = ++zTop;   // a poster that changes always lands on top
+    setPoster(t, s.p); t.tx = s.x; t.ty = s.y; t.tw = s.w; t.zi = ++zTop; t.el.style.zIndex = t.zi;   // a poster that changes always lands on top
   }
 
   // Pointer: posters near the cursor are carried along its path, a poster can be
@@ -119,7 +189,7 @@ export function collage(stage, sources) {
   stage.addEventListener('pointermove', (e) => {
     const [x, y] = local(e);
     // Posters near the cursor are carried along its path, like paper swept by the hand.
-    if (pointer && !dragged) {
+    if (pointer && !dragged && depthM < 0.05) {
       const mx = x - pointer[0], my = y - pointer[1];
       for (const it of tiles) {
         const d = Math.hypot(it.x + (it.px || 0) - x, it.y + (it.py || 0) - y), R = 760;
@@ -129,7 +199,7 @@ export function collage(stage, sources) {
     pointer = [x, y];
     if (dragged) {
       if (Math.hypot(x - grab.sx, y - grab.sy) > 8) grab.moved = true;
-      dragged.tx = x - grab.dx; dragged.ty = y - grab.dy;
+      if (depthM < 0.05) { dragged.tx = x - grab.dx; dragged.ty = y - grab.dy; }
     }
   });
   stage.addEventListener('pointerleave', () => { if (!dragged) pointer = null; });
@@ -139,7 +209,7 @@ export function collage(stage, sources) {
     const [x, y] = local(e);
     dragged = it;
     grab = { dx: x - it.x, dy: y - it.y, sx: x, sy: y, moved: false };
-    it.el.style.zIndex = ++zTop;
+    it.zi = ++zTop; it.el.style.zIndex = it.zi;
     stage.setPointerCapture(e.pointerId);
     stage.style.cursor = 'grabbing';
     e.preventDefault();
@@ -163,7 +233,15 @@ export function collage(stage, sources) {
   function draw(now) {
     raf = requestAnimationFrame(draw);
     const t = (now - t0) / 1000;
-    for (const it of tiles) {
+    // Scroll position -> fold-out (depthM, first fifth of the way) and camera travel (the rest).
+    const pr = progress();
+    depthM = smooth(0, 0.2, pr);
+    const travel = smooth(0.12, 1, pr);
+    if (pr === 0) slots = null; else if (!slots) slots = corridor();
+    const W = stage.clientWidth, H = stage.clientHeight, P = H * 1.05, O = [W / 2, H / 2];
+    const cam = travel * (corridorLen + P * 0.7);
+    if (ui) ui.style.opacity = (1 - depthM).toFixed(3);
+    tiles.forEach((it, i) => {
       const ease = it === dragged ? 0.35 : 0.035;   // a grabbed poster keeps up with the hand
       it.x += (it.tx - it.x) * ease; it.y += (it.ty - it.y) * ease; it.w += (it.tw - it.w) * ease;
       // Carried along the cursor's path, then slowly drifting back home.
@@ -175,9 +253,30 @@ export function collage(stage, sources) {
       it.px *= 0.988; it.py *= 0.988;
       const a = t * it.sp + it.ph, r = it === dragged ? 0 : it.r;
       const cx = it.x + it.px + Math.cos(a) * r, cy = it.y + it.py + Math.sin(a) * r * 0.8;
-      it.el.style.width = it.w.toFixed(1) + 'px'; it.el.style.height = (it.w / it.p.ar).toFixed(1) + 'px';
-      it.el.style.transform = `translate(${(cx - it.w / 2).toFixed(1)}px, ${(cy - it.w / it.p.ar / 2).toFixed(1)}px)`;
-    }
+      const w = it.w, h = it.w / it.p.ar;
+      it.el.style.width = w.toFixed(1) + 'px'; it.el.style.height = h.toFixed(1) + 'px';
+      const s = slots && slots[i];
+      if (!s || (depthM === 0 && cam === 0)) {
+        it.el.style.transform = `translate(${(cx - w / 2).toFixed(1)}px, ${(cy - h / 2).toFixed(1)}px)`;
+        it.el.style.zIndex = it.zi; it.el.style.opacity = ''; it.el.style.visibility = '';
+        return;
+      }
+      // Fold from the flat collage (centre cx, cy, facing you) to the corridor place, then move the camera in.
+      const m = depthM, mix = (a, b) => a + (b - a) * m;
+      const norm = (a) => { const l = Math.hypot(a[0], a[1], a[2]) || 1; return [a[0] / l, a[1] / l, a[2] / l]; };
+      const U = norm([mix(1, s.U[0]), mix(0, s.U[1]), mix(0, s.U[2])]);
+      const V = norm([mix(0, s.V[0]), mix(1, s.V[1]), mix(0, s.V[2])]);
+      const sw = mix(w, s.w), sh = mix(h, s.h);
+      const c = [mix(cx, s.x), mix(cy, s.y), mix(0, s.z) + cam];
+      const C = [c[0] - U[0] * sw / 2 - V[0] * sh / 2, c[1] - U[1] * sw / 2 - V[1] * sh / 2, c[2] - U[2] * sw / 2 - V[2] * sh / 2];
+      const q = project(C, U, V, w, h, sw, sh, P, O);
+      if (!q) { it.el.style.visibility = 'hidden'; return; }
+      it.el.style.visibility = '';
+      it.el.style.transform = q.css;
+      it.el.style.opacity = Math.min(1, (q.near - 0.06) / 0.25).toFixed(3);
+      // Stacking: the collage order while folding out, then nearer surfaces over farther ones.
+      it.el.style.zIndex = m < 0.35 ? it.zi : 100000 - Math.round(q.depth * 100);
+    });
   }
   function run(on) {
     if (on && !raf && ready) { raf = requestAnimationFrame(draw); timer = setInterval(swap, SWAP_MS); }
