@@ -13,7 +13,7 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Arimo:ital,wght@0,400;0,700;1,400&family=Tinos:ital,wght@0,400;0,700;1,400;1,700&display=swap" rel="stylesheet">
 <script src="zoom.js?v=1"></script>
-<link rel="stylesheet" href="style.css?v=20261006r">
+<link rel="stylesheet" href="style.css?v=20261006s">
 <script type="importmap">{"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.169.0/build/three.module.js","three/addons/":"https://cdn.jsdelivr.net/npm/three@0.169.0/examples/jsm/","cannon-es":"https://cdn.jsdelivr.net/npm/cannon-es@0.20.0/dist/cannon-es.js"}}</script>
 </head>
 <body class="intro-page no-header">
@@ -23,6 +23,7 @@
   <canvas></canvas>
   <div class="intro-center" id="intro-center">
     <div class="intro-logo" id="intro-logo" aria-hidden="true"><img src="commercial/img/logo/zz-03.webp?v=3" alt="" decoding="async"><i class="logo-core"></i></div>
+    <p class="intro-roles">Art direction · 3D motion · CGI · Level design</p>
     <nav class="topnav intro-nav" aria-label="Projects">
       <div class="tabs">
   <div class="dd">
@@ -104,7 +105,7 @@
     { url: 'commercial/models/hero/hs-soap.glb', norm: true, name: 'Soap', tag: 'HOROSOAPS', href: 'commercial/horosoaps.html', shine: 0.1 },
     { url: 'commercial/models/hero/cl-charm.glb', norm: true, name: 'Charm', tag: 'Clara Luciani', href: 'commercial/clara-luciani.html' },
     { url: 'commercial/models/xm-perfume.glb', norm: true, name: 'LOEWE 001', tag: 'LOEWE', href: 'commercial/loewe.html', weight: 2 },
-  ], { keepOut: [document.querySelector('#intro-logo .logo-core'), { el: document.querySelector('.intro-nav .dd-btn'), pad: 18 }] });
+  ], { keepOut: [document.querySelector('#intro-logo .logo-core'), { el: document.querySelector('.intro-roles'), pad: 10 }, { el: document.querySelector('.intro-nav .dd-btn'), pad: 18 }] });
   // Click on the logo: the objects rush to it for a moment, then float back.
   document.getElementById('intro-logo').addEventListener('click', () => scene.pull(1.1));
 </script>
