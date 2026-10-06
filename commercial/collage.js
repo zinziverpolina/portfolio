@@ -113,7 +113,8 @@ export function collage(stage, sources) {
   // grabbed and dragged (it stays where it is dropped until its next turn), and a click without
   // dragging scrolls to that poster in the gallery.
   let zTop = 1000, dragged = null, grab = null, pointer = null;
-  function local(e) { const r = stage.getBoundingClientRect(); return [e.clientX - r.left, e.clientY - r.top]; }
+  // Pointer in stage px; divides out the page zoom of zoom.js on wide screens.
+  function local(e) { const r = stage.getBoundingClientRect(), z = stage.currentCSSZoom || 1; return [(e.clientX - r.left) / z, (e.clientY - r.top) / z]; }
   const find = (el) => el && tiles.find((t) => t.el === el);
   stage.addEventListener('pointermove', (e) => {
     const [x, y] = local(e);

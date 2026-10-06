@@ -20,7 +20,9 @@ export function floatScene(hero, MODELS, opts = {}) {
   const ui = hero.querySelector('.shr-frames');
 
   const renderer = new THREE.WebGLRenderer({ canvas, antialias: true });
-  renderer.setPixelRatio(Math.min(devicePixelRatio, 2));
+  // Page zoom (zoom.js on wide screens): rects and pointer coords are in zoomed px, clientWidth/Height and styles in page px.
+  const zoomOf = () => hero.currentCSSZoom || 1;
+  renderer.setPixelRatio(Math.min(devicePixelRatio, 2) * zoomOf());
   renderer.toneMapping = THREE.NeutralToneMapping;
   const scene = new THREE.Scene();
   scene.background = new THREE.Color(0xffffff);
@@ -55,6 +57,7 @@ export function floatScene(hero, MODELS, opts = {}) {
   let W = 1, H = VIEW_H, unit = 1;
   function resize() {
     const w = hero.clientWidth, h = hero.clientHeight;
+    renderer.setPixelRatio(Math.min(devicePixelRatio, 2) * zoomOf());
     renderer.setSize(w, h, false);
     W = VIEW_H * w / h; H = VIEW_H;
     camera.left = -W / 2; camera.right = W / 2; camera.top = H / 2; camera.bottom = -H / 2;
@@ -68,8 +71,8 @@ export function floatScene(hero, MODELS, opts = {}) {
     let free = 1;
     if (block) {
       const hr = hero.getBoundingClientRect(), r = opts.keepOut.getBoundingClientRect();
-      zone.hw = r.width / w * W / 2; zone.hh = r.height / h * H / 2;
-      zone.x = ((r.left + r.width / 2 - hr.left) / w - 0.5) * W; zone.y = (0.5 - (r.top + r.height / 2 - hr.top) / h) * H;
+      zone.hw = r.width / hr.width * W / 2; zone.hh = r.height / hr.height * H / 2;
+      zone.x = ((r.left + r.width / 2 - hr.left) / hr.width - 0.5) * W; zone.y = (0.5 - (r.top + r.height / 2 - hr.top) / hr.height) * H;
       block.shapes = []; block.shapeOffsets = []; block.shapeOrientations = [];
       if (zone.hw > 0 && zone.hh > 0) block.addShape(new CANNON.Box(new CANNON.Vec3(zone.hw, zone.hh, DEPTH)));
       block.position.set(zone.x, zone.y, 0);
@@ -185,8 +188,8 @@ export function floatScene(hero, MODELS, opts = {}) {
     return { x: (px / hero.clientWidth - 0.5) * W, y: (0.5 - py / hero.clientHeight) * H };
   }
   function local(e) {
-    const r = hero.getBoundingClientRect();
-    return [e.clientX - r.left, e.clientY - r.top];
+    const r = hero.getBoundingClientRect(), z = zoomOf();
+    return [(e.clientX - r.left) / z, (e.clientY - r.top) / z];
   }
 
   hero.addEventListener('pointermove', (e) => {
@@ -239,7 +242,8 @@ export function floatScene(hero, MODELS, opts = {}) {
     const r = it.rect || frameRect(it), hr = hero.getBoundingClientRect();
     const cover = document.createElement('div');
     cover.className = 'cover cover-grow';
-    Object.assign(cover.style, { left: hr.left + r.x + 'px', top: hr.top + r.y + 'px', width: r.w + 'px', height: r.h + 'px' });
+    const z = zoomOf();
+    Object.assign(cover.style, { left: hr.left / z + r.x + 'px', top: hr.top / z + r.y + 'px', width: r.w + 'px', height: r.h + 'px' });
     document.body.appendChild(cover);
     cover.getBoundingClientRect();   // start the transition from the frame's box
     cover.classList.add('full');
