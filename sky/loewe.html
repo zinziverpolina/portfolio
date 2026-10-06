@@ -1,0 +1,314 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Live Laugh Loewe — Polina Zinziver</title>
+<meta name="description" content="Polina Zinziver — LOEWE SS22 “Live Laugh Loewe”: the chrome words from the sky animation, in the browser.">
+<style>
+  :root { --ink: #fff; --bg: #cfe3ea; }
+  html, body { margin: 0; height: 100%; overflow: hidden; background: var(--bg); }
+  canvas { display: block; position: fixed; inset: 0; touch-action: none; cursor: grab; opacity: 0; transition: opacity 1.6s ease; }
+  canvas.ready { opacity: 1; }
+  canvas:active { cursor: grabbing; }
+  nav { position: fixed; top: 22px; right: 28px; display: flex; gap: 22px; z-index: 2;
+        font: italic 17px/1 "Times New Roman", Tinos, serif; }
+  nav a { color: var(--ink); text-decoration: none; text-shadow: 0 0 12px rgba(0,0,0,.18); }
+  nav a:hover { text-decoration: underline; text-underline-offset: 4px; }
+  /* sky switcher (temporary, while choosing) */
+  .proto { position: fixed; left: 16px; bottom: 14px; z-index: 2; display: flex; gap: 6px; flex-wrap: wrap;
+           font: 12px/1 Arial, sans-serif; }
+  .proto button { background: rgba(255,255,255,.18); color: #fff; border: 1px solid rgba(255,255,255,.45);
+                  border-radius: 20px; padding: 6px 10px; cursor: pointer; backdrop-filter: blur(6px); }
+  .proto button.on { background: rgba(255,255,255,.75); color: #222; }
+  .hint { position: fixed; right: 18px; bottom: 16px; z-index: 2; color: #fff; font: italic 15px/1.3 "Times New Roman", Tinos, serif;
+          text-shadow: 0 0 10px rgba(0,0,0,.2); opacity: .85; transition: opacity 1.2s ease; pointer-events: none; text-align: right; }
+  .hint.gone { opacity: 0; }
+  @media (max-width: 600px) { nav { top: 16px; right: 16px; gap: 14px; font-size: 15px; } }
+</style>
+<script type="importmap">
+{ "imports": {
+  "three": "https://cdn.jsdelivr.net/npm/three@0.169.0/build/three.module.js",
+  "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.169.0/examples/jsm/"
+} }
+</script>
+</head>
+<body>
+
+<nav>
+  <a href="../index.html">artistic</a>
+  <a href="../commercial.html">commercial</a>
+  <a href="https://zinziverpolina.github.io/Polina-CV/" target="_blank" rel="noopener">cv</a>
+  <a href="https://www.instagram.com/polina_zinziver_/" target="_blank" rel="noopener">instagram</a>
+</nav>
+
+<div class="proto" id="proto"></div>
+<div class="hint" id="hint">drag the word to turn it · click to see its back<br>scroll to fly through · move to turn the sky</div>
+
+<script type="module">
+// LOEWE SS22 "Sky" (D:_ZINZIVER ART- LOEWE _SS22\SKY\Sky_2.c4d): Live, Laugh, Loewe turning in the sky.
+// The C4D animation is baked frame by frame (350 frames, 25 fps, loops) relative to its render camera and played
+// in front of the same opening view as the chrome name page (sky/chrome.html), inside the same sky sphere.
+// C4D → three.js: z flipped (C4D is left-handed).
+import * as THREE from 'three';
+import { RGBELoader } from 'three/addons/loaders/RGBELoader.js';
+import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
+
+const SKIES = { sky6: 'pink clouds', sky7: 'sky 7', s453: 'beach' };
+const params = new URLSearchParams(location.search);
+let skyId = SKIES[params.get('sky')] ? params.get('sky') : 'sky6';
+
+const CAM = {   // "Mirabela camera": 36 mm lens on a 36 mm film back → 53.1° horizontal field of view
+  pos: new THREE.Vector3(-0.56576, -0.91331, 8.89078),
+  dir: new THREE.Vector3(0.061, -0.097, -0.993),
+  up: new THREE.Vector3(0.006, 0.995, -0.097),
+  hfov: 2 * Math.atan(18 / 36),
+};
+const SPHERE = { center: new THREE.Vector3(0, -1.9, -0.1), r: 10 };
+const SKY_TURN = Math.PI;   // the panorama sits half a turn round compared with three.js' equirect convention
+
+// ---------- renderer / scene ----------
+const renderer = new THREE.WebGLRenderer({ antialias: true });
+renderer.setPixelRatio(Math.min(devicePixelRatio, 2));
+renderer.setSize(innerWidth, innerHeight);
+renderer.toneMapping = THREE.ACESFilmicToneMapping;   // C4D renders through OCIO "ACES 1.0 SDR-video"
+renderer.toneMappingExposure = 0.6;                   // three.js ACES at 0.6 matches it (the sky jpgs are baked the same way)
+document.body.prepend(renderer.domElement);
+
+const scene = new THREE.Scene();
+scene.environmentRotation.y = SKY_TURN;
+const camera = new THREE.PerspectiveCamera(40, innerWidth / innerHeight, 0.05, 100);
+camera.up.copy(CAM.up);
+const pmrem = new THREE.PMREMGenerator(renderer);
+
+// the sky sphere around the name: the camera is inside it, close to its wall, as in C4D
+const skyMat = new THREE.ShaderMaterial({
+  side: THREE.BackSide, depthWrite: false, toneMapped: false,
+  uniforms: { sky: { value: null }, center: { value: SPHERE.center }, turn: { value: SKY_TURN } },
+  vertexShader: `varying vec3 vWorld;
+    void main(){ vec4 w = modelMatrix * vec4(position, 1.); vWorld = w.xyz; gl_Position = projectionMatrix * viewMatrix * w; }`,
+  fragmentShader: `uniform sampler2D sky; uniform vec3 center; uniform float turn; varying vec3 vWorld;
+    #define PI 3.141592653589793
+    void main(){
+      vec3 d = normalize(vWorld - center);
+      float c = cos(turn), s = sin(turn);
+      d = vec3(c * d.x + s * d.z, d.y, -s * d.x + c * d.z);
+      vec2 uv = vec2(atan(d.z, d.x) / (2. * PI) + .5, asin(clamp(d.y, -1., 1.)) / PI + .5);
+      gl_FragColor = vec4(texture2D(sky, uv).rgb, 1.);
+      #include <colorspace_fragment>
+    }`,
+});
+const skyMesh = new THREE.Mesh(new THREE.SphereGeometry(SPHERE.r, 96, 48), skyMat);
+skyMesh.position.copy(SPHERE.center);
+scene.add(skyMesh);
+
+// ---------- skies: jpg on the sphere (made from the HDR as C4D shows it), 2K HDR for the reflections ----------
+const texLoader = new THREE.TextureLoader(), hdrLoader = new RGBELoader();
+const skyCache = {};
+function loadSky(id) {
+  if (!skyCache[id]) skyCache[id] = Promise.all([texLoader.loadAsync(`${id}_sphere.jpg`), hdrLoader.loadAsync(`${id}_2k.hdr`)])
+    .then(([bg, hdr]) => {
+      bg.colorSpace = THREE.SRGBColorSpace;
+      bg.anisotropy = renderer.capabilities.getMaxAnisotropy();
+      hdr.mapping = THREE.EquirectangularReflectionMapping;
+      const env = pmrem.fromEquirectangular(hdr).texture;
+      hdr.dispose();
+      return { bg, env };
+    });
+  return skyCache[id];
+}
+async function setSky(id) {
+  const { bg, env } = await loadSky(id);
+  skyMat.uniforms.sky.value = bg;
+  scene.environment = env;
+  skyId = id; syncButtons();
+}
+
+// ---------- the words ----------
+const chrome = new THREE.MeshPhysicalMaterial({ color: 0xf7f7fa, metalness: 1, roughness: 0, envMapIntensity: 1 });   // a clean mirror
+const STAGE_DEPTH = 9;       // metres from the camera to the words' turning centre, as the name on the chrome page
+const WORD_SCALE = 0.82;     // the Octane camera had a slightly wider lens: Live spans ~49 % of the frame in the video
+let nameObj = null, anim = null, animT = 0, LIFT = 0.22;
+const words = [], NAME_CENTER = new THREE.Vector3(), tmp = new Float32Array(12);
+const nameP = Promise.all([new GLTFLoader().loadAsync('loewe_words.glb'), fetch('loewe_anim.json').then(r => r.json())])
+  .then(([gltf, a]) => {
+    anim = a;
+    const s = STAGE_DEPTH / a.cameraToCentre;      // C4D units → metres, keeping what the camera saw
+    // the stage is built in the C4D camera's space and put in front of the opening camera
+    const eye = new THREE.PerspectiveCamera(); eye.up.copy(CAM.up); eye.position.copy(CAM.pos);
+    eye.lookAt(CAM.pos.clone().add(CAM.dir)); eye.updateMatrixWorld();
+    const anchor = new THREE.Group(); anchor.matrixAutoUpdate = false;
+    anchor.matrix.copy(eye.matrixWorld).multiply(new THREE.Matrix4().makeScale(s, s, s));
+    // turning centre for the hand / the click: where the words sit on average
+    let n = 0;
+    for (const fr of Object.values(a.words)) for (const m of fr)
+      if (Math.hypot(m[0], m[1], m[2]) > 0.01) { NAME_CENTER.x += m[9]; NAME_CENTER.y += m[10]; NAME_CENTER.z += m[11]; n++; }
+    NAME_CENTER.divideScalar(n); LIFT = 0.22 / s;
+    const pivot = nameObj = new THREE.Group(); pivot.position.copy(NAME_CENTER); pivot.scale.setScalar(WORD_SCALE);
+    const inner = new THREE.Group(); inner.position.copy(NAME_CENTER).negate();
+    anchor.add(pivot); pivot.add(inner); scene.add(anchor);
+    for (const name of Object.keys(a.words)) {
+      const mesh = gltf.scene.getObjectByName(name);
+      mesh.material = chrome; mesh.matrixAutoUpdate = false;
+      inner.add(mesh);
+      words.push({ mesh, frames: a.words[name] });
+    }
+  });
+
+// play the baked frames (linear in between — the turn is ~2° a frame)
+function playWords(dt) {
+  animT = (animT + dt * anim.fps) % anim.frames;
+  const f0 = Math.floor(animT), f1 = (f0 + 1) % anim.frames, k = animT - f0;
+  for (const w of words) {
+    const A = w.frames[f0], B = w.frames[f1], e = w.mesh.matrix.elements;
+    for (let i = 0; i < 12; i++) tmp[i] = A[i] + (B[i] - A[i]) * k;
+    e[0] = tmp[0]; e[1] = tmp[1]; e[2] = tmp[2]; e[3] = 0;
+    e[4] = tmp[3]; e[5] = tmp[4]; e[6] = tmp[5]; e[7] = 0;
+    e[8] = tmp[6]; e[9] = tmp[7]; e[10] = tmp[8]; e[11] = 0;
+    e[12] = tmp[9]; e[13] = tmp[10]; e[14] = tmp[11]; e[15] = 1;
+    w.mesh.visible = Math.hypot(tmp[0], tmp[1], tmp[2]) > 0.005;   // words come and go by scale
+    w.mesh.matrixWorldNeedsUpdate = true;
+  }
+}
+
+// ---------- controls: opens at the C4D view; the wheel / pinch flies the camera towards the name and through it,
+// moving the mouse left-right (or dragging) turns the sky around the name ----------
+const FLY = { min: -0.6, max: 11.5 }; // metres along the camera direction: a step back … ~2.5 m past the name (sphere wall at ~19 m)
+const SKY_SWING = 0.6;                // mouse from the left to the right edge turns the sky by ±0.6 rad
+const fly = { t: 0, target: 0 };
+const sky = { a: 0, swing: 0, drag: 0 };
+const el = renderer.domElement;
+const clampFly = v => Math.min(FLY.max, Math.max(FLY.min, v));
+
+const hint = document.getElementById('hint');
+if (matchMedia('(pointer: coarse)').matches) hint.innerHTML = 'drag the word to turn it · tap to see its back<br>pinch to fly through · drag the sky to turn it';
+const used = () => { hint.classList.add('gone'); };
+addEventListener('wheel', e => {
+  e.preventDefault(); used();
+  const step = e.deltaMode === 1 ? e.deltaY * 16 : e.deltaY;          // lines → pixels
+  fly.target = clampFly(fly.target - step * 0.006 * (1 + Math.abs(fly.target) * 0.08));
+}, { passive: false });
+
+// the name is an object you can take: press on the letters and drag to turn it any way (it keeps a little
+// momentum when let go); a click without dragging turns it half round (spring, with a little lift)
+const spin = { a: 0, v: 0, target: 0 };
+const held = { q: new THREE.Quaternion(), vx: 0, vy: 0, on: false };   // free rotation by hand, angular speed (rad/s)
+const GRAB = 0.006;                                                    // radians per pixel of drag
+const ray = new THREE.Raycaster(), ndc = new THREE.Vector2();
+function onName(e) {
+  if (!nameObj) return false;
+  ndc.set(e.clientX / innerWidth * 2 - 1, -(e.clientY / innerHeight) * 2 + 1);
+  ray.setFromCamera(ndc, camera);
+  return ray.intersectObject(nameObj, true).length > 0;
+}
+
+const pointers = new Map();
+let pinch = 0, press = null, hoverT = 0;
+addEventListener('pointermove', e => {
+  if (e.pointerType === 'mouse') {
+    sky.swing = -(e.clientX / innerWidth * 2 - 1) * SKY_SWING;
+    const now = performance.now();
+    if (!pointers.size && now - hoverT > 60) { hoverT = now; el.style.cursor = onName(e) ? 'grab' : ''; }
+  }
+  const p = pointers.get(e.pointerId);
+  if (!p) return;
+  if (pointers.size === 1) {
+    const dx = e.clientX - p.x, dy = e.clientY - p.y, dt = Math.max(1, e.timeStamp - (p.t || e.timeStamp - 16)) / 1000;
+    if (held.on) {                                                     // turning the name by hand
+      turnHeld(dx * GRAB, dy * GRAB);
+      held.vy = 0.6 * held.vy + 0.4 * dx * GRAB / dt; held.vx = 0.6 * held.vx + 0.4 * dy * GRAB / dt;
+    } else sky.drag -= dx * 0.004;                                     // one finger / mouse drag on the sky: turn the sky
+    used();
+  }
+  p.x = e.clientX; p.y = e.clientY; p.t = e.timeStamp;
+  if (pointers.size === 2) {                                            // two fingers: pinch to fly
+    const [a, b] = [...pointers.values()], d = Math.hypot(a.x - b.x, a.y - b.y);
+    if (pinch) { fly.target = clampFly(fly.target + (d - pinch) * 0.03); used(); }
+    pinch = d;
+  }
+});
+el.addEventListener('pointerdown', e => {
+  pointers.set(e.pointerId, { x: e.clientX, y: e.clientY }); pinch = 0;
+  press = pointers.size === 1 ? { x: e.clientX, y: e.clientY, t: performance.now() } : null;
+  held.on = pointers.size === 1 && onName(e);
+  if (held.on) { held.vx = held.vy = 0; el.style.cursor = 'grabbing'; }
+  el.setPointerCapture(e.pointerId);
+});
+const lift = e => {
+  const p = pointers.get(e.pointerId);
+  if (held.on) {
+    held.on = false; el.style.cursor = 'grab';
+    if (!p || e.timeStamp - (p.t || 0) > 80) held.vx = held.vy = 0;   // held still before letting go: no throw
+  }
+  pointers.delete(e.pointerId); pinch = 0;
+};
+// turn about the screen axes (the stage is built in camera space, so those are its own x and y)
+const qa = new THREE.Quaternion(), upW = new THREE.Vector3(), rightW = new THREE.Vector3();
+function turnHeld(ay, ax) {
+  upW.set(0, 1, 0);
+  rightW.set(1, 0, 0);
+  held.q.premultiply(qa.setFromAxisAngle(upW, ay)).premultiply(qa.setFromAxisAngle(rightW, ax)).normalize();
+}
+addEventListener('pointerup', e => {
+  const click = press && Math.hypot(e.clientX - press.x, e.clientY - press.y) < 7 && performance.now() - press.t < 500;
+  press = null; lift(e);
+  if (click && onName(e)) { spin.target += Math.PI; used(); }
+});
+addEventListener('pointercancel', lift);
+
+addEventListener('resize', () => {
+  camera.aspect = innerWidth / innerHeight;
+  // keep the C4D horizontal field of view, so the name always spans the screen the same way
+  camera.fov = THREE.MathUtils.radToDeg(2 * Math.atan(Math.tan(CAM.hfov / 2) / camera.aspect));
+  camera.updateProjectionMatrix();
+  renderer.setSize(innerWidth, innerHeight);
+});
+dispatchEvent(new Event('resize'));
+
+const right = new THREE.Vector3().crossVectors(CAM.dir, CAM.up).normalize();
+const q = new THREE.Quaternion(), dir = new THREE.Vector3(), target = new THREE.Vector3();
+const clock = new THREE.Clock();
+renderer.setAnimationLoop(() => {
+  const dt = Math.min(clock.getDelta(), 0.05), t = clock.elapsedTime;
+  // fly along the C4D camera's line of sight
+  fly.t += (fly.target - fly.t) * (1 - Math.pow(0.02, dt));
+  camera.position.copy(CAM.pos).addScaledVector(CAM.dir, fly.t);
+  // a breath of sway so the chrome never stands still
+  dir.copy(CAM.dir).applyQuaternion(q.setFromAxisAngle(CAM.up, Math.sin(t * 0.17) * 0.01))
+    .applyQuaternion(q.setFromAxisAngle(right, Math.sin(t * 0.11) * 0.005));
+  camera.lookAt(target.copy(camera.position).add(dir));
+  // turn the sky (sphere and reflections together)
+  sky.a += (sky.swing + sky.drag - sky.a) * (1 - Math.pow(0.01, dt));
+  scene.environmentRotation.y = SKY_TURN + sky.a;
+  skyMat.uniforms.turn.value = -(SKY_TURN + sky.a);   // three.js reads environmentRotation mirrored; the sphere follows it
+  // the words' own C4D animation, then the half turn / the hand on top of it
+  if (anim) playWords(dt);
+  if (nameObj) {
+    spin.v += (spin.target - spin.a) * 24 * dt;
+    spin.v *= Math.exp(-4.6 * dt);
+    spin.a += spin.v * dt;
+    if (!held.on) {                                                    // momentum after letting go
+      const k = Math.exp(-2.2 * dt);
+      held.vx *= k; held.vy *= k;
+      if (Math.abs(held.vx) + Math.abs(held.vy) > 1e-3) turnHeld(held.vy * dt, held.vx * dt);
+    }
+    nameObj.quaternion.copy(held.q).multiply(qa.setFromAxisAngle(upW.set(0, 1, 0), spin.a));
+    const left = Math.min(1, Math.abs(spin.target - spin.a) / Math.PI);
+    nameObj.position.y = NAME_CENTER.y + Math.sin(left * Math.PI) * LIFT;
+  }
+  renderer.render(scene, camera);
+});
+
+// ---------- sky switcher (temporary) ----------
+const proto = document.getElementById('proto');
+function syncButtons() { proto.querySelectorAll('button').forEach(b => b.classList.toggle('on', b.dataset.sky === skyId)); }
+Object.entries(SKIES).forEach(([id, label]) => {
+  const b = document.createElement('button'); b.textContent = label; b.dataset.sky = id;
+  b.onclick = () => setSky(id); proto.append(b);
+});
+
+await Promise.all([setSky(skyId), nameP]);
+el.classList.add('ready');
+</script>
+</body>
+</html>
