@@ -1,0 +1,39 @@
+/* Scatter stage (scatter.js): pieces lie loosely around the section text in the main page's frames. */
+.sc-stage { position: relative; }
+.sc-stage > :not(.sc-items) { position: relative; z-index: 1; max-width: 46%; }
+.sc-stage .sc-items { margin-top: 32px; display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; }   /* without JS: a plain grid */
+.sc-stage.sc-on .sc-items { position: absolute; inset: 0; margin: 0; display: block; pointer-events: none; z-index: 2; }
+.sc-on figure.sc { position: absolute; left: 0; top: 0; margin: 0; pointer-events: auto; cursor: grab; touch-action: pan-y; opacity: 0; transition: opacity .5s; will-change: transform; user-select: none; -webkit-user-select: none; }
+.sc-on figure.sc.shown { opacity: 1; }
+.sc-on figure.sc.drag { cursor: grabbing; }
+figure.sc { margin: 0; }
+figure.sc img, figure.sc video { display: block; width: 100%; height: 100%; object-fit: cover; background: #f2efe9; pointer-events: none; }
+.sc-on figure.sc img, .sc-on figure.sc video { pointer-events: none; }
+
+/* The frame: same as the main page (.shr-frame) — sky blue at rest, navy and the tag on hover / drag. */
+.sc-frame { --c: #5d8ab6; position: absolute; inset: -6px; border: 1px solid var(--c); opacity: .55; transition: opacity .2s; pointer-events: none; }
+figure.sc.on .sc-frame { --c: #2a27a6; opacity: 1; }
+.sc-frame i { position: absolute; width: 7px; height: 7px; margin: -4px 0 0 -4px; background: #fff; border: 1px solid var(--c); }
+.sc-frame i:nth-child(1) { left: 0; top: 0; }
+.sc-frame i:nth-child(2) { left: 50%; top: 0; }
+.sc-frame i:nth-child(3) { left: 100%; top: 0; }
+.sc-frame i:nth-child(4) { left: 100%; top: 50%; }
+.sc-frame i:nth-child(5) { left: 100%; top: 100%; }
+.sc-frame i:nth-child(6) { left: 50%; top: 100%; }
+.sc-frame i:nth-child(7) { left: 0; top: 100%; }
+.sc-frame i:nth-child(8) { left: 0; top: 50%; }
+.sc-frame .num { position: absolute; left: 5px; bottom: 3px; font: 11px/1 var(--sans); color: #fff; mix-blend-mode: difference; }
+.sc-frame .tag { position: absolute; left: 0; top: 100%; margin-top: 8px; white-space: nowrap; font: 500 clamp(11px, 1.19vw, 17.5px)/1 var(--sans); letter-spacing: -.02em; text-transform: uppercase; color: #2a27a6; opacity: 0; transform: translateY(6px); transition: opacity .2s, transform .2s; }
+figure.sc.on .sc-frame .tag { opacity: 1; transform: none; }
+figure.sc.pinned .sc-frame { opacity: .8; }
+
+/* A piece opened large */
+.sc-lb { position: fixed; inset: 0; z-index: 20; display: none; align-items: center; justify-content: center; padding: 24px; background: rgba(255,255,255,.96); cursor: zoom-out; }
+.sc-lb.open { display: flex; }
+.sc-lb img, .sc-lb video { max-width: 100%; max-height: 100%; width: auto; height: auto; cursor: auto; box-shadow: 0 0 0 1px #2a27a6; }
+
+.sc-hint { font: 13px/1.5 var(--sans); color: #5d8ab6; margin-top: 18px; }
+@media (max-width: 820px) {
+  .sc-stage > :not(.sc-items) { max-width: none; }
+  .sc-stage .sc-items { grid-template-columns: 1fr 1fr; }
+}
