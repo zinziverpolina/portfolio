@@ -43,7 +43,7 @@
 </nav>
 
 <div class="proto" id="proto"></div>
-<div class="hint" id="hint">click the name to turn it<br>scroll to fly through · move to turn the sky</div>
+<div class="hint" id="hint">drag the name to turn it · click to see its back<br>scroll to fly through · move to turn the sky</div>
 
 <script type="module">
 // The Cinema 4D scene zinziver_fonts_extrude.c4d, camera "Mirabela camera", rebuilt for the web:
@@ -144,7 +144,7 @@ const el = renderer.domElement;
 const clampFly = v => Math.min(FLY.max, Math.max(FLY.min, v));
 
 const hint = document.getElementById('hint');
-if (matchMedia('(pointer: coarse)').matches) hint.innerHTML = 'tap the name to turn it<br>pinch to fly through · drag to turn the sky';
+if (matchMedia('(pointer: coarse)').matches) hint.innerHTML = 'drag the name to turn it · tap to see its back<br>pinch to fly through · drag the sky to turn it';
 const used = () => { hint.classList.add('gone'); };
 addEventListener('wheel', e => {
   e.preventDefault(); used();
@@ -152,8 +152,11 @@ addEventListener('wheel', e => {
   fly.target = clampFly(fly.target - step * 0.006 * (1 + Math.abs(fly.target) * 0.08));
 }, { passive: false });
 
-// clicking the name turns it half round (spring, with a little lift), so both sides can be seen
+// the name is an object you can take: press on the letters and drag to turn it any way (it keeps a little
+// momentum when let go); a click without dragging turns it half round (spring, with a little lift)
 const spin = { a: 0, v: 0, target: 0 };
+const held = { q: new THREE.Quaternion(), vx: 0, vy: 0, on: false };   // free rotation by hand, angular speed (rad/s)
+const GRAB = 0.006;                                                    // radians per pixel of drag
 const ray = new THREE.Raycaster(), ndc = new THREE.Vector2();
 function onName(e) {
   if (!nameObj) return false;
@@ -168,12 +171,19 @@ addEventListener('pointermove', e => {
   if (e.pointerType === 'mouse') {
     sky.swing = -(e.clientX / innerWidth * 2 - 1) * SKY_SWING;
     const now = performance.now();
-    if (!pointers.size && now - hoverT > 60) { hoverT = now; el.style.cursor = onName(e) ? 'pointer' : ''; }
+    if (!pointers.size && now - hoverT > 60) { hoverT = now; el.style.cursor = onName(e) ? 'grab' : ''; }
   }
   const p = pointers.get(e.pointerId);
   if (!p) return;
-  if (pointers.size === 1) { sky.drag -= (e.clientX - p.x) * 0.004; used(); }   // one finger / mouse drag: keep turning the sky
-  p.x = e.clientX; p.y = e.clientY;
+  if (pointers.size === 1) {
+    const dx = e.clientX - p.x, dy = e.clientY - p.y, dt = Math.max(1, e.timeStamp - (p.t || e.timeStamp - 16)) / 1000;
+    if (held.on) {                                                     // turning the name by hand
+      turnHeld(dx * GRAB, dy * GRAB);
+      held.vy = 0.6 * held.vy + 0.4 * dx * GRAB / dt; held.vx = 0.6 * held.vx + 0.4 * dy * GRAB / dt;
+    } else sky.drag -= dx * 0.004;                                     // one finger / mouse drag on the sky: turn the sky
+    used();
+  }
+  p.x = e.clientX; p.y = e.clientY; p.t = e.timeStamp;
   if (pointers.size === 2) {                                            // two fingers: pinch to fly
     const [a, b] = [...pointers.values()], d = Math.hypot(a.x - b.x, a.y - b.y);
     if (pinch) { fly.target = clampFly(fly.target + (d - pinch) * 0.03); used(); }
@@ -183,9 +193,25 @@ addEventListener('pointermove', e => {
 el.addEventListener('pointerdown', e => {
   pointers.set(e.pointerId, { x: e.clientX, y: e.clientY }); pinch = 0;
   press = pointers.size === 1 ? { x: e.clientX, y: e.clientY, t: performance.now() } : null;
+  held.on = pointers.size === 1 && onName(e);
+  if (held.on) { held.vx = held.vy = 0; el.style.cursor = 'grabbing'; }
   el.setPointerCapture(e.pointerId);
 });
-const lift = e => { pointers.delete(e.pointerId); pinch = 0; };
+const lift = e => {
+  const p = pointers.get(e.pointerId);
+  if (held.on) {
+    held.on = false; el.style.cursor = 'grab';
+    if (!p || e.timeStamp - (p.t || 0) > 80) held.vx = held.vy = 0;   // held still before letting go: no throw
+  }
+  pointers.delete(e.pointerId); pinch = 0;
+};
+// turn about the screen axes: left-right spins round the camera's up, up-down tips towards the viewer
+const qa = new THREE.Quaternion(), upW = new THREE.Vector3(), rightW = new THREE.Vector3();
+function turnHeld(ay, ax) {
+  upW.set(0, 1, 0).applyQuaternion(camera.quaternion);
+  rightW.set(1, 0, 0).applyQuaternion(camera.quaternion);
+  held.q.premultiply(qa.setFromAxisAngle(upW, ay)).premultiply(qa.setFromAxisAngle(rightW, ax)).normalize();
+}
 addEventListener('pointerup', e => {
   const click = press && Math.hypot(e.clientX - press.x, e.clientY - press.y) < 7 && performance.now() - press.t < 500;
   press = null; lift(e);
@@ -223,7 +249,12 @@ renderer.setAnimationLoop(() => {
     spin.v += (spin.target - spin.a) * 24 * dt;
     spin.v *= Math.exp(-4.6 * dt);
     spin.a += spin.v * dt;
-    nameObj.rotation.y = spin.a;
+    if (!held.on) {                                                    // momentum after letting go
+      const k = Math.exp(-2.2 * dt);
+      held.vx *= k; held.vy *= k;
+      if (Math.abs(held.vx) + Math.abs(held.vy) > 1e-3) turnHeld(held.vy * dt, held.vx * dt);
+    }
+    nameObj.quaternion.copy(held.q).multiply(qa.setFromAxisAngle(upW.set(0, 1, 0), spin.a));
     const left = Math.min(1, Math.abs(spin.target - spin.a) / Math.PI);
     nameObj.position.y = NAME_CENTER.y + Math.sin(left * Math.PI) * 0.22;
   }
