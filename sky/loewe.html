@@ -127,6 +127,7 @@ async function setSky(id) {
 // ---------- the words ----------
 const chrome = new THREE.MeshPhysicalMaterial({ color: 0xf7f7fa, metalness: 1, roughness: 0, envMapIntensity: 1 });   // a clean mirror
 const STAGE_DEPTH = 9;       // metres from the camera to the words' turning centre, as the name on the chrome page
+const WORDS_UP = 0.45;       // metres: the words a little higher than in the video, closer to the middle of the screen
 const WORD_SCALE = 0.82;     // the Octane camera had a slightly wider lens: Live spans ~49 % of the frame in the video
 let nameObj = null, anim = null, animT = 0, LIFT = 0.22;
 const words = [], NAME_CENTER = new THREE.Vector3(), tmp = new Float32Array(12);
@@ -138,7 +139,7 @@ const nameP = Promise.all([new GLTFLoader().loadAsync('loewe_words.glb'), fetch(
     const eye = new THREE.PerspectiveCamera(); eye.up.copy(CAM.up); eye.position.copy(CAM.pos);
     eye.lookAt(CAM.pos.clone().add(CAM.dir)); eye.updateMatrixWorld();
     const anchor = new THREE.Group(); anchor.matrixAutoUpdate = false;
-    anchor.matrix.copy(eye.matrixWorld).multiply(new THREE.Matrix4().makeScale(s, s, s));
+    anchor.matrix.copy(eye.matrixWorld).multiply(new THREE.Matrix4().makeTranslation(0, WORDS_UP, 0)).multiply(new THREE.Matrix4().makeScale(s, s, s));
     // turning centre for the hand / the click: where the words sit on average
     let n = 0;
     for (const fr of Object.values(a.words)) for (const m of fr)
