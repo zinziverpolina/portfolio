@@ -5,7 +5,7 @@
 // Every change is kept in this browser at once; "Copy for Claude" puts the whole layout on the clipboard to
 // paste into the chat, and Claude bakes it into commercial/layout.json for everyone.
 
-const PART_NAMES = { h2: 'Title', '.meta': 'Subtitle', '.body': 'Description', '.credit': 'Credit', '.subnav': 'Links' };
+const PART_NAMES = { h2: 'Title', '.meta': 'Subtitle', '.fm-year': 'Year', '.body': 'Description', '.credit': 'Credit', '.subnav': 'Links' };
 const fontList = (GOOGLE_FONTS) => [
   ['', 'as it is'],
   ['Arial, Arimo, Helvetica, sans-serif', 'Arial — site sans'],
@@ -170,7 +170,7 @@ export function startEditor({ apis, saved, page, TEXT_PARTS, GOOGLE_FONTS, ensur
   }
 
   // ----- direct manipulation on each stage -----
-  const textEl = (api, part) => api.text.querySelector(`:scope > ${part}`);
+  const textEl = (api, part) => (part === '.fm-year' ? api.text.querySelector('.fm-year') : api.text.querySelector(`:scope > ${part}`));
   const partOf = (api, target) => TEXT_PARTS.find((p) => textEl(api, p)?.contains(target));
   for (const api of apis) {
     const el = api.el;

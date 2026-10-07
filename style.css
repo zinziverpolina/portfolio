@@ -565,3 +565,13 @@ body.page-dark .fm-card-nav button:hover, body.page-dark .fm-card-x:hover { colo
 .fm-ed .al { display: flex; gap: 4px; flex-wrap: wrap; }
 .fm-ed .al button { font: inherit; color: #2a27a6; background: #fff; border: 1px solid rgba(93,138,182,.6); padding: 3px 7px; cursor: pointer; }
 .fm-ed .al button.on { background: #2a27a6; border-color: #2a27a6; color: #fff; }
+/* Stage text: the subtitle and the year on one line at opposite sides (the year flips side when the subtitle
+   is set to the right); the year in its own style; the whole text block in a frame like the pictures' */
+.fm-text .meta:has(.fm-year) { display: flex; justify-content: space-between; align-items: baseline; gap: 1.4em; text-align: left; }
+.fm-text .meta.fm-rev { flex-direction: row-reverse; }
+.fm-text .meta .fm-sub { min-width: 0; }
+.fm-text .fm-year { flex: none; font: 500 clamp(11px, 1.19vw, 17.5px)/1 var(--sans); font-style: normal; letter-spacing: -.02em; text-transform: uppercase; font-variant-numeric: tabular-nums; color: var(--navy, #2a27a6); }
+body.page-dark .fm-text .fm-year { color: #eee; }
+.fm-text h2 .meta.inline:has(.fm-year) { display: flex; }
+.shr-frame.fm-tframe { left: -24px; top: -20px; right: -24px; bottom: -20px; pointer-events: none; }
+.fm-editing .fm-text > .fm-tframe { outline: none; }

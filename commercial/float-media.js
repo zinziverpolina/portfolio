@@ -36,7 +36,7 @@ export async function floatMedia(opts = {}) {
     // A section without pictures of its own (LOEWE's opening) floats a mix from the whole page.
     return stage(sec, own.length ? own : [...allMedia].sort(() => Math.random() - 0.5), card, opts.keep, scfg, EDIT);
   });
-  if (EDIT) import('./fm-edit.js?v=2').then((m) => m.startEditor({ apis, saved, page: PAGE, TEXT_PARTS, GOOGLE_FONTS, ensureFont }));
+  if (EDIT) import('./fm-edit.js?v=3').then((m) => m.startEditor({ apis, saved, page: PAGE, TEXT_PARTS, GOOGLE_FONTS, ensureFont }));
   const fitAll = () => {
     const nav = document.querySelector('.topnav'), h = nav ? nav.offsetHeight : 0;
     document.querySelectorAll('.fm-stage').forEach((s) => {
@@ -97,19 +97,32 @@ export function ensureFont(family) {
   document.head.appendChild(l);
 }
 // Text block of a stage: its offset from the centre (fractions of the stage) and per-part styles.
-export const TEXT_PARTS = ['h2', '.meta', '.body', '.credit', '.subnav'];
+export const TEXT_PARTS = ['.fm-year', 'h2', '.meta', '.body', '.credit', '.subnav'];   // the year first: it sits inside .meta
+export const partEl = (text, part) => part === '.fm-year' ? text.querySelector('.fm-year') : text.querySelector(`:scope > ${part}`);
 export function applyText(text, t = {}) {
   text.style.left = `calc(50% + ${((t.dx || 0) * 100).toFixed(3)}%)`;
   text.style.top = `calc(50% + ${((t.dy || 0) * 100).toFixed(3)}%)`;
   text.style.width = t.width ? (t.width * 100).toFixed(2) + '%' : '';
   for (const part of TEXT_PARTS) {
-    const el = text.querySelector(`:scope > ${part}`);
+    const el = partEl(text, part);
     if (!el) continue;
     const css = (t.styles || {})[part] || {};
     el.removeAttribute('style');
     for (const [k, v] of Object.entries(css)) el.style[k] = v;
     if (css.fontFamily) ensureFont(css.fontFamily);
   }
+  // The year always stands on the side opposite the subtitle.
+  const meta = text.querySelector('.fm-year')?.parentElement;
+  if (meta) meta.classList.toggle('fm-rev', getComputedStyle(meta).textAlign === 'right');
+}
+
+// "subtitle<br>2022" or "subtitle, 2022" → the subtitle and the year as two parts with their own styles.
+function splitYear(meta) {
+  if (!meta || meta.querySelector('.fm-year')) return;
+  const html = meta.innerHTML.trim();
+  const m = html.match(/^([\s\S]*?)\s*<br\s*\/?>\s*(\d{4}(?:\s*[–-]\s*\d{4})?)$/) || html.match(/^([\s\S]*?),\s*(\d{4}(?:\s*[–-]\s*\d{4})?)$/);
+  if (!m) return;
+  meta.innerHTML = `<span class="fm-sub">${m[1].trim()}</span><span class="fm-year">${m[2]}</span>`;
 }
 
 // ----- one stage -----
@@ -131,6 +144,12 @@ function stage(sec, sources, card, keep, scfg = {}, EDIT = false) {
     below.append(...kept);
     sec.after(below);
   }
+  splitYear(text.querySelector(':scope > .meta') || text.querySelector('h2 .meta'));
+  // the text block sits in a frame like the pictures'
+  const tframe = document.createElement('div');
+  tframe.className = 'shr-frame fm-tframe';
+  tframe.innerHTML = '<i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i>';
+  text.appendChild(tframe);
   const title = text.querySelector('h2')?.firstChild?.textContent.trim() || '';
   const list = sources.filter((n) => stillOf(n));   // the card steps through these
   applyText(text, scfg.text);
@@ -176,7 +195,7 @@ function stage(sec, sources, card, keep, scfg = {}, EDIT = false) {
   let W = 1, H = 1, K = { x0: 0, y0: 0, x1: 0, y1: 0 };
   const zoomOf = () => el.currentCSSZoom || 1;
   function textBox() {
-    const sr = el.getBoundingClientRect(), r = text.getBoundingClientRect(), z = zoomOf(), pad = 18;
+    const sr = el.getBoundingClientRect(), r = text.getBoundingClientRect(), z = zoomOf(), pad = 34;   // room for the text's frame
     return { x0: (r.left - sr.left) / z - pad, y0: (r.top - sr.top) / z - pad, x1: (r.right - sr.left) / z + pad, y1: (r.bottom - sr.top) / z + pad };
   }
   const saved = (it) => (scfg.items || {})[it.key];
