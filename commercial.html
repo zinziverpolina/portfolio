@@ -13,7 +13,7 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Arimo:ital,wght@0,400;0,700;1,400&family=Tinos:ital,wght@0,400;0,700;1,400;1,700&display=swap" rel="stylesheet">
 <script src="zoom.js?v=1"></script>
-<link rel="stylesheet" href="style.css?v=20261007a">
+<link rel="stylesheet" href="style.css?v=20261007b">
 <script type="importmap">{"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.169.0/build/three.module.js","three/addons/":"https://cdn.jsdelivr.net/npm/three@0.169.0/examples/jsm/","cannon-es":"https://cdn.jsdelivr.net/npm/cannon-es@0.20.0/dist/cannon-es.js"}}</script>
 </head>
 <body class="intro-page no-header">
@@ -22,7 +22,7 @@
 <div class="shr-hero" id="intro-stage" aria-label="Objects from Sacred Hyper Race, Nina Ricci, LOEWE SS22 and LOEWE Christmas floating in zero gravity. Hover to see the project, click an object to open it, drag to move.">
   <canvas></canvas>
   <div class="intro-center" id="intro-center">
-    <div class="intro-logo" id="intro-logo" aria-hidden="true"><img src="commercial/img/logo/zz-03.webp?v=3" alt="" decoding="async"><i class="logo-core"></i></div>
+    <div class="intro-logo" id="intro-logo" aria-hidden="true"><img src="commercial/img/logo/zz-13.webp?v=3" alt="" decoding="async"><i class="logo-core"></i></div>
     <p class="intro-roles">Art direction · 3D motion · CGI · Level design</p>
     <nav class="topnav intro-nav" aria-label="Projects">
       <div class="tabs">
@@ -58,7 +58,7 @@
   // Centre logo: the picked versions cycle on their own, grouped by typeface (Robbery, Kinky, Saint, Mirabela),
   // a new one every 1 s. A click on the logo draws the 3D objects to it (see the module below).
   const logo = document.getElementById('intro-logo'), logoImg = logo.querySelector('img');
-  const ORDER = [3, 13, 14, 16, 17, 18, 20, 8, 9, 10, 4, 1];   // final pick (12)
+  const ORDER = [13, 14, 16, 17, 18, 20, 8, 9, 10, 4, 1];   // final pick (11); zz-03 (chrome + pink gum) kept in the folder, out of the cycle
   const N = ORDER.length, url = (i) => 'commercial/img/logo/zz-' + String(ORDER[i]).padStart(2, '0') + '.webp?v=3';
   let cur = 0, timer = 0, logoVisible = true;
   // Preload right away (not after the heavy 3D models): each version is ~50 KB.

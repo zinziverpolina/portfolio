@@ -4,8 +4,9 @@
 // place in the next layout and lands on top, so the collage keeps rebuilding itself in a loop.
 // Posters near the cursor are carried along its path, can be dragged around, and a click scrolls to that poster in
 // the gallery below.
-// Scrolling dives in: the stage stays pinned while the posters fold out onto the walls, floor and ceiling of a
-// corridor and the camera travels through it; at its far end the page carries on to the gallery below.
+// Scrolling dives in: the stage stays pinned while the posters fold into a round tunnel — small, like particles,
+// on a spiral that streams off into the distance — and the camera travels through it, the tunnel slowly
+// turning; at its far end the page carries on to the gallery below.
 // collage(stageElement, galleryImages)
 export function collage(stage, sources) {
   const LAYOUTS = 4;       // layouts the base layer loops through
@@ -17,7 +18,7 @@ export function collage(stage, sources) {
   // ----- dive-in corridor (scroll-driven) -----
   const deep = !matchMedia('(prefers-reduced-motion: reduce)').matches;
   const ui = stage.querySelector('.cl-ui');
-  let wrap = null, depthM = 0, slots = null, corridorLen = 1;
+  let wrap = null, depthM = 0, slots = false, corridorLen = 1;
   if (deep) {
     wrap = document.createElement('div');
     wrap.className = 'cl-scroll';
@@ -40,29 +41,30 @@ export function collage(stage, sources) {
     return span > 0 ? Math.min(1, Math.max(0, (s.top - r.top) / span)) : 0;
   }
   const smooth = (a, b, x) => { const t = Math.min(1, Math.max(0, (x - a) / (b - a))); return t * t * (3 - 2 * t); };
-  // A place on the corridor for every poster: centre (x, y, z), its width and height directions (U, V), size.
-  // Corridor = the stage's own cross-section; z runs into the screen (negative = farther away).
+  // A place in the tunnel for every poster: small, like particles, along a spiral on the inside of a round
+  // tunnel that streams off into the distance. Each keeps its angle (a) and depth (z); the rest comes per frame.
+  // Places are given once per poster (it.tun) and kept for the whole dive, so posters that load late
+  // simply join the far end of the tunnel.
+  let tunZ = 0;
   function corridor() {
-    const W = stage.clientWidth, H = stage.clientHeight, gap = () => H * rnd(0.06, 0.16);
-    const cur = [-H * 0.12, -H * 0.12 - W * 0.18, -H * 0.4, -H * 0.4 - W * 0.12];
-    const WALL = [0, 1, 2, 0, 1, 3];   // left, right, floor, left, right, ceiling
-    const out = tiles.map((it, i) => {
-      const k = WALL[i % WALL.length], ar = it.p.ar;
-      if (k < 2) {   // side walls: images stand along the corridor
-        let h = H * rnd(0.42, 0.62), w = h * ar;
-        if (w > H * 1.1) { w = H * 1.1; h = w / ar; }
-        const z = cur[k] - w / 2; cur[k] -= w + gap();
-        return { x: k === 0 ? 0 : W, y: rnd(h / 2 + H * 0.06, H - h / 2 - H * 0.06), z, w, h,
-          U: [0, 0, k === 0 ? -1 : 1], V: [0, 1, 0] };
-      }
-      let w = W * rnd(0.3, 0.46), h = w / ar;   // floor / ceiling: images lie flat, top edge away from you
-      if (h > W * 0.6) { h = W * 0.6; w = h * ar; }
-      const z = cur[k] - h / 2; cur[k] -= h + gap();
-      return { x: rnd(w / 2 + W * 0.05, W - w / 2 - W * 0.05), y: k === 2 ? H : 0, z, w, h,
-        U: [1, 0, 0], V: [0, 0, k === 2 ? 1 : -1] };
+    const H = stage.clientHeight, GOLD = Math.PI * (3 - Math.sqrt(5));
+    if (!tiles.some((t) => t.tun)) tunZ = -H * 0.1;
+    tiles.forEach((it, i) => {
+      if (it.tun) return;
+      const ar = it.p.ar;
+      let h = H * rnd(0.15, 0.25), w = h * ar;
+      if (w > H * 0.38) { w = H * 0.38; h = w / ar; }
+      tunZ -= w * rnd(0.3, 0.55);
+      it.tun = { a: i * GOLD + rnd(-0.15, 0.15), z: tunZ - w / 2, w, h };
     });
-    corridorLen = -Math.min(...cur);
-    return out;
+    corridorLen = -tunZ;
+  }
+  // Where a tunnel place is now: on the tunnel wall at its angle, turned by the twist that grows as you go in.
+  // Width along the tunnel (U), height around it (V), facing the axis.
+  function tunnelAt(s, twist, W, H) {
+    const R = Math.min(W, H) * 0.6, a = s.a + twist;
+    return { x: W / 2 + R * Math.cos(a), y: H / 2 + R * Math.sin(a), z: s.z, w: s.w, h: s.h,
+      U: [0, 0, -1], V: [Math.sin(a), -Math.cos(a), 0] };
   }
   // matrix3d that draws an element's w x h box as the rectangle with top-left corner C and edge vectors
   // U*sw, V*sh, seen through a perspective P from the stage centre (O). Returns null if it reaches the camera.
@@ -91,7 +93,7 @@ export function collage(stage, sources) {
     const video = node.tagName === 'VIDEO';
     const thumb = node.getAttribute('src');
     const pre = new Image();
-    pre.onload = () => { pool.push({ thumb, video, ar: pre.naturalWidth / pre.naturalHeight, target: node }); if (!ready && pool.length >= 8) start(); };
+    pre.onload = () => { pool.push({ thumb, video, ar: pre.naturalWidth / pre.naturalHeight, target: node }); if (!ready && pool.length >= Math.min(total, 28)) start(); };
     pre.src = video ? node.getAttribute('poster') : thumb;
   });
   const playing = () => tiles.filter((t) => t.p && t.p.video).length;
@@ -139,8 +141,14 @@ export function collage(stage, sources) {
       const k = Math.min(1, (H * 0.9) / h, (W * 0.7) / w);
       return w * k;
     };
-    const cols = Math.max(2, Math.round(W / (S * 0.75))), rows = Math.max(2, Math.round(H / (S * 0.75)));
-    const n = cols * rows;
+    let cols = Math.max(2, Math.round(W / (S * 0.75))), rows = Math.max(2, Math.round(H / (S * 0.75)));
+    // Every tile a different image: with fewer images than grid cells, a smaller grid of larger tiles.
+    const distinct = pool.filter((q) => !q.video).length + Math.min(MAX_VIDEOS, pool.filter((q) => q.video).length);
+    if (cols * rows > distinct) {
+      cols = Math.max(1, Math.round(Math.sqrt(distinct * W / H))); rows = Math.max(1, Math.ceil(distinct / cols));
+      S = Math.min(W / cols, H / rows) / 0.75;
+    }
+    const n = Math.min(cols * rows, distinct);
     layouts = [];
     for (let l = 0; l < LAYOUTS; l++) {
       // Each layout: shuffled images with at most a few videos mixed in.
@@ -237,7 +245,8 @@ export function collage(stage, sources) {
     const pr = progress();
     depthM = smooth(0, 0.2, pr);
     const travel = smooth(0.12, 1, pr);
-    if (pr === 0) slots = null; else if (!slots) slots = corridor();
+    if (pr === 0) { if (slots) { tiles.forEach((t) => { t.tun = null; }); slots = false; } }   // back at the top: a fresh tunnel next time
+    else { slots = true; corridor(); }
     const W = stage.clientWidth, H = stage.clientHeight, P = H * 1.05, O = [W / 2, H / 2];
     const cam = travel * (corridorLen + P * 0.7);
     if (ui) ui.style.opacity = (1 - depthM).toFixed(3);
@@ -255,7 +264,7 @@ export function collage(stage, sources) {
       const cx = it.x + it.px + Math.cos(a) * r, cy = it.y + it.py + Math.sin(a) * r * 0.8;
       const w = it.w, h = it.w / it.p.ar;
       it.el.style.width = w.toFixed(1) + 'px'; it.el.style.height = h.toFixed(1) + 'px';
-      const s = slots && slots[i];
+      const s = slots && it.tun && tunnelAt(it.tun, travel * 1.4, W, H);
       if (!s || (depthM === 0 && cam === 0)) {
         it.el.style.transform = `translate(${(cx - w / 2).toFixed(1)}px, ${(cy - h / 2).toFixed(1)}px)`;
         it.el.style.zIndex = it.zi; it.el.style.opacity = ''; it.el.style.visibility = '';
@@ -282,7 +291,9 @@ export function collage(stage, sources) {
     if (on && !raf && ready) { raf = requestAnimationFrame(draw); timer = setInterval(swap, SWAP_MS); }
     if (!on && raf) { cancelAnimationFrame(raf); raf = 0; clearInterval(timer); timer = null; }
   }
+  setTimeout(() => { if (!ready && pool.length) start(); }, 2500);   // slow network: start with what has arrived
   function start() {
+    if (ready) return;
     ready = true;
     buildLayouts();
     run(visible);

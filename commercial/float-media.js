@@ -5,7 +5,8 @@
 // Hover: the frame turns navy and shows its tag. Drag: throw an item. Click on empty space or on the text:
 // everything jiggles. Click on an item: a card opens with the video (sound on), the still or the
 // rotatable 3D model and its caption; ← → step through the section, Esc / × / a click outside closes it.
-// floatMedia() — no arguments: it reads the page itself.
+// floatMedia(opts) reads the page itself. opts.models = false: no 3D-model posters on stage;
+// opts.keep = selector: those parts of a section stay visible below its stage (e.g. the model cards).
 const MEDIA = 'img.zoom, video.clip, model-viewer[poster]';
 const MAX = 14;          // items on one stage
 const MAX_PLAY = 2;      // of them, videos playing as muted loops (the rest show their poster)
@@ -13,17 +14,18 @@ const TURB = 0.06;       // turbulence: drifting push, as a share of the stage w
 const GUSTS = 0.35;      // random gusts per item per second
 const rnd = (a, b) => a + Math.random() * (b - a);
 
-export function floatMedia() {
+export function floatMedia(opts = {}) {
+  const sel = opts.models === false ? 'img.zoom, video.clip' : MEDIA;
   const sections = [...document.querySelectorAll('section.slide')];
-  const allMedia = [...document.querySelectorAll(`section.slide :is(${MEDIA})`)];
+  const allMedia = [...document.querySelectorAll(`section.slide :is(${sel})`)];
   if (!sections.length || !allMedia.length) return;
   document.body.classList.add('fm-page');
   document.documentElement.classList.add('fm-snap');
   const card = makeCard();
   sections.forEach((sec) => {
-    const own = [...sec.querySelectorAll(MEDIA)];
+    const own = [...sec.querySelectorAll(sel)];
     // A section without pictures of its own (LOEWE's opening) floats a mix from the whole page.
-    stage(sec, own.length ? own : [...allMedia].sort(() => Math.random() - 0.5), card);
+    stage(sec, own.length ? own : [...allMedia].sort(() => Math.random() - 0.5), card, opts.keep);
   });
   const fitAll = () => {
     const nav = document.querySelector('.topnav'), h = nav ? nav.offsetHeight : 0;
@@ -51,7 +53,7 @@ function captionOf(node) {
 function stillOf(node) { return node.tagName === 'IMG' ? node.getAttribute('src') : node.getAttribute('poster'); }
 
 // ----- one stage -----
-function stage(sec, sources, card) {
+function stage(sec, sources, card, keep) {
   const el = document.createElement('div');
   el.className = 'fm-stage';
   const text = document.createElement('div');
@@ -62,6 +64,13 @@ function stage(sec, sources, card) {
   el.append(text, frames);
   sec.before(el);
   sec.classList.add('fm-src');   // the old grid stays in the page (the cards read from it) but out of sight
+  const kept = keep ? [...sec.querySelectorAll(keep)].filter((k) => k.parentElement === sec) : [];
+  if (kept.length) {   // …except the parts asked to stay, which follow the stage in a section of their own
+    const below = document.createElement('section');
+    below.className = 'slide fm-keep';
+    below.append(...kept);
+    sec.after(below);
+  }
   const title = text.querySelector('h2')?.firstChild?.textContent.trim() || '';
   const list = sources.filter((n) => stillOf(n));   // the card steps through these
 

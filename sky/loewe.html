@@ -56,6 +56,9 @@ const params = new URLSearchParams(location.search);
 // the wheel only flies after a click on the scene, and vertical swipes still scroll the page
 const EMBED = params.has('embed');
 if (EMBED) document.documentElement.classList.add('embed');
+// ?embed&intro: the opening screen of the LOEWE page — the wheel flies right away, and flying through the
+// name tells the page to move on to the projects (it sends 'lw-sky-through'; 'lw-sky-reset' flies back)
+const INTRO = EMBED && params.has('intro');
 let skyId = SKIES[params.get('sky')] ? params.get('sky') : 'sky6';
 
 const CAM = {   // "Mirabela camera": 36 mm lens on a 36 mm film back → 53.1° horizontal field of view
@@ -213,9 +216,11 @@ const clampFly = v => Math.min(FLY.max, Math.max(FLY.min, v));
 const hint = document.getElementById('hint');
 if (matchMedia('(pointer: coarse)').matches) hint.innerHTML = 'tap for the next word · drag the word to turn it<br>pinch to fly through · drag the sky to turn it';
 const used = () => { hint.classList.add('gone'); };
-let active = !EMBED;                       // embedded: the wheel scrolls the page until the scene is clicked
+let active = !EMBED || INTRO;              // embedded: the wheel scrolls the page until the scene is clicked
 addEventListener('pointerdown', () => { active = true; });
-document.documentElement.addEventListener('mouseleave', () => { if (EMBED) active = false; });
+document.documentElement.addEventListener('mouseleave', () => { if (EMBED && !INTRO) active = false; });
+addEventListener('message', (e) => { if (e.data && e.data.type === 'lw-sky-reset') fly.target = 0; });
+let sentThrough = false;
 addEventListener('wheel', e => {
   if (!active) return;
   e.preventDefault(); used();
@@ -307,6 +312,10 @@ renderer.setAnimationLoop(() => {
   // fly along the C4D camera's line of sight
   fly.t += (fly.target - fly.t) * (1 - Math.pow(0.02, dt));
   camera.position.copy(CAM.pos).addScaledVector(CAM.dir, fly.t);
+  if (INTRO) {   // through the name: on to the projects
+    if (!sentThrough && fly.t > FLY.max - 0.8) { sentThrough = true; parent.postMessage({ type: 'lw-sky-through' }, '*'); }
+    if (fly.t < FLY.max - 3) sentThrough = false;
+  }
   // a breath of sway so the chrome never stands still
   dir.copy(CAM.dir).applyQuaternion(q.setFromAxisAngle(CAM.up, Math.sin(t * 0.17) * 0.01))
     .applyQuaternion(q.setFromAxisAngle(right, Math.sin(t * 0.11) * 0.005));

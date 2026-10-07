@@ -9,7 +9,7 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Arimo:ital,wght@0,400;0,700;1,400&family=Tinos:ital,wght@0,400;0,700;1,400;1,700&display=swap" rel="stylesheet">
 <script src="../zoom.js?v=1"></script>
-<link rel="stylesheet" href="../style.css?v=20261007a-lw">
+<link rel="stylesheet" href="../style.css?v=20261007b-lw">
 <script>
   // Arriving from the intro: start under a white cover that slowly turns transparent.
   (function () { var t; try { t = sessionStorage.getItem('cover'); sessionStorage.removeItem('cover'); } catch (e) {} if (!t) return;
@@ -55,6 +55,14 @@
   <a href="hypertrash.html">HYPERTRASH</a>
 </div></nav>
 
+<div class="lw-sky lw-intro" id="lw-sky">
+  <iframe src="../sky/loewe.html?embed&amp;intro" title="LOEWE SS22 — Live, Laugh, Loewe: the chrome words from the Sky animation, in the sky" allow="fullscreen"></iframe>
+  <div class="lw-sky-help">
+    <p class="desk">click on the text for animation · hold for rotation · zoom in to go further</p>
+    <p class="tap">tap the text for animation · hold for rotation · pinch to go further</p>
+  </div>
+</div>
+
 <section class="slide" id="loewe">
   <h2>LOEWE</h2>
   <div class="meta">promo animations for LOEWE and LOEWE Perfumes<br>2021–2022</div>
@@ -66,13 +74,7 @@
   </nav>
 </section>
 
-<div class="lw-sky" id="lw-sky">
-  <iframe src="../sky/loewe.html?embed" title="LOEWE SS22 — Live, Laugh, Loewe: the chrome words from the Sky animation, in the sky" loading="lazy" allow="fullscreen"></iframe>
-</div>
-<div class="lw-sky-help">
-  <p class="desk"><b>Click</b> — the next word &nbsp;·&nbsp; <b>drag a word</b> — turn it in your hands &nbsp;·&nbsp; <b>move the mouse or drag the sky</b> — turn the sky &nbsp;·&nbsp; <b>click the scene, then scroll</b> — fly to the words and through them</p>
-  <p class="tap"><b>Tap</b> — the next word · <b>drag a word</b> — turn it · <b>swipe sideways</b> — turn the sky · <b>pinch</b> — fly through the words</p>
-</div>
+
 
 <section class="slide" id="ss22">
   <h2>LOEWE SS22</h2>
@@ -179,8 +181,20 @@
 
 <script src="../site.js?v=20261005s"></script>
 <script type="module">
-  import { floatMedia } from './float-media.js?v=6';
+  import { floatMedia } from './float-media.js?v=7';
   floatMedia();
+  // The sky opens the page: flying through the name moves on to the projects; coming back up flies back out.
+  const sky = document.getElementById('lw-sky'), frame = sky.querySelector('iframe');
+  const fitSky = () => { const n = document.querySelector('.topnav'), hh = n ? n.offsetHeight : 0; sky.style.height = `calc(100svh / var(--z, 1) - ${hh}px)`; sky.style.scrollMarginTop = hh + 'px'; };
+  fitSky(); addEventListener('resize', fitSky);
+  addEventListener('message', (e) => {
+    if (e.source === frame.contentWindow && e.data && e.data.type === 'lw-sky-through') document.querySelector('.fm-stage')?.scrollIntoView({ behavior: 'smooth' });
+  });
+  let away = false;
+  new IntersectionObserver(([en]) => {
+    if (!en.isIntersecting) away = true;
+    else if (away && en.intersectionRatio > 0.6) { away = false; frame.contentWindow.postMessage({ type: 'lw-sky-reset' }, '*'); }
+  }, { threshold: [0, 0.6] }).observe(sky);
 </script>
 </body>
 </html>
