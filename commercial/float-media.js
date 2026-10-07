@@ -7,6 +7,9 @@
 // rotatable 3D model and its caption; ← → step through the section, Esc / × / a click outside closes it.
 // floatMedia(opts) reads the page itself. opts.models = false: no 3D-model posters on stage;
 // opts.keep = selector: those parts of a section stay visible below its stage (e.g. the model cards).
+// Hand-made layout: commercial/layout.json holds, per page and stage, fixed sizes / places of items
+// (fractions of the stage), items that stay put ("pin"), the text block's offset and its fonts. Open a page
+// with ?edit to change them (fm-edit.js); edits are kept in this browser until they are baked into layout.json.
 const MEDIA = 'img.zoom, video.clip, model-viewer[poster]';
 const MAX = 14;          // items on one stage
 const MAX_PLAY = 2;      // of them, videos playing as muted loops (the rest show their poster)
@@ -14,19 +17,26 @@ const TURB = 0.06;       // turbulence: drifting push, as a share of the stage w
 const GUSTS = 0.35;      // random gusts per item per second
 const rnd = (a, b) => a + Math.random() * (b - a);
 
-export function floatMedia(opts = {}) {
+export async function floatMedia(opts = {}) {
   const sel = opts.models === false ? 'img.zoom, video.clip' : MEDIA;
   const sections = [...document.querySelectorAll('section.slide')];
   const allMedia = [...document.querySelectorAll(`section.slide :is(${sel})`)];
   if (!sections.length || !allMedia.length) return;
   document.body.classList.add('fm-page');
   document.documentElement.classList.add('fm-snap');
+  const EDIT = new URLSearchParams(location.search).has('edit');
+  const PAGE = location.pathname.split('/').pop() || 'index.html';
+  const saved = await loadLayout(EDIT);
+  const pageCfg = (saved[PAGE] ||= { stages: {} });
+  pageCfg.stages ||= {};
   const card = makeCard();
-  sections.forEach((sec) => {
+  const apis = sections.map((sec, idx) => {
     const own = [...sec.querySelectorAll(sel)];
+    const scfg = (pageCfg.stages[idx] ||= {});
     // A section without pictures of its own (LOEWE's opening) floats a mix from the whole page.
-    stage(sec, own.length ? own : [...allMedia].sort(() => Math.random() - 0.5), card, opts.keep);
+    return stage(sec, own.length ? own : [...allMedia].sort(() => Math.random() - 0.5), card, opts.keep, scfg, EDIT);
   });
+  if (EDIT) import('./fm-edit.js?v=1').then((m) => m.startEditor({ apis, saved, page: PAGE, TEXT_PARTS, GOOGLE_FONTS, ensureFont }));
   const fitAll = () => {
     const nav = document.querySelector('.topnav'), h = nav ? nav.offsetHeight : 0;
     document.querySelectorAll('.fm-stage').forEach((s) => {
@@ -51,9 +61,59 @@ function captionOf(node) {
   return kindOf(node);
 }
 function stillOf(node) { return node.tagName === 'IMG' ? node.getAttribute('src') : node.getAttribute('poster'); }
+export function keyOf(node) { return (node.tagName === 'MODEL-VIEWER' ? 'model:' : '') + node.getAttribute('src'); }
+
+// ----- saved layout: layout.json for everyone, plus this browser's unsent edits in edit mode -----
+async function loadLayout(edit) {
+  let base = {};
+  try { const r = await fetch('layout.json', { cache: 'no-cache' }); if (r.ok) base = await r.json(); } catch (e) { base = {}; }
+  if (edit) {
+    try { const local = JSON.parse(localStorage.getItem('fm-layout') || 'null'); if (local) base = merge(base, local); } catch (e) { /* storage blocked */ }
+  }
+  return base;
+}
+function merge(a, b) {
+  const out = { ...a };
+  for (const k of Object.keys(b)) out[k] = b[k] && typeof b[k] === 'object' && !Array.isArray(b[k]) && a[k] && typeof a[k] === 'object' ? merge(a[k], b[k]) : b[k];
+  return out;
+}
+// Fonts offered in the editor that are not on every computer come from Google Fonts, loaded when used.
+export const GOOGLE_FONTS = {
+  'Inter Tight': 'Inter+Tight:ital,wght@0,100..900;1,100..900', 'Space Grotesk': 'Space+Grotesk:wght@300..700',
+  'Syne': 'Syne:wght@400..800', 'Unbounded': 'Unbounded:wght@200..900', 'Manrope': 'Manrope:wght@200..800',
+  'Archivo': 'Archivo:ital,wght@0,100..900;1,100..900', 'Bricolage Grotesque': 'Bricolage+Grotesque:wght@200..800',
+  'Playfair Display': 'Playfair+Display:ital,wght@0,400..900;1,400..900', 'Fraunces': 'Fraunces:ital,wght@0,100..900;1,100..900',
+  'Bodoni Moda': 'Bodoni+Moda:ital,wght@0,400..900;1,400..900', 'Cormorant Garamond': 'Cormorant+Garamond:ital,wght@0,300..700;1,300..700',
+  'Instrument Serif': 'Instrument+Serif:ital@0;1', 'Italiana': 'Italiana', 'Space Mono': 'Space+Mono:ital,wght@0,400;0,700;1,400',
+  'IBM Plex Mono': 'IBM+Plex+Mono:ital,wght@0,300;0,400;0,500;0,700;1,400',
+};
+export function ensureFont(family) {
+  const name = (family || '').split(',')[0].replace(/["']/g, '').trim();
+  const q = GOOGLE_FONTS[name];
+  if (!q || document.querySelector(`link[data-font="${name}"]`)) return;
+  const l = document.createElement('link');
+  l.rel = 'stylesheet'; l.dataset.font = name;
+  l.href = `https://fonts.googleapis.com/css2?family=${q}&display=swap`;
+  document.head.appendChild(l);
+}
+// Text block of a stage: its offset from the centre (fractions of the stage) and per-part styles.
+export const TEXT_PARTS = ['h2', '.meta', '.body', '.credit', '.subnav'];
+export function applyText(text, t = {}) {
+  text.style.left = `calc(50% + ${((t.dx || 0) * 100).toFixed(3)}%)`;
+  text.style.top = `calc(50% + ${((t.dy || 0) * 100).toFixed(3)}%)`;
+  text.style.width = t.width ? (t.width * 100).toFixed(2) + '%' : '';
+  for (const part of TEXT_PARTS) {
+    const el = text.querySelector(`:scope > ${part}`);
+    if (!el) continue;
+    const css = (t.styles || {})[part] || {};
+    el.removeAttribute('style');
+    for (const [k, v] of Object.entries(css)) el.style[k] = v;
+    if (css.fontFamily) ensureFont(css.fontFamily);
+  }
+}
 
 // ----- one stage -----
-function stage(sec, sources, card, keep) {
+function stage(sec, sources, card, keep, scfg = {}, EDIT = false) {
   const el = document.createElement('div');
   el.className = 'fm-stage';
   const text = document.createElement('div');
@@ -73,8 +133,13 @@ function stage(sec, sources, card, keep) {
   }
   const title = text.querySelector('h2')?.firstChild?.textContent.trim() || '';
   const list = sources.filter((n) => stillOf(n));   // the card steps through these
+  applyText(text, scfg.text);
 
-  const picks = list.slice(0, MAX);
+  // Items placed by hand always come on stage; the rest fill up to MAX.
+  const cfgOf = (n) => (scfg.items || {})[keyOf(n)];
+  const shown = EDIT ? list : list.filter((n) => !(cfgOf(n) && cfgOf(n).hide));   // the editor still lists hidden ones
+  const placed = shown.filter((n) => cfgOf(n));
+  const picks = [...placed, ...shown.filter((n) => !placed.includes(n))].slice(0, MAX);
   const items = [];
   let playing = 0, ready = false;
   picks.forEach((node, i) => {
@@ -100,7 +165,7 @@ function stage(sec, sources, card, keep) {
         `<span class="num">${String(i + 1).padStart(2, '0')}.</span><span class="tag"></span>`;
       frame.querySelector('.tag').textContent = captionOf(node);
       frames.appendChild(frame);
-      items.push({ el: box, media, frame, node, ar: pre.naturalWidth / pre.naturalHeight, x: 0, y: 0, vx: 0, vy: 0,
+      items.push({ el: box, media, frame, node, key: keyOf(node), ar: pre.naturalWidth / pre.naturalHeight, x: 0, y: 0, vx: 0, vy: 0,
         w: 1, h: 1, box: null, seed: rnd(0, 100), placed: false });
       if (ready) layout();
     };
@@ -114,7 +179,13 @@ function stage(sec, sources, card, keep) {
     const sr = el.getBoundingClientRect(), r = text.getBoundingClientRect(), z = zoomOf(), pad = 18;
     return { x0: (r.left - sr.left) / z - pad, y0: (r.top - sr.top) / z - pad, x1: (r.right - sr.left) / z + pad, y1: (r.bottom - sr.top) / z + pad };
   }
+  const saved = (it) => (scfg.items || {})[it.key];
   function home(i, it) {
+    const o = saved(it);
+    if (o && o.x != null) {   // placed by hand
+      const hw0 = it.w / 2, hh0 = it.h / 2;
+      return { x: Math.min(Math.max(o.x * W, hw0), W - hw0), y: Math.min(Math.max(o.y * H, hh0), H - hh0) };
+    }
     const n = items.length, cols = Math.max(2, Math.round(Math.sqrt(n * W / H))), rows = Math.ceil(n / cols);
     const row = Math.floor(i / cols), inRow = row < rows - 1 ? cols : n - row * cols;
     const p = { x: ((i % cols) + 0.5) / inRow * W, y: (row + 0.5) / rows * H };
@@ -136,8 +207,12 @@ function stage(sec, sources, card, keep) {
     const free = Math.max(W * H * 0.3, W * H - (K.x1 - K.x0) * (K.y1 - K.y0));
     const unit = Math.sqrt(free * 0.36 / Math.max(items.length, 6));
     items.forEach((it, i) => {
-      it.w = unit * Math.sqrt(it.ar); it.h = unit / Math.sqrt(it.ar);
-      const k = Math.min(1, (H * 0.3) / it.h, (W * 0.26) / it.w); it.w *= k; it.h *= k;
+      const o = saved(it);
+      if (o && o.w) { it.w = o.w * W; it.h = it.w / it.ar; }   // size fixed by hand
+      else {
+        it.w = unit * Math.sqrt(it.ar); it.h = unit / Math.sqrt(it.ar);
+        const k = Math.min(1, (H * 0.3) / it.h, (W * 0.26) / it.w); it.w *= k; it.h *= k;
+      }
       it.el.style.width = it.w.toFixed(1) + 'px'; it.el.style.height = it.h.toFixed(1) + 'px';
       if (!it.placed) { const p = home(i, it); it.x = p.x + rnd(-20, 20); it.y = p.y + rnd(-20, 20); it.placed = true; }
     });
@@ -169,6 +244,7 @@ function stage(sec, sources, card, keep) {
     if (hovered) { hovered.frame.classList.add('on'); hovered.el.classList.add('hot'); }
   }
   el.addEventListener('pointermove', (e) => {
+    if (api.editing) return;
     const [x, y] = local(e);
     if (pointer.down && Math.hypot(x - pointer.sx, y - pointer.sy) > 8) pointer.moved = true;
     pointer.x = x; pointer.y = y;
@@ -177,7 +253,7 @@ function stage(sec, sources, card, keep) {
   });
   el.addEventListener('pointerleave', () => { if (!dragged) setHover(null); });
   el.addEventListener('pointerdown', (e) => {
-    if (e.target.closest('a')) return;   // links in the text work as links
+    if (api.editing || e.target.closest('a')) return;   // links in the text work as links
     const [x, y] = local(e);
     Object.assign(pointer, { x, y, sx: x, sy: y, down: true, moved: false, t: performance.now() });
     dragged = onText(e) ? null : hit(x, y);
@@ -208,6 +284,8 @@ function stage(sec, sources, card, keep) {
     const dt = Math.min(0.033, (now - (last || now)) / 1000); last = now;
     const t = now / 1000, kx = (K.x0 + K.x1) / 2, ky = (K.y0 + K.y1) / 2, bounce = 0.6;
     items.forEach((it, i) => {
+      it.still = api.paused || !!(saved(it) && saved(it).pin);
+      if (it.still) { const p = home(i, it); it.x = p.x; it.y = p.y; it.vx = it.vy = 0; return; }
       if (it === dragged) { it.vx = (pointer.x - it.x) * 14; it.vy = (pointer.y - it.y) * 14; }
       else {
         const p = home(i, it);
@@ -229,7 +307,8 @@ function stage(sec, sources, card, keep) {
         const b = items[j];
         const ox = (a.w + b.w) / 2 + 6 - Math.abs(a.x - b.x), oy = (a.h + b.h) / 2 + 6 - Math.abs(a.y - b.y);
         if (ox <= 0 || oy <= 0) continue;
-        const ma = a === dragged ? 0 : b === dragged ? 1 : 0.5;
+        if (a.still && b.still) continue;
+        const ma = a === dragged || a.still ? 0 : b === dragged || b.still ? 1 : 0.5;
         if (ox < oy) {
           const s = a.x < b.x ? -1 : 1; a.x += s * ox * ma; b.x -= s * ox * (1 - ma);
           const v = a.vx - b.vx; if (v * s < 0) { a.vx -= v * (1 + bounce) * 0.5; b.vx += v * (1 + bounce) * 0.5; }
@@ -240,6 +319,7 @@ function stage(sec, sources, card, keep) {
       }
     }
     for (const it of items) {
+      if (it.still) { draw(it); continue; }
       // the text block
       const tx = Math.min(it.x + it.w / 2 - K.x0, K.x1 - (it.x - it.w / 2)), ty = Math.min(it.y + it.h / 2 - K.y0, K.y1 - (it.y - it.h / 2));
       if (tx > 0 && ty > 0) {
@@ -271,6 +351,12 @@ function stage(sec, sources, card, keep) {
   }
   new IntersectionObserver((e) => { visible = e[0].isIntersecting; run(); }).observe(el);
   document.addEventListener('visibilitychange', run);
+  // what the editor (fm-edit.js) works with
+  const api = { el, text, frames, items, scfg, title, editing: false, paused: false,
+    layout: () => { if (ready) layout(); }, size: () => ({ W, H }), local, hit, zoomOf,
+    applyText: () => applyText(text, scfg.text) };
+  if (EDIT) { api.editing = true; api.paused = true; }
+  return api;
 }
 
 // ----- the card: one for the page -----
