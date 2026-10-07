@@ -1,1 +1,45 @@
-{}
+{
+ "nina-ricci.html": {
+  "stages": {
+   "0": {
+    "text": {
+     "dx": -0.18111713435374147,
+     "dy": -0.29190575462351387,
+     "styles": {
+      "h2": {
+       "color": "#2a27a6",
+       "fontFamily": "\"Bricolage Grotesque\", sans-serif",
+       "textAlign": "left"
+      },
+      ".meta": {
+       "textAlign": "left",
+       "fontStyle": "italic",
+       "fontFamily": "\"Inter Tight\", sans-serif"
+      },
+      ".body": {
+       "lineHeight": "1.4",
+       "textAlign": "left"
+      }
+     }
+    },
+    "items": {
+     "video/nina-ricci-3.mp4": {
+      "w": 0.14054372848487287,
+      "x": 0.4558062287414966,
+      "y": 0.6840640904827802
+     },
+     "video/nina-ricci-2.mp4": {
+      "w": 0.14075896354199738,
+      "x": 0.24597417091836735,
+      "y": 0.8194559114927344
+     },
+     "video/nina-ricci-v2.mp4": {
+      "w": 0.15801939148216945,
+      "x": 0.6401438368975474,
+      "y": 0.21974419308674592
+     }
+    }
+   }
+  }
+ }
+}

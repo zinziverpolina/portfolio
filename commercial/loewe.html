@@ -9,7 +9,7 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Arimo:ital,wght@0,400;0,700;1,400&family=Tinos:ital,wght@0,400;0,700;1,400;1,700&display=swap" rel="stylesheet">
 <script src="../zoom.js?v=1"></script>
-<link rel="stylesheet" href="../style.css?v=20261008b-lw">
+<link rel="stylesheet" href="../style.css?v=20261008d-lw">
 <script>
   // Arriving from the intro: start under a white cover that slowly turns transparent.
   (function () { var t; try { t = sessionStorage.getItem('cover'); sessionStorage.removeItem('cover'); } catch (e) {} if (!t) return;
@@ -54,7 +54,7 @@
 </div></nav>
 
 <div class="lw-sky lw-intro" id="lw-sky">
-  <iframe src="../sky/loewe.html?embed&amp;intro" title="LOEWE SS22 — Live, Laugh, Loewe: the chrome words from the Sky animation, in the sky" allow="fullscreen"></iframe>
+  <iframe src="../sky/loewe.html?embed&amp;intro&amp;v=2" title="LOEWE SS22 — Live, Laugh, Loewe: the chrome words from the Sky animation, in the sky" allow="fullscreen"></iframe>
   <div class="lw-sky-help">
     <p class="desk">click on the text for animation · hold for rotation · zoom in to go further</p>
     <p class="tap">tap the text for animation · hold for rotation · pinch to go further</p>
@@ -185,8 +185,17 @@
   const sky = document.getElementById('lw-sky'), frame = sky.querySelector('iframe');
   const fitSky = () => { const n = document.querySelector('.topnav'), hh = n ? n.offsetHeight : 0; sky.style.height = `calc(100svh / var(--z, 1) - ${hh}px)`; sky.style.scrollMarginTop = hh + 'px'; };
   fitSky(); addEventListener('resize', fitSky);
+  let going = false;
   addEventListener('message', (e) => {
-    if (e.source === frame.contentWindow && e.data && e.data.type === 'lw-sky-through') document.querySelector('.fm-stage')?.scrollIntoView({ behavior: 'smooth' });
+    if (e.source !== frame.contentWindow || !e.data || e.data.type !== 'lw-sky-through' || going) return;
+    // Zooming on: the sky keeps growing and fades to white, then the LOEWE section grows in out of it.
+    going = true;
+    sky.classList.add('lw-going');
+    setTimeout(() => {
+      const st = document.querySelector('.fm-stage');
+      if (st) { st.scrollIntoView({ behavior: 'instant' }); st.classList.remove('fm-arrive'); void st.offsetWidth; st.classList.add('fm-arrive'); }
+      setTimeout(() => { sky.classList.remove('lw-going'); going = false; }, 900);
+    }, 560);
   });
   let away = false;
   new IntersectionObserver(([en]) => {
