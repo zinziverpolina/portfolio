@@ -122,6 +122,8 @@ export function startEditor({ apis, saved, page, TEXT_PARTS, GOOGLE_FONTS, ensur
     const size = num(css.fontSize || cs.fontSize);
     const ls = css.letterSpacing ? num(css.letterSpacing) : +(num(cs.letterSpacing) / size || 0).toFixed(3);
     const lh = css.lineHeight ? num(css.lineHeight) : +(num(cs.lineHeight) / size || 1.2).toFixed(2);
+    // the links line is a row of links: its alignment is where the row sits
+    const curAlign = part === '.subnav' ? ({ 'flex-start': 'left', 'flex-end': 'right', 'center': 'center' }[css.justifyContent || cs.justifyContent] || 'center') : (css.textAlign || cs.textAlign);
     const width = ((t.width || api.text.getBoundingClientRect().width / api.zoomOf() / api.size().W) * 100).toFixed(0);
     selBox.innerHTML = `
       <p class="fm-ed-t">${esc(api.title)} · ${PART_NAMES[part]}</p>
@@ -129,6 +131,7 @@ export function startEditor({ apis, saved, page, TEXT_PARTS, GOOGLE_FONTS, ensur
       <label>Size, px <span><input type="range" min="8" max="160" step="1" value="${size}" data-k="fontSize"><input type="number" min="6" max="300" step="1" value="${size}" data-k="fontSize"></span></label>
       <label>Weight <select data-k="fontWeight">${[300, 400, 500, 600, 700, 800, 900].map((w) => `<option ${String(w) === String(css.fontWeight || cs.fontWeight) ? 'selected' : ''}>${w}</option>`).join('')}</select></label>
       <label>Style <select data-k="fontStyle">${['normal', 'italic'].map((v) => `<option ${v === (css.fontStyle || cs.fontStyle) ? 'selected' : ''}>${v}</option>`).join('')}</select></label>
+      <label>Alignment <span class="al">${[['left', '⇤ left'], ['center', 'centre'], ['right', 'right ⇥'], ['justify', 'justify']].map(([v, n]) => `<button type="button" data-al="${v}" class="${v === curAlign ? 'on' : ''}">${n}</button>`).join('')}</span></label>
       <label>Case <select data-k="textTransform">${[['none', 'as written'], ['uppercase', 'UPPERCASE'], ['lowercase', 'lowercase'], ['capitalize', 'Capitalised']].map(([v, n]) => `<option value="${v}" ${v === (css.textTransform || cs.textTransform) ? 'selected' : ''}>${n}</option>`).join('')}</select></label>
       <label>Letter spacing, em <span><input type="range" min="-0.1" max="0.4" step="0.005" value="${ls}" data-k="letterSpacing"><input type="number" min="-0.2" max="1" step="0.005" value="${ls}" data-k="letterSpacing"></span></label>
       <label>Line height <span><input type="range" min="0.7" max="2.4" step="0.05" value="${lh}" data-k="lineHeight"><input type="number" min="0.5" max="3" step="0.05" value="${lh}" data-k="lineHeight"></span></label>
@@ -153,8 +156,14 @@ export function startEditor({ apis, saved, page, TEXT_PARTS, GOOGLE_FONTS, ensur
       set(k, e.target.value);
     };
     selBox.onclick = (e) => {
-      const c = e.target.dataset.c, k = e.target.dataset.k;
+      const c = e.target.dataset.c, k = e.target.dataset.k, al = e.target.dataset.al;
       if (c) { set('color', c); return; }
+      if (al) {
+        if (part === '.subnav') set('justifyContent', { left: 'flex-start', center: 'center', right: 'flex-end', justify: 'space-between' }[al]);
+        else set('textAlign', al);
+        selBox.querySelectorAll('[data-al]').forEach((b) => b.classList.toggle('on', b.dataset.al === al));
+        return;
+      }
       if (k === 'reset') { delete (textCfg(api).styles || {})[part]; api.applyText(); api.layout(); save(); select({ api, part }); }
       if (k === 'center') { t.dx = 0; t.dy = 0; api.applyText(); api.layout(); save(); }
     };

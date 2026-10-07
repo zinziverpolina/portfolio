@@ -562,3 +562,6 @@ body.page-dark .fm-card-nav button:hover, body.page-dark .fm-card-x:hover { colo
 .fm-ed button[data-a].main { background: #2a27a6; color: #fff; }
 .fm-ed-act { display: flex; gap: 6px; flex-wrap: wrap; }
 .fm-ed-out { width: 100%; height: 120px; font: 11px/1.3 monospace; }
+.fm-ed .al { display: flex; gap: 4px; flex-wrap: wrap; }
+.fm-ed .al button { font: inherit; color: #2a27a6; background: #fff; border: 1px solid rgba(93,138,182,.6); padding: 3px 7px; cursor: pointer; }
+.fm-ed .al button.on { background: #2a27a6; border-color: #2a27a6; color: #fff; }

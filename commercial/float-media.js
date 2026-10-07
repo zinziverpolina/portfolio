@@ -36,7 +36,7 @@ export async function floatMedia(opts = {}) {
     // A section without pictures of its own (LOEWE's opening) floats a mix from the whole page.
     return stage(sec, own.length ? own : [...allMedia].sort(() => Math.random() - 0.5), card, opts.keep, scfg, EDIT);
   });
-  if (EDIT) import('./fm-edit.js?v=1').then((m) => m.startEditor({ apis, saved, page: PAGE, TEXT_PARTS, GOOGLE_FONTS, ensureFont }));
+  if (EDIT) import('./fm-edit.js?v=2').then((m) => m.startEditor({ apis, saved, page: PAGE, TEXT_PARTS, GOOGLE_FONTS, ensureFont }));
   const fitAll = () => {
     const nav = document.querySelector('.topnav'), h = nav ? nav.offsetHeight : 0;
     document.querySelectorAll('.fm-stage').forEach((s) => {
