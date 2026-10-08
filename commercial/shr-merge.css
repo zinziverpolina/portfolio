@@ -1,0 +1,128 @@
+/* Sacred Merge — Suika-style merge game with the Sacred Hyper Race models.
+   Frames copy the look of .shr-frame in ../style.css (kept separate so the game owns its page).
+   Positions of the jar, score, next and legend are set from shr-merge.js (layout()). */
+:root {
+  --navy: #2a27a6;
+  --sky: #5d8ab6;
+  --sans: Arial, Arimo, Helvetica, sans-serif;
+  --title-font: "Bricolage Grotesque", Arial, Helvetica, sans-serif;
+  --jw: 320px;   /* jar width, set by JS: titles scale with it */
+}
+* { box-sizing: border-box; }
+html, body { margin: 0; height: 100%; overflow: hidden; background: #fff; overscroll-behavior: none; }
+body { font: 500 14px/1.2 var(--sans); letter-spacing: -.02em; color: #111; -webkit-tap-highlight-color: transparent; }
+.sm { position: fixed; inset: 0; overflow: hidden; background: #fff; user-select: none; -webkit-user-select: none; -webkit-touch-callout: none; touch-action: none; }
+.sm-canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block; touch-action: none; z-index: 1; }
+.sm-fx { position: absolute; inset: 0; pointer-events: none; z-index: 3; }
+
+/* Signature frame: 1px line, 8 little white squares */
+.sm-box, .sm-jar, .sm-fr { --c: var(--sky); position: absolute; border: 1px solid var(--c); }
+.sm-box i, .sm-jar > i, .sm-fr i, .sm-legend .slot i { position: absolute; width: 7px; height: 7px; margin: -4px 0 0 -4px; background: #fff; border: 1px solid var(--c); }
+.sm-box i:nth-child(1), .sm-jar > i:nth-child(1), .sm-fr i:nth-child(1), .sm-legend .slot i:nth-child(1) { left: 0; top: 0; }
+.sm-box i:nth-child(2), .sm-jar > i:nth-child(2), .sm-fr i:nth-child(2), .sm-legend .slot i:nth-child(2) { left: 50%; top: 0; }
+.sm-box i:nth-child(3), .sm-jar > i:nth-child(3), .sm-fr i:nth-child(3), .sm-legend .slot i:nth-child(3) { left: 100%; top: 0; }
+.sm-box i:nth-child(4), .sm-jar > i:nth-child(4), .sm-fr i:nth-child(4), .sm-legend .slot i:nth-child(4) { left: 100%; top: 50%; }
+.sm-box i:nth-child(5), .sm-jar > i:nth-child(5), .sm-fr i:nth-child(5), .sm-legend .slot i:nth-child(5) { left: 100%; top: 100%; }
+.sm-box i:nth-child(6), .sm-jar > i:nth-child(6), .sm-fr i:nth-child(6), .sm-legend .slot i:nth-child(6) { left: 50%; top: 100%; }
+.sm-box i:nth-child(7), .sm-jar > i:nth-child(7), .sm-fr i:nth-child(7), .sm-legend .slot i:nth-child(7) { left: 0; top: 100%; }
+.sm-box i:nth-child(8), .sm-jar > i:nth-child(8), .sm-fr i:nth-child(8), .sm-legend .slot i:nth-child(8) { left: 0; top: 50%; }
+.sm-tag { display: block; white-space: nowrap; font: 500 12px/1 var(--sans); letter-spacing: -.02em; text-transform: uppercase; color: var(--sky); }
+
+/* The jar: open at the top (no top line); the top-middle square follows the aim */
+.sm-jar { left: 0; top: 0; border-top-color: transparent; z-index: 0; pointer-events: none; transition: border-color .25s; }
+.sm-jar > i:nth-child(2) { transition: none; }
+.sm.is-start .sm-jar > i:nth-child(2) { left: 50% !important; }
+.sm-fill { position: absolute; inset: 0; background: var(--navy); opacity: 0; }
+.sm-jar.flash { --c: var(--navy); }
+.sm-jar.flash .sm-fill { animation: sm-fill .9s ease-out; }
+@keyframes sm-fill { 0% { opacity: .55; } 100% { opacity: 0; } }
+.sm-danger { position: absolute; left: 0; right: 0; top: 0; height: 0; border-top: 1px dashed rgba(93, 138, 182, .55); }
+.sm-danger.warn { border-top: 2px solid var(--navy); margin-top: -1px; animation: sm-warn .5s ease-in-out infinite alternate; }
+@keyframes sm-warn { from { opacity: 1; } to { opacity: .25; } }
+.sm.is-start .sm-danger { opacity: 0; }
+
+/* Aim guide: a faint dashed vertical line under the held creature */
+.sm-guide { position: absolute; left: 0; top: 0; width: 1px; height: 0; z-index: 0; pointer-events: none; opacity: 0; will-change: transform;
+  background: repeating-linear-gradient(to bottom, rgba(93, 138, 182, .45) 0 4px, transparent 4px 9px); transition: opacity .15s; }
+.sm-guide.on { opacity: 1; }
+
+/* Top links and sound toggle */
+.sm-nav { position: absolute; left: 16px; top: calc(14px + env(safe-area-inset-top)); display: flex; gap: 18px; z-index: 6; }
+.sm-nav a, .sm-sound { font: 500 13px/1 var(--sans); letter-spacing: -.02em; text-transform: uppercase; color: var(--navy); text-decoration: none; cursor: pointer; }
+.sm-nav a + a { color: var(--sky); }
+.sm-nav a:hover, .sm-sound:hover { color: var(--navy); text-decoration: underline; text-underline-offset: 3px; }
+.sm-sound { position: absolute; right: 16px; top: calc(14px + env(safe-area-inset-top)); z-index: 6; padding: 0; border: 0; background: none; color: var(--sky); }
+.sm-sound[aria-pressed="true"] { color: var(--navy); }
+
+/* Score (big, framed) and next */
+.sm-score, .sm-next { position: absolute; left: 0; top: 0; z-index: 4; pointer-events: none; }
+.sm-score[hidden], .sm-next[hidden] { display: none; }
+.sm-score { text-align: center; }
+.sm-score .sm-box { position: relative; min-width: 112px; padding: 9px 24px 12px; transition: border-color .2s; }
+.sm-score .sm-box.hot { --c: var(--navy); }
+.sm-score-n { display: block; font: 600 56px/1 var(--title-font); letter-spacing: -.04em; color: var(--navy); font-variant-numeric: tabular-nums; }
+.sm-score .sm-tag { margin-top: 9px; }
+.sm-score .bump { animation: sm-bump .28s ease-out; }
+@keyframes sm-bump { 0% { transform: scale(1.16); } 100% { transform: none; } }
+.sm-next { width: 72px; text-align: right; }
+.sm-next .sm-box { position: relative; width: 72px; height: 72px; }
+.sm-next .sm-tag { margin-top: 9px; }
+.sm-next.joker .sm-box { --c: var(--navy); }
+.sm-next.joker .sm-tag { color: var(--navy); }
+
+/* Chain legend (like Suika's evolution circle): 9 icons, numbers under */
+.sm-legend { position: absolute; left: 0; top: 0; z-index: 2; display: flex; margin: 0; padding: 0; list-style: none; pointer-events: none; }
+.sm-legend li { position: relative; flex: 1 1 0; }
+.sm-legend .slot { position: relative; width: 100%; aspect-ratio: 1; --c: transparent; border: 1px solid var(--c); }
+.sm-legend .slot i { display: none; width: 5px; height: 5px; margin: -3px 0 0 -3px; }
+.sm-legend .n { display: block; margin-top: 6px; text-align: center; font: 500 11px/1 var(--sans); letter-spacing: 0; color: var(--sky); opacity: .7; }
+.sm-legend li.got .n { color: #111; opacity: 1; }
+.sm-legend li.top .slot { --c: var(--navy); }
+.sm-legend li.top .slot i { display: block; }
+.sm-legend li.top .n { color: var(--navy); }
+
+/* Merge flash frame (navy, follows the new creature), number + name tag */
+.sm-fr { left: 0; top: 0; --c: var(--navy); opacity: 0; will-change: transform, opacity; }
+.sm-fr.go { animation: sm-fr 1s ease-out forwards; }
+@keyframes sm-fr { 0% { opacity: 0; } 8% { opacity: 1; } 65% { opacity: 1; } 100% { opacity: 0; } }
+.sm-fr .num { position: absolute; left: 5px; bottom: 3px; font: 11px/1 var(--sans); letter-spacing: 0; color: var(--navy); }
+.sm-fr .tag { position: absolute; left: 0; top: 100%; margin-top: 8px; white-space: nowrap; font: 500 12px/1 var(--sans); letter-spacing: -.02em; text-transform: uppercase; color: var(--navy); }
+.sm-pop { position: absolute; left: 0; top: 0; white-space: nowrap; font: 500 13px/1 var(--sans); letter-spacing: -.02em; text-transform: uppercase; color: var(--navy); opacity: 0; pointer-events: none; }
+.sm-pop.go { animation: sm-pop .9s ease-out forwards; }
+.sm-pop.big { font: 600 calc(var(--jw) * .085)/1 var(--title-font); letter-spacing: -.03em; }
+.sm-pop.big.go { animation-duration: 1.6s; }
+@keyframes sm-pop { 0% { opacity: 0; translate: -50% 4px; } 12% { opacity: 1; translate: -50% -4px; } 70% { opacity: 1; } 100% { opacity: 0; translate: -50% -28px; } }
+
+/* Start and game-over screens sit over the jar (rect set by JS) */
+.sm-screen { position: absolute; left: 0; top: 0; z-index: 5; pointer-events: none; display: flex; flex-direction: column; align-items: center; text-align: center; padding: 22px 10px 22px; }
+.sm-screen[hidden] { display: none; }
+.sm-start h1 { margin: 0; font: 600 calc(var(--jw) * .125)/.92 var(--title-font); letter-spacing: -.04em; color: var(--navy); white-space: nowrap; }
+.sm-start p { margin: 12px 0 0; font: 500 calc(var(--jw) * .04)/1.2 var(--sans); letter-spacing: -.02em; text-transform: uppercase; color: var(--sky); }
+.sm-go { margin-top: auto; font: 500 15px/1 var(--sans); letter-spacing: -.02em; text-transform: uppercase; color: var(--navy); }
+.sm-go .sm-tap { display: none; animation: sm-blink 1.6s ease-in-out infinite; }
+.sm-go .sm-load { color: var(--sky); }
+.sm-start.ready .sm-tap, .sm-over .sm-tap { display: inline; }
+.sm-start.ready .sm-load { display: none; }
+@keyframes sm-blink { 0%, 100% { opacity: 1; } 50% { opacity: .35; } }
+.sm-over { justify-content: center; }
+.sm-over-box { position: relative; display: flex; flex-direction: column; align-items: center; gap: 10px; min-width: 190px; padding: 18px 30px 20px; background: rgba(255, 255, 255, .9); --c: var(--navy); }
+.sm-over-cause { font: 500 12px/1 var(--sans); text-transform: uppercase; color: var(--navy); }
+.sm-over-n { font: 600 88px/.9 var(--title-font); letter-spacing: -.05em; color: var(--navy); font-variant-numeric: tabular-nums; }
+.sm-over-best { font: 500 13px/1 var(--sans); text-transform: uppercase; color: var(--sky); }
+.sm-over-best.new { color: var(--navy); }
+.sm-over .sm-go { margin-top: 26px; padding: 6px 10px; background: rgba(255, 255, 255, .9); }
+
+@media (max-width: 600px) {
+  .sm-nav { gap: 12px; }
+  .sm-nav a, .sm-sound { font-size: 11px; }
+  .sm-score .sm-box { min-width: 96px; padding: 7px 20px 10px; }
+  .sm-score-n { font-size: 44px; }
+  .sm-score .sm-tag, .sm-next .sm-tag { font-size: 11px; margin-top: 7px; }
+  .sm-next, .sm-next .sm-box { width: 62px; }
+  .sm-next .sm-box { height: 62px; }
+  .sm-fr .tag { font-size: 11px; }
+  .sm-legend .n { font-size: 10px; margin-top: 5px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .sm-go .sm-tap, .sm-danger.warn { animation: none; }
+}

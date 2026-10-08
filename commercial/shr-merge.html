@@ -1,0 +1,66 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex">
+<meta name="theme-color" content="#ffffff">
+<title>Sacred Merge — Polina Zinziver</title>
+<meta name="description" content="Sacred Merge: a merge game with the creatures of Sacred Hyper Race, a Fortnite map by Polina Zinziver.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Arimo:wght@400;500;700&family=Bricolage+Grotesque:wght@200..800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="shr-merge.css?v=1">
+<script src="https://cdn.jsdelivr.net/npm/matter-js@0.20.0/build/matter.min.js"></script>
+<script type="importmap">{"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.169.0/build/three.module.js","three/addons/":"https://cdn.jsdelivr.net/npm/three@0.169.0/examples/jsm/"}}</script>
+</head>
+<body>
+<main class="sm is-start" id="sm">
+  <canvas class="sm-canvas" aria-label="Sacred Merge game"></canvas>
+
+  <!-- the container: open at the top; its top-middle square slides along the opening with the aim -->
+  <div class="sm-jar" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i>
+    <div class="sm-fill"></div>
+    <div class="sm-danger"></div>
+  </div>
+  <div class="sm-guide" aria-hidden="true"></div>
+  <div class="sm-fx" aria-hidden="true"></div>
+
+  <nav class="sm-nav">
+    <a href="../commercial.html">POLINA ZINZIVER</a>
+    <a href="sacred-hyper-race.html">SACRED HYPER RACE</a>
+  </nav>
+  <button class="sm-sound" type="button" aria-pressed="false">SOUND OFF</button>
+
+  <div class="sm-score" hidden>
+    <div class="sm-box"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i>
+      <b class="sm-score-n">0</b>
+    </div>
+    <span class="sm-tag">BEST <span class="sm-best-n">0</span></span>
+  </div>
+
+  <div class="sm-next" hidden>
+    <div class="sm-box"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
+    <span class="sm-tag sm-next-tag">NEXT</span>
+  </div>
+
+  <ol class="sm-legend" aria-label="The chain, smallest to largest"></ol>
+
+  <section class="sm-screen sm-start">
+    <h1>SACRED MERGE</h1>
+    <p>merge the creatures · reach the Sun Man</p>
+    <div class="sm-go"><span class="sm-load">LOADING 0/5</span><span class="sm-tap">TAP TO START</span></div>
+  </section>
+
+  <section class="sm-screen sm-over" hidden>
+    <div class="sm-box sm-over-box"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i>
+      <span class="sm-over-cause">OVERFLOW</span>
+      <b class="sm-over-n">0</b>
+      <span class="sm-over-best">BEST 0</span>
+    </div>
+    <div class="sm-go"><span class="sm-tap">TAP TO RESTART</span></div>
+  </section>
+</main>
+<script type="module" src="shr-merge.js?v=1"></script>
+</body>
+</html>
