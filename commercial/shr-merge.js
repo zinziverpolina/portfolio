@@ -45,14 +45,14 @@ const T = {
   MAX_DPR: 2,
 };
 const JOKER = 0;
-const CHAIN = [
+const CHAIN = [   // Polina's order (8 Oct): House, Church, Tree, Waterfall II, Frog, Orchid, Two Heads, Mouth Arch, Sun Man
   null,
   { file: 'shr-house.glb', name: 'House' },
+  { file: 'shr-church.glb', name: 'Church' },
+  { file: 'shr-tree.glb', name: 'Tree' },
+  { file: 'shr-waterfall-tree-2.glb', name: 'Waterfall Tree II' },
   { file: 'shr-frog.glb', name: 'Frog' },
   { file: 'shr-orchid.glb', name: 'Orchid' },
-  { file: 'shr-tree.glb', name: 'Tree' },
-  { file: 'shr-waterfall-tree-1.glb', name: 'Waterfall Tree I' },
-  { file: 'shr-waterfall-tree-2.glb', name: 'Waterfall Tree II' },
   { file: 'shr-two-heads.glb', name: 'Two Heads' },
   { file: 'shr-mouth-arch.glb', name: 'Mouth Arch' },
   { file: 'shr-sun-man.glb', name: 'Sun Man' },
