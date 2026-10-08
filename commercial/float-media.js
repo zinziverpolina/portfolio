@@ -118,7 +118,7 @@ export function applyText(text, t = {}) {
 }
 
 // "subtitle<br>2022" or "subtitle, 2022" → the subtitle and the year as two parts with their own styles.
-function splitYear(meta) {
+export function splitYear(meta) {
   if (!meta || meta.querySelector('.fm-year')) return;
   const html = meta.innerHTML.trim();
   const m = html.match(/^([\s\S]*?)\s*<br\s*\/?>\s*(\d{4}(?:\s*[–-]\s*\d{4})?)$/) || html.match(/^([\s\S]*?),\s*(\d{4}(?:\s*[–-]\s*\d{4})?)$/);
@@ -380,7 +380,7 @@ function stage(sec, sources, card, keep, scfg = {}, EDIT = false) {
 }
 
 // ----- the card: one for the page -----
-function makeCard() {
+export function makeCard() {
   const root = document.createElement('div');
   root.className = 'fm-card';
   root.hidden = true;
