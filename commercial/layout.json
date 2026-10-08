@@ -41,5 +41,24 @@
     }
    }
   }
+ },
+ "carolina-sarria.html": {
+  "stages": {
+   "0": {
+    "text": {
+     "dx": -0.08,
+     "dy": 0,
+     "bob": true
+    },
+    "items": {
+     "video/carolina-nft.mp4": {
+      "w": 0.246,
+      "x": 0.82,
+      "y": 0.5,
+      "pin": true
+     }
+    }
+   }
+  }
  }
 }

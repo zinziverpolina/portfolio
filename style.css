@@ -586,3 +586,7 @@ body.page-dark .fm-text .fm-year { color: #eee; }
 /* Titles and the header's CV / INSTAGRAM in Bricolage Grotesque (chosen in the editor, 8 Oct) */
 :root { --title-font: "Bricolage Grotesque", Arial, Helvetica, sans-serif; }
 h1, h2, .cl-ui .tl, .topnav .in a[target] { font-family: var(--title-font); }
+/* Text block that stays put but breathes: a slow up-and-down (layout.json text.bob) */
+.fm-text.fm-bob { animation: fm-bob 5.5s ease-in-out infinite; }
+@keyframes fm-bob { 0%, 100% { translate: 0 -6px; } 50% { translate: 0 6px; } }
+@media (prefers-reduced-motion: reduce) { .fm-text.fm-bob { animation: none; } }

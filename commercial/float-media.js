@@ -103,6 +103,7 @@ export function applyText(text, t = {}) {
   text.style.left = `calc(50% + ${((t.dx || 0) * 100).toFixed(3)}%)`;
   text.style.top = `calc(50% + ${((t.dy || 0) * 100).toFixed(3)}%)`;
   text.style.width = t.width ? (t.width * 100).toFixed(2) + '%' : '';
+  text.classList.toggle('fm-bob', !!t.bob);   // a slow up-and-down breath for a text block that stays put
   for (const part of TEXT_PARTS) {
     const el = partEl(text, part);
     if (!el) continue;
