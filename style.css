@@ -538,9 +538,9 @@ body.page-dark .fm-card-nav button:hover, body.page-dark .fm-card-x:hover { colo
 .lw-intro { background: #fff; }
 .lw-intro iframe { transition: transform .56s cubic-bezier(.5, 0, .75, 0), opacity .56s ease-in; transform-origin: 50% 45%; }
 .lw-intro.lw-going iframe { transform: scale(1.7); opacity: 0; }
-.fm-stage.fm-arrive { animation: fm-arrive .85s cubic-bezier(.2, .7, .2, 1) both; }
+.fm-arrive { animation: fm-arrive .85s cubic-bezier(.2, .7, .2, 1) both; }
 @keyframes fm-arrive { from { transform: scale(.8); opacity: 0; filter: blur(8px); } to { transform: none; opacity: 1; filter: none; } }
-@media (prefers-reduced-motion: reduce) { .lw-intro iframe { transition: none; } .fm-stage.fm-arrive { animation: none; } }
+@media (prefers-reduced-motion: reduce) { .lw-intro iframe { transition: none; } .fm-arrive { animation: none; } }
 /* Edit mode (?edit, fm-edit.js) */
 .fm-editing .shr-frame.fm-frame { opacity: .8; }
 .fm-editing .shr-frame.fm-frame.fm-sel { --c: #2a27a6; opacity: 1; }
