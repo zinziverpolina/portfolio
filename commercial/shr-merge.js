@@ -12,8 +12,8 @@ const M = window.Matter;
 // ----- tuning (world units: the jar is W × H; 1 unit ≈ 0.8–1 css px) -----
 const T = {
   W: 400, H: 600,             // jar size in world units (aspect 0.667)
-  R1: 18,                     // radius of level 1 (House)
-  RATIO: 1.22,                // radius × per level → Sun Man ≈ 88 (diameter = 44% of W)
+  R1: 27,                     // radius of level 1 (House); ×1.5 from 18 at Polina’s request (8 Oct)
+  RATIO: 1.22,                // radius × per level → Sun Man ≈ 132 (diameter = 66% of W)
   JOKER_R_LEVEL: 3,           // the joker is as big as level 3
   DANGER_Y: 66,               // danger line, units below the jar's top edge
   OVER_TIME: 2.0,             // s a landed creature may stay above the line before OVERFLOW
