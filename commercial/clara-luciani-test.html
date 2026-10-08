@@ -2,6 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
+<meta name="robots" content="noindex">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Clara Luciani — Polina Zinziver</title>
 <meta name="description" content="Polina Zinziver — Clara Luciani: tour visuals, 2025.">
@@ -9,6 +10,7 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Arimo:ital,wght@0,400;0,700;1,400&family=Tinos:ital,wght@0,400;0,700;1,400;1,700&display=swap" rel="stylesheet">
 <script src="zoom.js?v=1"></script>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Sans:ital,wght@0,400..700;1,400..700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="../style.css?v=20261009a">
 <script type="module" src="https://cdn.jsdelivr.net/npm/@google/model-viewer@4.1.0/dist/model-viewer.min.js"></script>
 <script>
@@ -20,7 +22,7 @@
   })();
 </script>
 </head>
-<body>
+<body class="tw-page">
 
 <nav class="topnav"><div class="in">
   <a class="name" href="../commercial.html">POLINA ZINZIVER</a>
@@ -55,9 +57,31 @@
 </div></nav>
 
 <section class="slide" id="clara-luciani">
-  <h2>CLARA LUCIANI</h2>
-  <div class="meta">visuals for Clara Luciani Tour 2025<br>2025</div>
-  <div class="body"><p>3D modelling and animation for the French singer’s 2025 tour.</p></div>
+  <div class="tw-head">
+    <div class="tw-title">
+      <h2>CLARA LUCIANI</h2>
+      <p class="tw-tag">Pearls, a mirror and a lover’s eye</p>
+    </div>
+    <div class="tw-grid">
+      <dl class="tw-meta">
+        <dt>Services</dt><dd>3D modelling<br>Animation</dd>
+      </dl>
+      <dl class="tw-meta">
+        <dt>Project</dt><dd>Clara Luciani Tour 2025<br>2025</dd>
+      </dl>
+      <div class="tw-text">
+        <p>Visuals for the French singer’s 2025 tour, built from three motifs: pearls, a mirror and the lover’s eye.</p>
+        <details class="tw-more">
+          <summary><span>More</span><span aria-hidden="true">↓</span></summary>
+          <div class="tw-sections">
+            <section><h3>A cloud of pearls</h3><p>Pearls hang in a pale, silvery space and slowly drift.</p></section>
+            <section><h3>The mirror</h3><p>A mirror appears among the pearls.</p></section>
+            <section><h3>The lover’s eye</h3><p>An eye set in a pearl frame, after the lover’s-eye miniatures of the late 18th century.</p></section>
+          </div>
+        </details>
+      </div>
+    </div>
+  </div>
   <div class="media c3">
     <video class="clip r916" src="video/clara-1.mp4" poster="video/clara-1.jpg" muted loop playsinline controls preload="none"></video>
     <img class="zoom r916" src="img/clara-s3.jpg" alt="Clara Luciani Tour 2025 — the mirror appearing among pearls" loading="lazy">
@@ -79,8 +103,8 @@
 
 <script src="../site.js?v=20261005l"></script>
 <script type="module">
-  import { floatMedia } from './float-media.js?v=12';
-  floatMedia({ models: false });
+  import { framedPage } from './framed-page.js?v=1';
+  framedPage();
 </script>
 </body>
 </html>
