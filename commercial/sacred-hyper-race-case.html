@@ -1,0 +1,225 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="robots" content="noindex">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Sacred Hyper Race (case draft) — Polina Zinziver</title>
+<meta name="description" content="Polina Zinziver — Sacred Hyper Race: art direction, level design, 2024.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Arimo:ital,wght@0,400;0,700;1,400&family=Tinos:ital,wght@0,400;0,700;1,400;1,700&display=swap" rel="stylesheet">
+<script src="../zoom.js?v=1"></script>
+<link rel="stylesheet" href="../style.css?v=20261008e">
+<script type="importmap">{"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.169.0/build/three.module.js","three/addons/":"https://cdn.jsdelivr.net/npm/three@0.169.0/examples/jsm/","cannon-es":"https://cdn.jsdelivr.net/npm/cannon-es@0.20.0/dist/cannon-es.js"}}</script>
+<script type="module" src="https://cdn.jsdelivr.net/npm/@google/model-viewer@4.1.0/dist/model-viewer.min.js"></script>
+<script>
+  // Arriving from the intro: start under a white cover that slowly turns transparent.
+  (function () { var t; try { t = sessionStorage.getItem('cover'); sessionStorage.removeItem('cover'); } catch (e) {} if (!t) return;
+    (function add() { if (!document.body) return requestAnimationFrame(add); var c = document.createElement('div'); c.className = 'cover cover-in'; document.body.appendChild(c); c.getBoundingClientRect(); document.documentElement.classList.remove('arriving');
+      setTimeout(function () { c.getBoundingClientRect(); c.classList.add('go'); }, 45); setTimeout(function () { c.remove(); }, 600); })();
+    document.documentElement.classList.add('arriving');
+  })();
+</script>
+</head>
+<body>
+
+<nav class="topnav"><div class="in">
+  <a class="name" href="../commercial.html">POLINA ZINZIVER</a>
+  <a href="https://zinziverpolina.github.io/Polina-CV/" target="_blank" rel="noopener">cv</a>
+  <a href="https://www.instagram.com/polina_zinziver_/" target="_blank" rel="noopener">instagram</a>
+</div>
+<div class="tabs">
+  <div class="dd">
+    <button class="dd-btn" type="button" aria-expanded="false" aria-controls="dd-panel">all projects <span aria-hidden="true">▾</span></button>
+    <div class="dd-panel" id="dd-panel">
+    <ol class="projects">
+      <li><a href="nina-ricci.html"><img src="video/nina-ricci-1.jpg" alt="" loading="lazy" decoding="async"><span class="t">Nina Ricci</span><span class="y">2022</span><span class="w">animations for the Summer 22 collection</span></a></li>
+      <li><a href="loewe.html"><img src="video/loewe-ww-1.jpg" alt="" loading="lazy" decoding="async"><span class="t">LOEWE</span><span class="y">2021–2022</span><span class="w">SS22 shows, Christmas and perfumes</span></a></li>
+      <li class="on"><a href="sacred-hyper-race.html"><img src="img/shr-1.jpg" alt="" loading="lazy" decoding="async"><span class="t">Sacred Hyper Race</span><span class="y">2024</span><span class="w">art direction, level design</span></a></li>
+      <li><a href="clara-luciani.html"><img src="img/clara-s4.jpg" alt="" loading="lazy" decoding="async"><span class="t">Clara Luciani</span><span class="y">2025</span><span class="w">tour visuals</span></a></li>
+      <li><a href="horosoaps.html"><img src="video/horosoaps-3.jpg" alt="" loading="lazy" decoding="async"><span class="t">HOROSOAPS</span><span class="y">2023</span><span class="w">promo animations</span></a></li>
+      <li><a href="carolina-sarria.html"><img src="img/carolina-1.jpg" alt="" loading="lazy" decoding="async"><span class="t">CAROLINA SARRIA</span><span class="y">2020</span><span class="w">mixed media portraits</span></a></li>
+      <li><a href="posters.html"><img src="img/posters-1.jpg" alt="" loading="lazy" decoding="async"><span class="t">Posters &amp; covers</span><span class="y">2021–2025</span><span class="w">for parties, labels and musicians</span></a></li>
+      <li><a href="hypertrash.html"><img src="img/hypertrash-1.jpg" alt="" loading="lazy" decoding="async"><span class="t">HYPERTRASH</span><span class="y">2024–2026</span><span class="w">covers, singles and posters</span></a></li>
+    </ol>
+    </div>
+  </div>
+  <a href="nina-ricci.html">Nina Ricci</a>
+  <a href="loewe.html">LOEWE</a>
+  <a href="sacred-hyper-race.html" class="on" aria-current="page">Fortnite</a>
+  <a href="clara-luciani.html">Clara Luciani</a>
+  <a href="horosoaps.html">HOROSOAPS</a>
+  <a href="carolina-sarria.html">CAROLINA SARRIA</a>
+  <span class="tabs-gap" aria-hidden="true"></span>
+  <a href="posters.html">Posters</a>
+  <a href="hypertrash.html">HYPERTRASH</a>
+</div></nav>
+
+<div class="shr-world" id="shr-world" aria-label="Sacred Hyper Race — walk among the sculptures from the map">
+  <canvas></canvas>
+  <div class="world-ui">
+    <span class="tl">Sacred Hyper Race</span>
+    <span class="tr">sculptures from the map</span>
+    <div class="world-start">
+      <i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i>
+      <p class="t">Walk around</p>
+      <button type="button">Enter</button>
+      <p class="h desk">WASD / arrows — walk · mouse — look · Shift — run · Esc — leave</p>
+      <p class="h tap">left thumb — walk · right thumb — look</p>
+      <p class="world-loading">loading 0%</p>
+    </div>
+    <div class="world-cross"></div>
+    <div class="world-label"></div>
+    <div class="world-stick"><i></i></div>
+    <button type="button" class="world-exit" aria-label="Leave the map">×</button>
+  </div>
+</div>
+
+<div class="shr-hero" id="shr-hero" aria-label="Sacred Hyper Race — models from the map floating in zero gravity. Drag to move them, click to make them jiggle.">
+  <canvas></canvas>
+  <div class="shr-frames"></div>
+  <div class="shr-ui">
+    <span class="tl">Sacred Hyper Race</span>
+    <span class="tm">Models from <br>the map</span>
+    <span class="tr">2024</span>
+    <span class="bl">Fortnite map, MultiGamesStudio</span>
+    <span class="br">drag · click</span>
+  </div>
+</div>
+
+<section class="slide" id="sacred-hyper-race">
+  <h2>SACRED HYPER RACE</h2>
+  <div class="meta">Fortnite race map: art direction, level design, Unreal assembly<br>2024</div>
+  <div class="body"><p>A race track for Fortnite’s Rocket Racing, built in one month. Idea and execution by Polina Zinziver: three laps through violet organic forms, past creatures, to a temple at the finish.</p></div>
+  <div class="credit">made with MultiGamesStudio</div>
+  <div class="media c2">
+    <video class="clip r169" src="video/shr-1.mp4" poster="video/shr-1.jpg" muted loop playsinline controls preload="none"></video>
+    <img class="zoom" src="img/shrc-poster.jpg" alt="Sacred Hyper Race — Two Heads, key art" loading="lazy">
+  </div>
+</section>
+
+<section class="slide" id="drawing">
+  <h2>01 · TRACK AND CREATURES</h2>
+  <div class="meta">process<br>April 2024</div>
+  <div class="body"><p>The route started from the plan of a real kart circuit. The creatures started as ink drawings in a notebook.</p></div>
+  <div class="media c3">
+    <img class="zoom" src="img/shrc-track.jpg" alt="Sacred Hyper Race — track layout reference" loading="lazy">
+    <img class="zoom" src="img/shrc-sketch1.jpg" alt="Sacred Hyper Race — notebook sketch" loading="lazy">
+    <img class="zoom" src="img/shrc-sketch2.jpg" alt="Sacred Hyper Race — notebook sketch" loading="lazy">
+    <img class="zoom" src="img/shrc-sketch3.jpg" alt="Sacred Hyper Race — notebook sketch" loading="lazy">
+    <img class="zoom" src="img/shrc-sketch4.jpg" alt="Sacred Hyper Race — notebook sketch" loading="lazy">
+    <img class="zoom" src="img/shrc-sketch5.jpg" alt="Sacred Hyper Race — notebook sketch" loading="lazy">
+    <img class="zoom" src="img/shrc-sketch6.jpg" alt="Sacred Hyper Race — notebook sketch" loading="lazy">
+  </div>
+</section>
+
+<section class="slide" id="sculpting">
+  <h2>02 · SCULPTING</h2>
+  <div class="meta">process<br>April 2024</div>
+  <div class="body"><p>The creatures were sculpted in Forger, then made game-ready in Cinema 4D: retopology and UVs, twelve models for the map.</p></div>
+  <div class="media c4">
+    <img class="zoom" src="models/shr-sun-man.jpg" alt="Sacred Hyper Race — Sun Man" loading="lazy">
+    <img class="zoom" src="models/shr-mouth-arch.jpg" alt="Sacred Hyper Race — Mouth Arch" loading="lazy">
+    <img class="zoom" src="models/shr-two-heads.jpg" alt="Sacred Hyper Race — Two Heads" loading="lazy">
+    <img class="zoom" src="models/shr-frog.jpg" alt="Sacred Hyper Race — Frog" loading="lazy">
+    <img class="zoom" src="models/shr-waterfall-tree-1.jpg" alt="Sacred Hyper Race — Waterfall Tree" loading="lazy">
+    <img class="zoom" src="models/shr-orchid.jpg" alt="Sacred Hyper Race — Orchid" loading="lazy">
+    <img class="zoom" src="models/shr-church.jpg" alt="Sacred Hyper Race — Church" loading="lazy">
+    <img class="zoom" src="models/shr-house.jpg" alt="Sacred Hyper Race — House" loading="lazy">
+  </div>
+</section>
+
+<section class="slide" id="surfaces">
+  <h2>03 · SURFACES</h2>
+  <div class="meta">process<br>May 2024</div>
+  <div class="body"><p>Hand-drawn symmetrical patterns became the textures and decals, painted onto the models in Substance Painter.</p></div>
+  <div class="media c3">
+    <img class="zoom" src="img/shrc-surface1.jpg" alt="Sacred Hyper Race — pattern" loading="lazy">
+    <img class="zoom" src="img/shrc-surface2.jpg" alt="Sacred Hyper Race — mountain texture" loading="lazy">
+    <img class="zoom" src="img/shrc-surface3.jpg" alt="Sacred Hyper Race — pattern" loading="lazy">
+    <img class="zoom" src="img/shrc-surface4.jpg" alt="Sacred Hyper Race — painted texture" loading="lazy">
+    <img class="zoom" src="img/shrc-surface5.jpg" alt="Sacred Hyper Race — decal" loading="lazy">
+    <img class="zoom" src="img/shrc-surface6.jpg" alt="Sacred Hyper Race — decal" loading="lazy">
+  </div>
+</section>
+
+<section class="slide" id="assembly">
+  <h2>04 · ASSEMBLY</h2>
+  <div class="meta">process<br>May 2024</div>
+  <div class="body"><p>Everything was placed, lit and tuned along the track in Unreal Editor for Fortnite.</p></div>
+  <div class="media c3">
+    <img class="zoom" src="img/shrc-ue1.jpg" alt="Sacred Hyper Race — UEFN: creatures along the road" loading="lazy">
+    <img class="zoom" src="img/shrc-ue2.jpg" alt="Sacred Hyper Race — UEFN: road to the gate" loading="lazy">
+    <img class="zoom" src="img/shrc-ue3.jpg" alt="Sacred Hyper Race — UEFN: tunnel through the creatures" loading="lazy">
+    <img class="zoom" src="img/shrc-ue4.jpg" alt="Sacred Hyper Race — UEFN: forest of tentacles" loading="lazy">
+    <img class="zoom" src="img/shrc-ue5.jpg" alt="Sacred Hyper Race — UEFN: the big face" loading="lazy">
+    <img class="zoom" src="img/shrc-ue6.jpg" alt="Sacred Hyper Race — UEFN: Sun Man and the temple" loading="lazy">
+    <img class="zoom" src="img/shrc-ue7.jpg" alt="Sacred Hyper Race — UEFN: temple at the finish" loading="lazy">
+  </div>
+</section>
+
+<section class="slide" id="result">
+  <h2>RESULT</h2>
+  <div class="meta">playable map in Fortnite<br>June 2024</div>
+  <div class="body"><p>Published in Rocket Racing: a three-lap race of about three and a half minutes, recorded in live races in June 2024.</p></div>
+  <div class="credit"><a href="https://www.fortnite.com/@multi.games/7699-8302-5215?lang=en-US" target="_blank" rel="noopener" style="color:var(--link)">Play in Fortnite →</a></div>
+  <div class="media c2">
+    <video class="clip r169" src="video/shrc-race1.mp4" poster="video/shrc-race1.jpg" muted loop playsinline controls preload="none" aria-label="Sacred Hyper Race — race: tunnel and rings"></video>
+    <video class="clip r169" src="video/shrc-race2.mp4" poster="video/shrc-race2.jpg" muted loop playsinline controls preload="none" aria-label="Sacred Hyper Race — race: the cave"></video>
+    <video class="clip r169" src="video/shrc-race3.mp4" poster="video/shrc-race3.jpg" muted loop playsinline controls preload="none" aria-label="Sacred Hyper Race — race: through the creatures"></video>
+    <video class="clip r169" src="video/shrc-race4.mp4" poster="video/shrc-race4.jpg" muted loop playsinline controls preload="none" aria-label="Sacred Hyper Race — playtest, evening light"></video>
+  </div>
+  <p class="label">Low-poly models from the map — drag to rotate</p>
+  <div class="models">
+    <figure><model-viewer src="models/shr-sun-man.glb" poster="models/shr-sun-man.jpg" alt="Sacred Hyper Race — Sun Man, low-poly model" loading="lazy" camera-controls disable-zoom disable-pan touch-action="pan-y" min-camera-orbit="auto auto 20%" max-camera-orbit="auto auto 200%" interaction-prompt="none" auto-rotate auto-rotate-delay="0" rotation-per-second="18deg" environment-image="neutral" shadow-intensity="1" camera-orbit="20deg 78deg 105%"></model-viewer><figcaption>Sun Man<span>23.5k tris</span></figcaption></figure>
+    <figure><model-viewer src="models/shr-mouth-arch.glb" poster="models/shr-mouth-arch.jpg" alt="Sacred Hyper Race — Mouth Arch, low-poly model" loading="lazy" camera-controls disable-zoom disable-pan touch-action="pan-y" min-camera-orbit="auto auto 20%" max-camera-orbit="auto auto 200%" interaction-prompt="none" auto-rotate auto-rotate-delay="0" rotation-per-second="18deg" environment-image="neutral" shadow-intensity="1" camera-orbit="20deg 78deg 105%"></model-viewer><figcaption>Mouth Arch<span>80k tris</span></figcaption></figure>
+    <figure><model-viewer src="models/shr-two-heads.glb" poster="models/shr-two-heads.jpg" alt="Sacred Hyper Race — Two Heads, low-poly model" loading="lazy" camera-controls disable-zoom disable-pan touch-action="pan-y" min-camera-orbit="auto auto 20%" max-camera-orbit="auto auto 200%" interaction-prompt="none" auto-rotate auto-rotate-delay="0" rotation-per-second="18deg" environment-image="neutral" shadow-intensity="1" camera-orbit="20deg 78deg 105%"></model-viewer><figcaption>Two Heads<span>56k tris</span></figcaption></figure>
+    <figure><model-viewer src="models/shr-frog.glb" poster="models/shr-frog.jpg" alt="Sacred Hyper Race — Frog, low-poly model" loading="lazy" camera-controls disable-zoom disable-pan touch-action="pan-y" min-camera-orbit="auto auto 20%" max-camera-orbit="auto auto 200%" interaction-prompt="none" auto-rotate auto-rotate-delay="0" rotation-per-second="18deg" environment-image="neutral" shadow-intensity="1" camera-orbit="20deg 78deg 105%"></model-viewer><figcaption>Frog<span>43k tris</span></figcaption></figure>
+    <figure><model-viewer src="models/shr-squad-monster.glb" poster="models/shr-squad-monster.jpg" alt="Sacred Hyper Race — Squad Monster, low-poly model" loading="lazy" camera-controls disable-zoom disable-pan touch-action="pan-y" min-camera-orbit="auto auto 20%" max-camera-orbit="auto auto 200%" interaction-prompt="none" auto-rotate auto-rotate-delay="0" rotation-per-second="18deg" environment-image="neutral" shadow-intensity="1" camera-orbit="20deg 78deg 105%"></model-viewer><figcaption>Squad Monster<span>128k tris</span></figcaption></figure>
+    <figure><model-viewer src="models/shr-waterfall-tree-1.glb" poster="models/shr-waterfall-tree-1.jpg" alt="Sacred Hyper Race — Waterfall Tree I, low-poly model" loading="lazy" camera-controls disable-zoom disable-pan touch-action="pan-y" min-camera-orbit="auto auto 20%" max-camera-orbit="auto auto 200%" interaction-prompt="none" auto-rotate auto-rotate-delay="0" rotation-per-second="18deg" environment-image="neutral" shadow-intensity="1" camera-orbit="20deg 78deg 105%"></model-viewer><figcaption>Waterfall Tree I<span>43k tris</span></figcaption></figure>
+    <figure><model-viewer src="models/shr-waterfall-tree-2.glb" poster="models/shr-waterfall-tree-2.jpg" alt="Sacred Hyper Race — Waterfall Tree II, low-poly model" loading="lazy" camera-controls disable-zoom disable-pan touch-action="pan-y" min-camera-orbit="auto auto 20%" max-camera-orbit="auto auto 200%" interaction-prompt="none" auto-rotate auto-rotate-delay="0" rotation-per-second="18deg" environment-image="neutral" shadow-intensity="1" camera-orbit="20deg 78deg 105%"></model-viewer><figcaption>Waterfall Tree II<span>43k tris</span></figcaption></figure>
+    <figure><model-viewer src="models/shr-tree.glb" poster="models/shr-tree.jpg" alt="Sacred Hyper Race — Tree, low-poly model" loading="lazy" camera-controls disable-zoom disable-pan touch-action="pan-y" min-camera-orbit="auto auto 20%" max-camera-orbit="auto auto 200%" interaction-prompt="none" auto-rotate auto-rotate-delay="0" rotation-per-second="18deg" environment-image="neutral" shadow-intensity="1" camera-orbit="20deg 78deg 105%"></model-viewer><figcaption>Tree<span>33k tris</span></figcaption></figure>
+    <figure><model-viewer src="models/shr-orchid.glb" poster="models/shr-orchid.jpg" alt="Sacred Hyper Race — Orchid, low-poly model" loading="lazy" camera-controls disable-zoom disable-pan touch-action="pan-y" min-camera-orbit="auto auto 20%" max-camera-orbit="auto auto 200%" interaction-prompt="none" auto-rotate auto-rotate-delay="0" rotation-per-second="18deg" environment-image="neutral" shadow-intensity="1" camera-orbit="20deg 78deg 105%"></model-viewer><figcaption>Orchid<span>28.5k tris</span></figcaption></figure>
+    <figure><model-viewer src="models/shr-church.glb" poster="models/shr-church.jpg" alt="Sacred Hyper Race — Church, low-poly model" loading="lazy" camera-controls disable-zoom disable-pan touch-action="pan-y" min-camera-orbit="auto auto 20%" max-camera-orbit="auto auto 200%" interaction-prompt="none" auto-rotate auto-rotate-delay="0" rotation-per-second="18deg" environment-image="neutral" shadow-intensity="1" camera-orbit="20deg 78deg 105%"></model-viewer><figcaption>Church<span>50.5k tris</span></figcaption></figure>
+    <figure><model-viewer src="models/shr-house.glb" poster="models/shr-house.jpg" alt="Sacred Hyper Race — House, low-poly model" loading="lazy" camera-controls disable-zoom disable-pan touch-action="pan-y" min-camera-orbit="auto auto 20%" max-camera-orbit="auto auto 200%" interaction-prompt="none" auto-rotate auto-rotate-delay="0" rotation-per-second="18deg" environment-image="neutral" shadow-intensity="1" camera-orbit="20deg 78deg 105%"></model-viewer><figcaption>House<span>31k tris</span></figcaption></figure>
+    <figure><model-viewer src="models/shr-fence.glb" poster="models/shr-fence.jpg" alt="Sacred Hyper Race — Fence, low-poly model" loading="lazy" camera-controls disable-zoom disable-pan touch-action="pan-y" min-camera-orbit="auto auto 20%" max-camera-orbit="auto auto 200%" interaction-prompt="none" auto-rotate auto-rotate-delay="0" rotation-per-second="18deg" environment-image="neutral" shadow-intensity="1" camera-orbit="20deg 78deg 105%"></model-viewer><figcaption>Fence<span>47k tris</span></figcaption></figure>
+  </div>
+</section>
+
+<nav class="pager">
+  <a class="prev" href="loewe.html">← LOEWE</a>
+  <a class="all" href="../commercial.html">all projects</a>
+  <a class="next" href="clara-luciani.html">Clara Luciani →</a>
+</nav>
+
+<footer>© Polina Zinziver · <a href="../index.html">artistic practice →</a></footer>
+
+<script src="../site.js?v=20261005l"></script>
+<script type="module">
+  import { shrWorld } from './shr-world.js?v=20261005l';
+  shrWorld(document.getElementById('shr-world'), '');
+</script>
+<script type="module">
+  import { floatScene } from './float-scene.js';
+  floatScene(document.getElementById('shr-hero'), [
+    { url: 'models/hero/shr-sun-man.glb', name: 'Sun Man' },
+    { url: 'models/hero/shr-mouth-arch.glb', name: 'Mouth Arch' },
+    { url: 'models/hero/shr-two-heads.glb', name: 'Two Heads' },
+    { url: 'models/hero/shr-frog.glb', name: 'Frog' },
+    { url: 'models/hero/shr-squad-monster.glb', name: 'Squad Monster' },
+    { url: 'models/hero/shr-waterfall-tree-1.glb', name: 'Waterfall Tree I' },
+    { url: 'models/hero/shr-waterfall-tree-2.glb', name: 'Waterfall Tree II' },
+    { url: 'models/hero/shr-tree.glb', name: 'Tree' },
+    { url: 'models/hero/shr-orchid.glb', name: 'Orchid' },
+    { url: 'models/hero/shr-church.glb', name: 'Church' },
+    { url: 'models/hero/shr-house.glb', name: 'House' },
+    { url: 'models/hero/shr-fence.glb', name: 'Fence' }
+  ]);
+</script>
+<script type="module">
+  import { floatMedia } from './float-media.js?v=11';
+  floatMedia({ models: false, keep: '.models, p.label:has(+ .models), .models + p.label' });
+</script>
+</body>
+</html>
