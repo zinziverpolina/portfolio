@@ -3,8 +3,9 @@
 The project pages (commercial/<slug>.html) stay the sources: edit them, then run
     python tools/build_projects.py
 from the repo root. Each project's content (between the header and its pager) goes into the long page in
-order; the black projects sit together in one dark band. The header links point to the projects on the long
-page, and the project pages themselves send visitors there (open one with ?src to see it on its own).
+order; the black projects sit together in one dark band. It is the phone version: on a phone (≤ 820 px) a
+project page moves to its place on the long page (?src keeps it); on a wide screen the long page hands over to
+the project's own page, which has arrows to the next one.
 """
 import os, re
 
@@ -77,7 +78,13 @@ def build():
     head = pages['sacred-hyper-race'][:pages['sacred-hyper-race'].index('<body')]
     head = re.sub(r'<title>[^<]*</title>', '<title>Projects — Polina Zinziver</title>', head)
     head = re.sub(r'(<meta name="description" content=")[^"]*', r'\1Commercial projects by Polina Zinziver: 3D animation, CGI, art direction, level design', head)
-    head = re.sub(r'\n<script>\nif \(!/\[\?&\]src\\b/.*?</script>', '', head, flags=re.S)   # no redirect here
+    head = re.sub(r'<script>/\* phones: the long page \*/.*?</script>\n', '', head)   # not on the long page itself
+    # wide screens see the projects one by one (with arrows): the long page hands over to the project's page
+    head = head.replace('<head>\n', '''<head>
+<script>/* wide screens: the project pages */ if (!matchMedia('(max-width: 820px)').matches) {
+  var m = location.hash.match(/^#p-([a-z-]+)$/); location.replace((m ? m[1] : 'sacred-hyper-race') + '.html');
+}</script>
+''', 1)
     parts, js, dark_open = [], [], False
     for slug in ORDER:
         if slug in DARK and not dark_open:
