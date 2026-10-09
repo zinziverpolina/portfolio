@@ -41,28 +41,49 @@ export function collage(stage, sources) {
     return span > 0 ? Math.min(1, Math.max(0, (s.top - r.top) / span)) : 0;
   }
   const smooth = (a, b, x) => { const t = Math.min(1, Math.max(0, (x - a) / (b - a))); return t * t * (3 - 2 * t); };
-  // A place in the tunnel for every poster: small, like particles, along a spiral on the inside of a round
-  // tunnel that streams off into the distance. Each keeps its angle (a) and depth (z); the rest comes per frame.
-  // Places are given once per poster (it.tun) and kept for the whole dive, so posters that load late
-  // simply join the far end of the tunnel.
-  let tunZ = 0;
+  // The tunnel: rings of pictures laid around the inside of a round tube, overlapping so that no background
+  // shows between them. About ten times as many pictures as the collage: the posters on stage take the first
+  // places, clones of every image (video posters for videos) fill the rest. Made when the dive starts.
+  const RING = 12;          // pictures around the tube
+  const TUN_R = 0.6;        // tube radius, share of the stage's smaller side
+  let tunPlaces = [], clones = [];
+  function sizeFor(place, ar) {
+    // whole pictures (never cropped), scaled to overlap their neighbours around (h) and along (w) the tube
+    let h = place.cell * 1.32, w = h * ar;
+    if (w < place.cell * 1.12) { w = place.cell * 1.12; h = w / ar; }
+    return { a: place.a, z: place.z, w, h };
+  }
   function corridor() {
-    const H = stage.clientHeight, GOLD = Math.PI * (3 - Math.sqrt(5));
-    if (!tiles.some((t) => t.tun)) tunZ = -H * 0.1;
-    tiles.forEach((it, i) => {
-      if (it.tun) return;
-      const ar = it.p.ar;
-      let h = H * rnd(0.15, 0.25), w = h * ar;
-      if (w > H * 0.38) { w = H * 0.38; h = w / ar; }
-      tunZ -= w * rnd(0.3, 0.55);
-      it.tun = { a: i * GOLD + rnd(-0.15, 0.15), z: tunZ - w / 2, w, h };
-    });
-    corridorLen = -tunZ;
+    if (tunPlaces.length) return;
+    const W = stage.clientWidth, H = stage.clientHeight, R = Math.min(W, H) * TUN_R;
+    const cell = 2 * Math.PI * R / RING;
+    const total = Math.max(180, Math.min(320, tiles.length * 10));
+    let z = -H * 0.05;
+    for (let r = 0; tunPlaces.length < total; r++) {
+      for (let k = 0; k < RING; k++) {
+        tunPlaces.push({ a: (k + (r % 2) * 0.5) / RING * Math.PI * 2 + rnd(-0.07, 0.07), z: z - cell * 0.5 + rnd(-0.12, 0.12) * cell, cell });
+      }
+      z -= cell * 0.82;
+    }
+    corridorLen = -z;
+    tiles.forEach((it, i) => { it.tun = sizeFor(tunPlaces[i], it.p.ar); });
+    const images = pool.map((q) => ({ src: q.video ? q.target.getAttribute('poster') : q.thumb, ar: q.ar })).sort(() => Math.random() - 0.5);
+    for (let i = tiles.length; i < tunPlaces.length; i++) {
+      const q = images[i % images.length], el = document.createElement('img');
+      el.className = 'cl-piece cl-tun'; el.alt = ''; el.draggable = false; el.decoding = 'async'; el.src = q.src;
+      el.style.width = '200px'; el.style.height = (200 / q.ar).toFixed(1) + 'px';
+      stage.appendChild(el);
+      clones.push({ el, ar: q.ar, tun: sizeFor(tunPlaces[i], q.ar), delay: Math.random() * 0.5 });
+    }
+  }
+  function dropTunnel() {
+    clones.forEach((c) => c.el.remove()); clones = []; tunPlaces = [];
+    tiles.forEach((t) => { t.tun = null; });
   }
   // Where a tunnel place is now: on the tunnel wall at its angle, turned by the twist that grows as you go in.
   // Width along the tunnel (U), height around it (V), facing the axis.
   function tunnelAt(s, twist, W, H) {
-    const R = Math.min(W, H) * 0.6, a = s.a + twist;
+    const R = Math.min(W, H) * TUN_R, a = s.a + twist;
     return { x: W / 2 + R * Math.cos(a), y: H / 2 + R * Math.sin(a), z: s.z, w: s.w, h: s.h,
       U: [0, 0, -1], V: [Math.sin(a), -Math.cos(a), 0] };
   }
@@ -245,7 +266,7 @@ export function collage(stage, sources) {
     const pr = progress();
     depthM = smooth(0, 0.2, pr);
     const travel = smooth(0.12, 1, pr);
-    if (pr === 0) { if (slots) { tiles.forEach((t) => { t.tun = null; }); slots = false; } }   // back at the top: a fresh tunnel next time
+    if (pr === 0) { if (slots) { dropTunnel(); slots = false; } }   // back at the top: a fresh tunnel next time
     else { slots = true; corridor(); }
     const W = stage.clientWidth, H = stage.clientHeight, P = H * 1.05, O = [W / 2, H / 2];
     const cam = travel * (corridorLen + P * 0.7);
@@ -265,6 +286,7 @@ export function collage(stage, sources) {
       const w = it.w, h = it.w / it.p.ar;
       it.el.style.width = w.toFixed(1) + 'px'; it.el.style.height = h.toFixed(1) + 'px';
       const s = slots && it.tun && tunnelAt(it.tun, travel * 1.4, W, H);
+      if (slots && !it.tun) { it.el.style.visibility = 'hidden'; return; }   // loaded after the tunnel was laid out
       if (!s || (depthM === 0 && cam === 0)) {
         it.el.style.transform = `translate(${(cx - w / 2).toFixed(1)}px, ${(cy - h / 2).toFixed(1)}px)`;
         it.el.style.zIndex = it.zi; it.el.style.opacity = ''; it.el.style.visibility = '';
@@ -286,6 +308,20 @@ export function collage(stage, sources) {
       // Stacking: the collage order while folding out, then nearer surfaces over farther ones.
       it.el.style.zIndex = m < 0.35 ? it.zi : 100000 - Math.round(q.depth * 100);
     });
+    // The clones fly in from the depth while the collage folds, then stay on the tube's wall.
+    for (const c of clones) {
+      const k = smooth(c.delay * 0.4, c.delay * 0.4 + 0.6, depthM);
+      const sp = tunnelAt(c.tun, travel * 1.4, W, H);
+      const U = sp.U, V = sp.V, w = 200, h = 200 / c.ar;
+      const z = sp.z - (1 - k) * 2600 + cam;
+      const C = [sp.x - U[0] * sp.w / 2 - V[0] * sp.h / 2, sp.y - U[1] * sp.w / 2 - V[1] * sp.h / 2, z - U[2] * sp.w / 2 - V[2] * sp.h / 2];
+      const q = k > 0.001 && project(C, U, V, w, h, sp.w, sp.h, P, O);
+      if (!q) { c.el.style.visibility = 'hidden'; continue; }
+      c.el.style.visibility = '';
+      c.el.style.transform = q.css;
+      c.el.style.opacity = Math.min(k * 1.5, 1, (q.near - 0.06) / 0.25).toFixed(3);
+      c.el.style.zIndex = depthM < 0.35 ? 0 : 100000 - Math.round(q.depth * 100);
+    }
   }
   function run(on) {
     if (on && !raf && ready) { raf = requestAnimationFrame(draw); timer = setInterval(swap, SWAP_MS); }

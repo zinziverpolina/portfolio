@@ -661,7 +661,7 @@ body.page-dark.tw-page .sf-strip-h i { color: #888; }
 body.page-dark .sf-arrow { color: #ddd; }
 body.page-dark .sf-arrow:hover { color: #fff; }
 /* Same side margins on every page (Nina Ricci's): the room for a scrollbar is always kept, so short pages don't
-   shift; the full-width first screens (LOEWE sky, Posters/HYPERTRASH collage) sit inside the text margins too */
+   shift. The interactive first screens (LOEWE sky, Posters/HYPERTRASH collage) stay full width. */
 html { scrollbar-gutter: stable; }
-.lw-intro, .cl-scroll { width: min(calc(100% - 96px), calc(var(--w) - 96px)); margin-inline: auto; }
-@media (max-width: 820px) { .lw-intro, .cl-scroll { width: calc(100% - 32px); } }
+/* the collage and its tunnel on pure black */
+.cl-stage, body.page-dark .cl-stage { background: #000; }
