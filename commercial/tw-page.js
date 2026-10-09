@@ -32,7 +32,10 @@ function buildHead(sec) {
   const grid = el('div', 'tw-grid');
   // the same columns on every page: Role (as in the project menu) | Credits, Year
   const col = el('dl', 'tw-meta'), col2 = el('dl', 'tw-meta');
-  const role = document.querySelector('.dd-panel .projects li.on .w');
+  // on the long page the section's project is its .proj block; on a project page, the menu's current entry
+  const proj = sec.closest('.proj');
+  const role = (proj && document.querySelector(`.dd-panel .projects a[href="#${proj.id}"] .w`))
+    || document.querySelector('.dd-panel .projects li.on .w');
   const cap = (s) => s.charAt(0).toUpperCase() + s.slice(1);
   if (role) col.innerHTML += `<dt>Role</dt><dd>${role.textContent.split(/,\s*/).map(cap).join('<br>')}</dd>`;
   if (credit) col2.innerHTML += `<dt>Credits</dt><dd>${cap(credit.innerHTML)}</dd>`;
@@ -49,13 +52,18 @@ function buildHead(sec) {
 }
 
 // A fold: a thin rule with the name and the count; a click opens the pictures below it in their usual grid.
+// small icons for the folds: a picture, a film
+export const ICON = {
+  images: '<svg viewBox="0 0 18 14" aria-hidden="true"><rect x=".75" y=".75" width="16.5" height="12.5" rx="1" fill="none" stroke="currentColor" stroke-width="1.5"/><circle cx="12.5" cy="4.6" r="1.5" fill="currentColor"/><path d="M1.5 12.5l4.8-5.2 3.6 3.9 2.1-2.1 4.5 3.4" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/></svg>',
+  videos: '<svg viewBox="0 0 18 14" aria-hidden="true"><rect x=".75" y=".75" width="16.5" height="12.5" rx="1" fill="none" stroke="currentColor" stroke-width="1.5"/><path d="M7 4.2v5.6l4.6-2.8z" fill="currentColor"/></svg>',
+};
+
 function fold(name, media) {
   const nodes = [...media.querySelectorAll('video.clip, img.zoom')];
   const kind = nodes.every((n) => n.tagName === 'VIDEO') ? 'videos' : 'images';
   const d = el('details', 'tw-fold');
-  d.innerHTML = '<summary><span></span><b aria-hidden="true">↓</b><i></i></summary>';
+  d.innerHTML = `<summary><span></span><i class="fold-ic">${ICON[kind]}</i><b aria-hidden="true">↓</b></summary>`;
   d.querySelector('summary span').textContent = name;
-  d.querySelector('summary i').textContent = `${nodes.length} ${nodes.length === 1 ? kind.slice(0, -1) : kind}`;
   media.hidden = false;
   d.appendChild(media);
   return d;

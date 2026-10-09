@@ -227,7 +227,8 @@ addEventListener('wheel', e => {
   let step = e.deltaMode === 1 ? e.deltaY * 16 : e.deltaY;            // lines → pixels
   // the wheel turned down (a trackpad swipe up with natural scrolling) flies in; a pinch: spreading flies in
   const dir = e.ctrlKey ? -1 : 1;
-  fly.target = clampFly(fly.target + dir * step * 0.006 * (1 + Math.abs(fly.target) * 0.08));
+  if (INTRO && dir * step < 0 && fly.target <= FLY.min + 0.05) { parent.postMessage({ type: 'lw-sky-scroll', dy: step }, '*'); return; }
+  fly.target = clampFly(fly.target + dir * step * 0.016 * (1 + Math.abs(fly.target) * 0.08));
 }, { passive: false });
 
 // the name is an object you can take: press on the letters and drag to turn it any way (it keeps a little

@@ -9,8 +9,8 @@
 // turning; at its far end the page carries on to the gallery below.
 // A logo on the stage (.cl-logo, HYPERTRASH) sits over the collage, stays in the middle of the tunnel all the way
 // in, and at the far end the camera goes through it into the page.
-// collage(stageElement, galleryImages)
-export function collage(stage, sources) {
+// collage(stageElement, galleryImages, { lazy }) — lazy: the pictures load only when the stage comes near (long page)
+export function collage(stage, sources, opts = {}) {
   const LAYOUTS = 4;       // layouts the base layer loops through
   const SWAP_MS = 700;     // one poster moves to the next layout this often
   const DIVE_MS = 1800;    // a click: the trip through the tunnel before landing on the picture
@@ -115,17 +115,22 @@ export function collage(stage, sources) {
   // Originals at full quality, all of them. Videos join as muted loops (their poster frame gives the size);
   // only a few play on stage at once.
   const MAX_VIDEOS = 4;
-  [...sources].sort(() => Math.random() - 0.5).forEach((node) => {
-    const video = node.tagName === 'VIDEO';
-    const thumb = node.getAttribute('src');
-    const pre = new Image();
-    pre.onload = () => {
-      pool.push({ thumb, video, ar: pre.naturalWidth / pre.naturalHeight, target: node });
-      if (!ready && pool.length >= Math.min(total, 28)) start();
-      else if (ready && pool.length === total) buildLayouts();   // the last one in: everything on stage
-    };
-    pre.src = video ? node.getAttribute('poster') : thumb;
-  });
+  function begin() {
+    [...sources].sort(() => Math.random() - 0.5).forEach((node) => {
+      const video = node.tagName === 'VIDEO';
+      const thumb = node.getAttribute('src');
+      const pre = new Image();
+      pre.onload = () => {
+        pool.push({ thumb, video, ar: pre.naturalWidth / pre.naturalHeight, target: node });
+        if (!ready && pool.length >= Math.min(total, 28)) start();
+        else if (ready && pool.length === total) buildLayouts();   // the last one in: everything on stage
+      };
+      pre.src = video ? node.getAttribute('poster') : thumb;
+    });
+    setTimeout(() => { if (!ready && pool.length) start(); }, 2500);   // slow network: start with what has arrived
+  }
+  if (!opts.lazy) begin();
+  else new IntersectionObserver((en, io) => { if (en[0].isIntersecting) { io.disconnect(); begin(); } }, { rootMargin: '150% 0px' }).observe(wrap || stage);
   const playing = () => tiles.filter((t) => t.p && t.p.video).length;
   // A video poster only when there is room for one more playing loop.
   const usable = (p, it) => !p.video || (it && it.p && it.p.video) || playing() < MAX_VIDEOS;
@@ -363,7 +368,6 @@ export function collage(stage, sources) {
     if (on && !raf && ready) { raf = requestAnimationFrame(draw); timer = setInterval(swap, SWAP_MS); }
     if (!on && raf) { cancelAnimationFrame(raf); raf = 0; clearInterval(timer); timer = null; }
   }
-  setTimeout(() => { if (!ready && pool.length) start(); }, 2500);   // slow network: start with what has arrived
   function start() {
     if (ready) return;
     ready = true;

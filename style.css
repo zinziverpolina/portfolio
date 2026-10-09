@@ -378,20 +378,20 @@ html.picking section.slide img.kept, html.picking section.slide video.kept { out
 @keyframes cl-found { 0%, 60% { outline-color: #2a27a6; } 100% { outline-color: rgba(42,39,166,0); } }
 
 /* Posters & covers: the whole page on black */
-body.page-dark { background: #000; color: #bbb; }
-body.page-dark h1, body.page-dark h2, body.page-dark .projects .t { color: #eee; }
-body.page-dark .meta, body.page-dark .credit, body.page-dark .caption { color: #ddd; }
-body.page-dark .label { color: #ccc; }
-body.page-dark .slide + .slide, body.page-dark footer, body.page-dark .pager, body.page-dark .cl-stage { border-color: #222; }
-body.page-dark .topnav { background: rgba(0,0,0,.92); border-bottom-color: #222; }
-body.page-dark .topnav .name, body.page-dark .pager a { color: #eee; }
-body.page-dark .topnav a:hover, body.page-dark .topnav a.on, body.page-dark .topnav .dd:hover .dd-btn, body.page-dark .topnav .dd.open .dd-btn { color: #fff; }
-body.page-dark .topnav .dd-panel { background: #000; border-bottom-color: #222; box-shadow: 0 18px 40px rgba(0,0,0,.6); }
-body.page-dark .projects, body.page-dark .projects a { border-color: #222; }
-body.page-dark .projects .w { color: #ccc; }
-body.page-dark .cl-ui span { background: #000; color: #eee; }
-body.page-dark .cl-ui .br { color: #999; }
-body.page-dark footer { color: #777; }
+.page-dark{ background: #000; color: #bbb; }
+.page-dark h1, .page-dark h2, .page-dark .projects .t{ color: #eee; }
+.page-dark .meta, .page-dark .credit, .page-dark .caption{ color: #ddd; }
+.page-dark .label{ color: #ccc; }
+.page-dark .slide + .slide, .page-dark footer, .page-dark .pager, .page-dark .cl-stage{ border-color: #222; }
+.page-dark .topnav{ background: rgba(0,0,0,.92); border-bottom-color: #222; }
+.page-dark .topnav .name, .page-dark .pager a{ color: #eee; }
+.page-dark .topnav a:hover, .page-dark .topnav a.on, .page-dark .topnav .dd:hover .dd-btn, .page-dark .topnav .dd.open .dd-btn{ color: #fff; }
+.page-dark .topnav .dd-panel{ background: #000; border-bottom-color: #222; box-shadow: 0 18px 40px rgba(0,0,0,.6); }
+.page-dark .projects, .page-dark .projects a{ border-color: #222; }
+.page-dark .projects .w{ color: #ccc; }
+.page-dark .cl-ui span{ background: #000; color: #eee; }
+.page-dark .cl-ui .br{ color: #999; }
+.page-dark footer{ color: #777; }
 .cl-stage { isolation: isolate; z-index: 0; }
 /* Dive-in corridor (collage.js): a tall scroll stretch keeps the stage pinned while the camera travels in */
 .cl-scroll { position: relative; }
@@ -443,33 +443,33 @@ html { scroll-padding-top: 100px; }
 .topnav .dd-panel .projects a { text-transform: none; }   /* only the names (.t) in caps; years and descriptions as before */
 @media (max-width: 820px) { .topnav .in { font-size: 14px; } .topnav .tabs { font-size: 13px; } .topnav .dd-panel .projects .t { font-size: 15px; } }
 
-body.page-dark .topnav a, body.page-dark .topnav .tabs a, body.page-dark .topnav .dd-btn { color: #999; }
-body.page-dark .topnav .name { color: #eee; }
-body.page-dark .topnav a:hover, body.page-dark .topnav a.on, body.page-dark .topnav .tabs a:hover, body.page-dark .topnav .tabs a.on,
-body.page-dark .topnav .dd:hover .dd-btn, body.page-dark .topnav .dd.open .dd-btn, body.page-dark .topnav .tabs .dd-btn.on { color: #fff; }
-body.page-dark .topnav .dd-panel .projects .t, body.page-dark .topnav .dd-panel .projects li.on .t { color: #eee; }
+.page-dark .topnav a, .page-dark .topnav .tabs a, .page-dark .topnav .dd-btn{ color: #999; }
+.page-dark .topnav .name{ color: #eee; }
+.page-dark .topnav a:hover, .page-dark .topnav a.on, .page-dark .topnav .tabs a:hover, .page-dark .topnav .tabs a.on,
+.page-dark .topnav .dd:hover .dd-btn, .page-dark .topnav .dd.open .dd-btn, .page-dark .topnav .tabs .dd-btn.on{ color: #fff; }
+.page-dark .topnav .dd-panel .projects .t, .page-dark .topnav .dd-panel .projects li.on .t{ color: #eee; }
 
 /* Site palette (6 Oct 2026). White pages: all text in the dark tower blue (--navy); links and buttons turn the
    muted frame blue (--sky) on hover; the current item stays navy and underlined; former greys are --sky;
    project subtitles (.meta) are --sky. The 3D frames keep their own logic (sky, navy when hovered).
-   Black pages (body.page-dark) keep white and grey. */
-:root { --navy: #2a27a6; --sky: #5d8ab6; --sky-line: rgba(93,138,182,.55); --hover: #000; }
-body:not(.page-dark) { --title: var(--navy); --text: var(--navy); --ink: var(--navy); --link: var(--navy); --hover: var(--sky); }
-body.page-dark { --hover: #fff; }
-body:not(.page-dark) .meta, body:not(.page-dark) footer, body:not(.page-dark) .index span, body:not(.page-dark) .models figcaption span,
-body:not(.page-dark) .projects .y, body:not(.page-dark) .pager .all, body:not(.page-dark) .shr-ui .br, body:not(.page-dark) .world-loading,
-body:not(.page-dark) .cl-ui .br, body:not(.page-dark) .picks figcaption, body:not(.page-dark) .label .src { color: var(--sky); }
-body:not(.page-dark) .shr-ui span:not(.br), body:not(.page-dark) .world-ui, body:not(.page-dark) .cl-ui span:not(.br),
-body:not(.page-dark) footer a, body:not(.page-dark) .body a { color: var(--navy); }
-body:not(.page-dark) footer a:hover, body:not(.page-dark) .body a:hover, body:not(.page-dark) .video-note a:hover, body:not(.page-dark) .pick-links a:hover { color: var(--sky); }
-body:not(.page-dark) .topnav { border-bottom-color: var(--sky-line); }
-body:not(.page-dark) .topnav .name, body:not(.page-dark) .topnav a, body:not(.page-dark) .topnav .tabs a, body:not(.page-dark) .topnav .dd-btn,
-body:not(.page-dark) .topnav .dd-panel .projects .t { color: var(--navy); }
-body:not(.page-dark) .topnav a:hover, body:not(.page-dark) .topnav .tabs a:hover, body:not(.page-dark) .topnav .dd:hover .dd-btn,
-body:not(.page-dark) .topnav .dd.open .dd-btn, body:not(.page-dark) .topnav .dd-panel .projects a:hover .t { color: var(--sky); }
-body:not(.page-dark) .topnav .dd-panel { border-bottom-color: var(--sky-line); }
-body:not(.page-dark) .topnav .dd-panel .projects .y { color: var(--sky); }
-body:not(.page-dark) .topnav .dd-panel .projects a { border-bottom-color: var(--sky-line); }
+   Black pages (.page-dark) keep white and grey. */
+:root{ --navy: #2a27a6; --sky: #5d8ab6; --sky-line: rgba(93,138,182,.55); --hover: #000; }
+body:not(.page-dark){ --title: var(--navy); --text: var(--navy); --ink: var(--navy); --link: var(--navy); --hover: var(--sky); }
+.page-dark{ --hover: #fff; }
+.meta:not(.page-dark *), footer:not(.page-dark *), .index span:not(.page-dark *), .models figcaption span:not(.page-dark *),
+.projects .y:not(.page-dark *), .pager .all:not(.page-dark *), .shr-ui .br:not(.page-dark *), .world-loading:not(.page-dark *),
+.cl-ui .br:not(.page-dark *), .picks figcaption:not(.page-dark *), .label .src:not(.page-dark *){ color: var(--sky); }
+.shr-ui span:not(.br):not(.page-dark *), .world-ui:not(.page-dark *), .cl-ui span:not(.br):not(.page-dark *),
+footer a:not(.page-dark *), .body a:not(.page-dark *){ color: var(--navy); }
+footer a:hover:not(.page-dark *), .body a:hover:not(.page-dark *), .video-note a:hover:not(.page-dark *), .pick-links a:hover:not(.page-dark *){ color: var(--sky); }
+.topnav:not(.page-dark *){ border-bottom-color: var(--sky-line); }
+.topnav .name:not(.page-dark *), .topnav a:not(.page-dark *), .topnav .tabs a:not(.page-dark *), .topnav .dd-btn:not(.page-dark *),
+.topnav .dd-panel .projects .t:not(.page-dark *){ color: var(--navy); }
+.topnav a:hover:not(.page-dark *), .topnav .tabs a:hover:not(.page-dark *), .topnav .dd:hover .dd-btn:not(.page-dark *),
+.topnav .dd.open .dd-btn:not(.page-dark *), .topnav .dd-panel .projects a:hover .t:not(.page-dark *){ color: var(--sky); }
+.topnav .dd-panel:not(.page-dark *){ border-bottom-color: var(--sky-line); }
+.topnav .dd-panel .projects .y:not(.page-dark *){ color: var(--sky); }
+.topnav .dd-panel .projects a:not(.page-dark *){ border-bottom-color: var(--sky-line); }
 /* LOEWE page: the Sky words scene (sky/loewe.html?embed), full width under the header like the Sacred Hyper Race walk */
 .lw-sky { position: relative; height: calc(100vh / var(--z, 1) - 92px); height: calc(100svh / var(--z, 1) - 92px); min-height: 440px; overflow: hidden; background: #cfe3ea; }
 .lw-sky iframe { position: absolute; inset: 0; width: 100%; height: 100%; border: 0; display: block; }
@@ -521,16 +521,16 @@ model-viewer.fm-card-m { width: min(80vw, 900px); height: calc(100svh / var(--z,
 .topnav:not(.intro-nav) .in, .topnav:not(.intro-nav) .tabs { max-width: none; }
 .topnav .tabs .tabs-gap { margin-left: auto; }
 /* Floating stages on black pages (CAROLINA SARRIA): black ground, white and grey type, white hovered frames */
-body.page-dark .fm-stage { background: #000; border-bottom-color: #222; }
-body.page-dark .shr-frame.fm-frame.on { --c: #fff; }
-body.page-dark .shr-frame.fm-frame.on .tag { color: #fff; }
-body.page-dark .shr-frame.fm-frame .num { color: #999; }
-body.page-dark .fm-card { background: rgba(0,0,0,.84); }
-body.page-dark .fm-card-box { background: #000; border-color: #444; box-shadow: 0 18px 50px rgba(0,0,0,.6); }
-body.page-dark .fm-card-t { color: #eee; }
-body.page-dark .fm-card-c, body.page-dark .fm-card-nav .n { color: #999; }
-body.page-dark .fm-card-nav button, body.page-dark .fm-card-x { color: #ddd; }
-body.page-dark .fm-card-nav button:hover, body.page-dark .fm-card-x:hover { color: #fff; }
+.page-dark .fm-stage{ background: #000; border-bottom-color: #222; }
+.page-dark .shr-frame.fm-frame.on{ --c: #fff; }
+.page-dark .shr-frame.fm-frame.on .tag{ color: #fff; }
+.page-dark .shr-frame.fm-frame .num{ color: #999; }
+.page-dark .fm-card{ background: rgba(0,0,0,.84); }
+.page-dark .fm-card-box{ background: #000; border-color: #444; box-shadow: 0 18px 50px rgba(0,0,0,.6); }
+.page-dark .fm-card-t{ color: #eee; }
+.page-dark .fm-card-c, .page-dark .fm-card-nav .n{ color: #999; }
+.page-dark .fm-card-nav button, .page-dark .fm-card-x{ color: #ddd; }
+.page-dark .fm-card-nav button:hover, .page-dark .fm-card-x:hover{ color: #fff; }
 /* LOEWE opens with the sky: its instructions over the lower edge, in the header's caps type */
 .lw-intro { scroll-snap-align: start; }
 .lw-intro .lw-sky-help { position: absolute; left: 0; right: 0; bottom: 18px; max-width: none; margin: 0; padding: 0 16px; text-align: center; pointer-events: none; font: 500 clamp(11px, 1.19vw, 17.5px)/1.3 var(--sans); letter-spacing: -.01em; text-transform: lowercase; color: #b4bac2; }
@@ -579,7 +579,7 @@ body.page-dark .fm-card-nav button:hover, body.page-dark .fm-card-x:hover { colo
 .fm-text .meta.fm-rev { flex-direction: row-reverse; }
 .fm-text .meta .fm-sub { min-width: 0; }
 .fm-text .fm-year { flex: none; font: 500 clamp(11px, 1.19vw, 17.5px)/1 var(--sans); font-style: normal; letter-spacing: -.02em; text-transform: uppercase; font-variant-numeric: tabular-nums; color: var(--navy, #2a27a6); }
-body.page-dark .fm-text .fm-year { color: #eee; }
+.page-dark .fm-text .fm-year{ color: #eee; }
 .fm-text h2 .meta.inline:has(.fm-year) { display: flex; }
 .shr-frame.fm-tframe { left: -24px; top: -20px; right: -24px; bottom: -20px; pointer-events: none; }
 .fm-editing .fm-text > .fm-tframe { outline: none; }
@@ -650,21 +650,21 @@ h1, h2, .cl-ui .tl, .topnav .in a[target] { font-family: var(--title-font); }
 .tw-text .subnav { margin: 4px 0 0; font: inherit; gap: 4px 18px; }
 @media (max-width: 820px) { .tw-page .sf-strips { grid-template-columns: 1fr; } }
 /* …on black pages */
-body.page-dark .tw-head { color: #ddd; }
-body.page-dark .tw-tag { color: #8a8a8a; }
-body.page-dark .tw-meta dt { color: #777; }
-body.page-dark .tw-grid, body.page-dark .tw-more { border-color: #333; }
-body.page-dark .tw-more summary, body.page-dark .tw-sections h3 { color: #eee; }
-body.page-dark .tw-more summary:hover { color: #fff; }
-body.page-dark.tw-page .sf-strip-h { color: #eee; }
-body.page-dark.tw-page .sf-strip-h i { color: #888; }
-body.page-dark .sf-arrow { color: #ddd; }
-body.page-dark .sf-arrow:hover { color: #fff; }
+.page-dark .tw-head{ color: #ddd; }
+.page-dark .tw-tag{ color: #8a8a8a; }
+.page-dark .tw-meta dt{ color: #777; }
+.page-dark .tw-grid, .page-dark .tw-more{ border-color: #333; }
+.page-dark .tw-more summary, .page-dark .tw-sections h3{ color: #eee; }
+.page-dark .tw-more summary:hover{ color: #fff; }
+.page-dark.tw-page .sf-strip-h{ color: #eee; }
+.page-dark.tw-page .sf-strip-h i{ color: #888; }
+.page-dark .sf-arrow{ color: #ddd; }
+.page-dark .sf-arrow:hover{ color: #fff; }
 /* Same side margins on every page (Nina Ricci's): the room for a scrollbar is always kept, so short pages don't
    shift. The interactive first screens (LOEWE sky, Posters/HYPERTRASH collage) stay full width. */
 html { scrollbar-gutter: stable; }
 /* the collage and its tunnel on pure black */
-.cl-stage, body.page-dark .cl-stage { background: #000; }
+.cl-stage, .page-dark .cl-stage{ background: #000; }
 /* Three fonts (9 Oct): Bricolage for titles (and CV / INSTAGRAM), the header's sans for every text, serif italic
    for subtitles. Column labels in caps. */
 .tw-head { --tw-font: var(--sans); }
@@ -692,9 +692,9 @@ body .case, .tw-page .sf-strip-h { font-family: var(--sans); }
 .tw-fold summary:hover { color: var(--sky, #5d8ab6); }
 .tw-fold[open] summary b { transform: rotate(180deg); }
 .tw-fold > .media { margin: 6px 0 22px; }
-body.page-dark .tw-fold { border-color: #333; }
-body.page-dark .tw-fold summary { color: #eee; }
-body.page-dark .tw-fold summary i { color: #888; }
+.page-dark .tw-fold{ border-color: #333; }
+.page-dark .tw-fold summary{ color: #eee; }
+.page-dark .tw-fold summary i{ color: #888; }
 /* Posters: one plain gallery, five across */
 #posters .gallery { columns: 5; column-gap: 12px; }
 #posters .gallery img { margin-bottom: 12px; }
@@ -710,5 +710,27 @@ body.page-dark .tw-fold summary i { color: #888; }
 .tw-fold summary span { font: 500 clamp(20px, 2.2vw, 30px)/1 var(--title-font); letter-spacing: -.02em; text-transform: uppercase; }
 .tw-fold summary b { font-size: clamp(14px, 1.3vw, 18px); color: var(--sky, #5d8ab6); }
 .tw-fold summary i { font-size: 13px; }
-body.page-dark .tw-fold summary b { color: #888; }
+.page-dark .tw-fold summary b{ color: #888; }
 .tw-page .slide + .slide .tw-head { margin-top: 0; }
+
+/* 9 Oct, round 4 */
+/* a dark wrapper inside a light page (the long projects page): the plain colours back */
+.page-dark { --title: #434343; --text: #595959; --ink: #000; --link: #5d8ab6; }
+/* no serif italic on the commercial site: the header's sans, bold */
+body:has(.tabs) { --serif: Arial, Arimo, Helvetica, sans-serif; }
+body:has(.tabs) :is(.tw-tag, .pager, footer, .meta, .credit, .caption, .fm-card-c, .projects .y, .projects .w, .models figcaption span, .subnav, .case-head .sub) { font-style: normal; font-weight: 700; }
+/* folds: a small picture / film icon next to the title instead of the count */
+.fold-ic { display: inline-block; width: clamp(15px, 1.25vw, 19px); line-height: 0; color: var(--sky, #5d8ab6); vertical-align: baseline; font-style: normal; }
+.fold-ic svg { display: block; width: 100%; height: auto; }
+.tw-fold summary .fold-ic { align-self: center; }
+.case h3 .fold-ic { width: .42em; vertical-align: .12em; margin-left: .1em; }
+.page-dark .fold-ic { color: #888; }
+/* LOEWE overview: links to its three projects, in the heading font */
+.lw-links { display: flex; flex-direction: column; gap: 10px; }
+.lw-links a { font: 500 clamp(20px, 2.2vw, 30px)/1 var(--title-font); letter-spacing: -.02em; text-transform: uppercase; color: var(--navy); text-decoration: none; }
+.lw-links a b { font-size: .6em; font-weight: 400; color: var(--sky); }
+.lw-links a:hover, .lw-links a:hover b { color: var(--sky); }
+/* the long projects page: a line between projects; the black ones together in one dark band */
+.long-page .proj + .proj { border-top: 1px solid var(--sky-line, #eee); }
+.long-page .dark-zone .proj + .proj { border-top-color: #222; }
+.long-page .dark-zone { padding-bottom: 1px; }

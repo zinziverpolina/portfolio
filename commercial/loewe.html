@@ -1,6 +1,9 @@
 <!doctype html>
 <html lang="en">
 <head>
+<script>
+if (!/[?&]src\b/.test(location.search)) location.replace('projects.html#p-loewe');
+</script>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>LOEWE — Polina Zinziver</title>
@@ -9,7 +12,7 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Arimo:ital,wght@0,400;0,700;1,400&family=Tinos:ital,wght@0,400;0,700;1,400;1,700&display=swap" rel="stylesheet">
 <script src="../zoom.js?v=1"></script>
-<link rel="stylesheet" href="../style.css?v=20261009j-lw">
+<link rel="stylesheet" href="../style.css?v=20261009k">
 <script>
   // Arriving from the intro: start under a white cover that slowly turns transparent.
   (function () { var t; try { t = sessionStorage.getItem('cover'); sessionStorage.removeItem('cover'); } catch (e) {} if (!t) return;
@@ -33,35 +36,59 @@
     <button class="dd-btn" type="button" aria-expanded="false" aria-controls="dd-panel">all projects <span aria-hidden="true">▾</span></button>
     <div class="dd-panel" id="dd-panel">
     <ol class="projects">
-      <li><a href="sacred-hyper-race.html"><img src="img/shr-1.jpg" alt="" loading="lazy" decoding="async"><span class="t">Fortnite</span><span class="y">2024</span><span class="w">art direction, level design, Unreal assembly</span></a></li>
-      <li><a href="nina-ricci.html"><img src="video/nina-ricci-1.jpg" alt="" loading="lazy" decoding="async"><span class="t">Nina Ricci</span><span class="y">2022</span><span class="w">3D modelling, animation, render</span></a></li>
-      <li class="on"><a href="loewe.html"><img src="video/loewe-ww-1.jpg" alt="" loading="lazy" decoding="async"><span class="t">LOEWE</span><span class="y">2021–2022</span><span class="w">3D animation</span></a></li>
-      <li><a href="clara-luciani.html"><img src="img/clara-s4.jpg" alt="" loading="lazy" decoding="async"><span class="t">Clara Luciani</span><span class="y">2025</span><span class="w">3D modelling, animation</span></a></li>
-      <li><a href="horosoaps.html"><img src="video/horosoaps-3.jpg" alt="" loading="lazy" decoding="async"><span class="t">HOROSOAPS</span><span class="y">2023</span><span class="w">3D animation</span></a></li>
-      <li><a href="carolina-sarria.html"><img src="img/carolina-1.jpg" alt="" loading="lazy" decoding="async"><span class="t">CAROLINA SARRIA</span><span class="y">2020</span><span class="w">co-direction, 3D modelling, render</span></a></li>
-      <li><a href="hypertrash.html"><img src="img/hypertrash-1.jpg" alt="" loading="lazy" decoding="async"><span class="t">HYPERTRASH</span><span class="y">2024–2026</span><span class="w">covers, posters</span></a></li>
-      <li><a href="posters.html"><img src="img/posters-1.jpg" alt="" loading="lazy" decoding="async"><span class="t">Posters &amp; covers</span><span class="y">2021–2025</span><span class="w">posters, covers</span></a></li>
+      <li><a href="projects.html#p-sacred-hyper-race"><img src="img/shr-1.jpg" alt="" loading="lazy" decoding="async"><span class="t">Fortnite</span><span class="y">2024</span><span class="w">art direction, level design, Unreal assembly</span></a></li>
+      <li><a href="projects.html#p-nina-ricci"><img src="video/nina-ricci-1.jpg" alt="" loading="lazy" decoding="async"><span class="t">Nina Ricci</span><span class="y">2022</span><span class="w">3D modelling, animation, render</span></a></li>
+      <li class="on"><a href="projects.html#p-loewe"><img src="video/loewe-ww-1.jpg" alt="" loading="lazy" decoding="async"><span class="t">LOEWE</span><span class="y">2021–2022</span><span class="w">3D animation</span></a></li>
+      <li><a href="projects.html#p-clara-luciani"><img src="img/clara-s4.jpg" alt="" loading="lazy" decoding="async"><span class="t">Clara Luciani</span><span class="y">2025</span><span class="w">3D modelling, animation</span></a></li>
+      <li><a href="projects.html#p-horosoaps"><img src="video/horosoaps-3.jpg" alt="" loading="lazy" decoding="async"><span class="t">HOROSOAPS</span><span class="y">2023</span><span class="w">3D animation</span></a></li>
+      <li><a href="projects.html#p-carolina-sarria"><img src="img/carolina-1.jpg" alt="" loading="lazy" decoding="async"><span class="t">CAROLINA SARRIA</span><span class="y">2020</span><span class="w">art direction</span></a></li>
+      <li><a href="projects.html#p-hypertrash"><img src="img/hypertrash-1.jpg" alt="" loading="lazy" decoding="async"><span class="t">HYPERTRASH</span><span class="y">2024–2026</span><span class="w">covers, posters</span></a></li>
+      <li><a href="projects.html#p-posters"><img src="img/posters-1.jpg" alt="" loading="lazy" decoding="async"><span class="t">Posters &amp; covers</span><span class="y">2021–2025</span><span class="w">posters, covers</span></a></li>
     </ol>
     </div>
   </div>
-  <a href="sacred-hyper-race.html">Fortnite</a>
-  <a href="nina-ricci.html">Nina Ricci</a>
-  <a href="loewe.html" class="on" aria-current="page">LOEWE</a>
-  <a href="clara-luciani.html">Clara Luciani</a>
-  <a href="horosoaps.html">HOROSOAPS</a>
-  <a href="carolina-sarria.html">CAROLINA SARRIA</a>
-  <span class="tabs-gap" aria-hidden="true"></span>
-  <a href="hypertrash.html">HYPERTRASH</a>
-  <a href="posters.html">Posters</a>
+  <a href="projects.html#p-sacred-hyper-race">Fortnite</a>
+  <a href="projects.html#p-nina-ricci">Nina Ricci</a>
+  <a href="projects.html#p-loewe" class="on" aria-current="page">LOEWE</a>
+  <a href="projects.html#p-clara-luciani">Clara Luciani</a>
+  <a href="projects.html#p-horosoaps">HOROSOAPS</a>
+  <a href="projects.html#p-carolina-sarria">CAROLINA SARRIA</a>
+  <a href="projects.html#p-hypertrash">HYPERTRASH</a>
+  <a href="projects.html#p-posters">Posters</a>
 </div></nav>
 
 <div class="lw-sky lw-intro" id="lw-sky">
-  <iframe src="../sky/loewe.html?embed&amp;intro&amp;v=3" title="LOEWE SS22 — Live, Laugh, Loewe: the chrome words from the Sky animation, in the sky" allow="fullscreen"></iframe>
+  <iframe src="../sky/loewe.html?embed&amp;intro&amp;v=4" title="LOEWE SS22 — Live, Laugh, Loewe: the chrome words from the Sky animation, in the sky" allow="fullscreen"></iframe>
   <div class="lw-sky-help">
     <p class="desk">click on the text for animation · hold for rotation · zoom in to go further</p>
     <p class="tap">tap the text for animation · hold for rotation · pinch to go further</p>
   </div>
 </div>
+
+<section class="slide lw-top" id="loewe">
+  <div class="tw-head">
+    <div class="tw-title">
+      <h2>LOEWE</h2>
+      <p class="tw-tag">promo animations for Instagram and website</p>
+    </div>
+    <div class="tw-grid">
+      <dl class="tw-meta">
+        <dt>Role</dt><dd>3D animation</dd>
+      </dl>
+      <dl class="tw-meta">
+        <dt>Credits</dt><dd>Art direction by Bob Eaton</dd>
+        <dt>Year</dt><dd>2021–2022</dd>
+      </dl>
+      <div class="tw-text">
+        <nav class="lw-links" aria-label="LOEWE projects">
+          <a href="#ss22">LOEWE SS22 <b aria-hidden="true">↓</b></a>
+          <a href="#christmas">LOEWE Christmas <b aria-hidden="true">↓</b></a>
+          <a href="#perfumes">LOEWE Perfumes <b aria-hidden="true">↓</b></a>
+        </nav>
+      </div>
+    </div>
+  </div>
+</section>
 
 <section class="slide" id="ss22">
   <div class="tw-head">
@@ -214,7 +241,7 @@
 
 <script src="../site.js?v=20261005s"></script>
 <script type="module">
-  import { twPage } from './tw-page.js?v=6';
+  import { twPage } from './tw-page.js?v=8';
   twPage();
   // The sky opens the page: flying through the name moves on to the projects; coming back up flies back out.
   const sky = document.getElementById('lw-sky'), frame = sky.querySelector('iframe');
@@ -227,11 +254,13 @@
     going = true;
     sky.classList.add('lw-going');
     setTimeout(() => {
-      const st = document.querySelector('.fm-stage, section.slide');
+      const st = document.getElementById('loewe');
       if (st) { st.scrollIntoView({ behavior: 'instant' }); st.classList.remove('fm-arrive'); void st.offsetWidth; st.classList.add('fm-arrive'); }
       setTimeout(() => { sky.classList.remove('lw-going'); going = false; }, 900);
     }, 300);
   });
+  // backed out of the sky with the wheel: the page scrolls on up
+  addEventListener('message', (e) => { if (e.source === frame.contentWindow && e.data && e.data.type === 'lw-sky-scroll') scrollBy({ top: e.data.dy, behavior: 'instant' }); });
   let away = false;
   new IntersectionObserver(([en]) => {
     if (!en.isIntersecting) away = true;
