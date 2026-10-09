@@ -677,3 +677,30 @@ body .case, .tw-page .sf-strip-h { font-family: var(--sans); }
 /* HYPERTRASH: the logo over the collage and in the middle of the tunnel (moved by collage.js) */
 .cl-logo { position: absolute; left: 50%; top: 50%; width: min(64%, 980px); height: auto; max-width: none; transform: translate(-50%, -50%); z-index: 200000; pointer-events: none; user-select: none; will-change: transform, opacity; }
 @media (max-width: 820px) { .cl-logo { width: 88%; } }
+
+/* 9 Oct, round 2 */
+/* header links: contact · cv · artistic portfolio · instagram, lowercase, same size */
+.topnav .in a.lk { text-transform: none; font-family: var(--title-font); }
+/* "More videos" / "Stills": folds — a rule with the name and the count, the usual grid opens under it */
+.tw-folds { margin-top: 34px; }
+.tw-fold { border-top: 1px solid var(--sky-line, rgba(93,138,182,.55)); }
+.tw-fold:last-child { border-bottom: 1px solid var(--sky-line, rgba(93,138,182,.55)); }
+.tw-fold summary { display: flex; align-items: baseline; gap: 14px; padding: 10px 0; cursor: pointer; list-style: none; font: 500 15px/1.2 var(--sans); color: var(--navy, #2a27a6); }
+.tw-fold summary::-webkit-details-marker { display: none; }
+.tw-fold summary i { font-style: normal; color: var(--sky, #5d8ab6); margin-left: auto; }
+.tw-fold summary b { font-weight: 400; transition: transform .2s; }
+.tw-fold summary:hover { color: var(--sky, #5d8ab6); }
+.tw-fold[open] summary b { transform: rotate(180deg); }
+.tw-fold > .media { margin: 6px 0 22px; }
+body.page-dark .tw-fold { border-color: #333; }
+body.page-dark .tw-fold summary { color: #eee; }
+body.page-dark .tw-fold summary i { color: #888; }
+/* Posters: one plain gallery, five across */
+#posters .gallery { columns: 5; column-gap: 12px; }
+#posters .gallery img { margin-bottom: 12px; }
+@media (max-width: 820px) { #posters .gallery { columns: 2; column-gap: 10px; } #posters .gallery img { margin-bottom: 10px; } }
+/* HYPERTRASH logo: half the size */
+.cl-logo { width: min(32%, 490px); }
+@media (max-width: 820px) { .cl-logo { width: 44%; } }
+/* the longer "Sacred Hyper Race (Fortnite)" tab: a little less room between the tabs keeps them on one line */
+@media (min-width: 821px) { .topnav .tabs { column-gap: 18px; } }
