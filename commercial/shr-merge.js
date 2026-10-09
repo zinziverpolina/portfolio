@@ -13,7 +13,7 @@ const M = window.Matter;
 const T = {
   W: 400, H: 600,             // jar size in world units (aspect 0.667)
   R1: 27,                     // radius of level 1 (House); ×1.5 from 18 at Polina’s request (8 Oct)
-  RATIO: 1.22,                // radius × per level → Sun Man ≈ 132 (diameter = 66% of W)
+  RATIO: 1.303,               // radius × per level → Sun Man (level 7) ≈ 132 (diameter = 66% of W)
   JOKER_R_LEVEL: 3,           // the joker is as big as level 3
   DANGER_Y: 66,               // danger line, units below the jar's top edge
   OVER_TIME: 2.0,             // s a landed creature may stay above the line before OVERFLOW
@@ -27,7 +27,7 @@ const T = {
   FRICTION: 0.2, FRICTION_STATIC: 0.5, RESTITUTION: 0.12, AIR: 0.008, DENSITY: 0.001,
   GROW_TIME: 0.12,            // s for a merged body to grow from the old radius to the new one
   POP_TIME: 0.32,             // s of the visual pop-scale on merge
-  SPAWN_WEIGHTS: [32, 27, 20, 13, 8],   // chance of levels 1–5 for new pieces (small more often)
+  SPAWN_WEIGHTS: [40, 30, 20, 10],      // chance of levels 1–4 for new pieces (small more often)
   JOKER_CHANCE: 0.04,         // per new piece once the score reaches JOKER_MIN_SCORE…
   JOKER_MIN_SCORE: 200,       // …never twice in a row
   COMBO_WINDOW: 1.0,          // s: merges closer than this build ×2, ×3…
@@ -45,20 +45,18 @@ const T = {
   MAX_DPR: 2,
 };
 const JOKER = 0;
-const CHAIN = [   // Polina's order (8 Oct): House, Church, Tree, Waterfall II, Frog, Orchid, Two Heads, Mouth Arch, Sun Man
+const CHAIN = [   // Polina's order (9 Oct): House, Waterfall II, Tree, Church, Two Heads, Mouth Arch, Sun Man
   null,
   { file: 'shr-house.glb', name: 'House' },
-  { file: 'shr-church.glb', name: 'Church' },
-  { file: 'shr-tree.glb', name: 'Tree' },
   { file: 'shr-waterfall-tree-2.glb', name: 'Waterfall Tree II' },
-  { file: 'shr-frog.glb', name: 'Frog' },
-  { file: 'shr-orchid.glb', name: 'Orchid' },
+  { file: 'shr-tree.glb', name: 'Tree' },
+  { file: 'shr-church.glb', name: 'Church' },
   { file: 'shr-two-heads.glb', name: 'Two Heads' },
   { file: 'shr-mouth-arch.glb', name: 'Mouth Arch' },
   { file: 'shr-sun-man.glb', name: 'Sun Man' },
 ];
 CHAIN[JOKER] = { file: 'shr-squad-monster.glb', name: 'Squad Monster' };
-const MAX_LEVEL = 9;
+const MAX_LEVEL = 7;
 const MODEL_DIR = 'models/hero/';
 const BEST_KEY = 'shr-merge-best';
 const DEBUG = /[?&]debug\b/.test(location.search);
@@ -139,7 +137,7 @@ soundBtn.addEventListener('click', () => {
 // ----- models: normalised so the silhouette fits a unit circle -----
 const tpl = [];   // tpl[level] = THREE.Group (unit radius) once loaded
 const loader = new GLTFLoader();
-const FIRST = [1, 2, 3, 4, 5], REST = [6, 7, 8, 9, JOKER];
+const FIRST = [1, 2, 3, 4], REST = [5, 6, 7, JOKER];
 let firstDone = 0, firstOk = 0;
 
 const fitInfo = [];   // ?debug: how far each model's furthest vertex pokes out
