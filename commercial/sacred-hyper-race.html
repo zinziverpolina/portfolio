@@ -97,14 +97,19 @@
     .g2.wd { grid-template-columns: 1fr; }
   }
   .case .tw-head { margin-top: 30px; }
-  .case .tw-text .play { margin-top: 6px; }
+  .case .tw-text .plays { display: flex; flex-wrap: wrap; gap: 8px; margin: 6px 0 0; }
+  .case .tw-text .play { margin: 0; padding: 10px 14px; font-size: 13px; }
+  .case-hero { margin: 26px 0 0; }
+  .pairs { display: grid; grid-template-columns: 1fr 1fr; gap: 22px 28px; }
+  .pair { display: grid; grid-template-columns: 2fr 3fr; gap: 14px; align-items: center; }
+  .pair-sketch { margin: 0; }
+  .pair-sketch img { display: block; width: 100%; aspect-ratio: 3 / 4; object-fit: contain; background: #fff; cursor: zoom-in; }
+  .pair .models { grid-template-columns: 1fr; }
+  .models.sculpt { grid-template-columns: repeat(4, 1fr); }
+  @media (max-width: 820px) { .pairs { grid-template-columns: 1fr; } .models.sculpt { grid-template-columns: repeat(2, 1fr); } }
 </style>
 
 <main class="case">
-  <div class="case-hero">
-    <video src="video/shr-1.mp4" poster="video/shr-1.jpg" autoplay muted loop playsinline controls preload="metadata" aria-label="Sacred Hyper Race — flythrough"></video>
-  </div>
-
   <div class="tw-head">
     <div class="tw-title">
       <h2>SACRED HYPER RACE</h2>
@@ -122,48 +127,59 @@
       </dl>
       <div class="tw-text">
         <p>A track for Fortnite’s Rocket Racing, built in one month. Three laps through violet organic forms, past creatures, to a temple at the finish. Idea and execution by Polina Zinziver, from the first sketch to the assembled map.</p>
-        <p><a class="play" href="https://www.fortnite.com/@multi.games/7699-8302-5215?lang=en-US" target="_blank" rel="noopener">Play in Fortnite →</a></p>
+        <p class="plays">
+          <a class="play" href="https://www.fortnite.com/@multi.games/7699-8302-5215?lang=en-US" target="_blank" rel="noopener">Play in Fortnite →</a>
+          <a class="play" href="#walk">Walk the map ↓</a>
+          <a class="play" href="shr-game.html">Minigame →</a>
+        </p>
       </div>
     </div>
+  </div>
+
+  <div class="case-hero">
+    <video src="video/shr-1.mp4" poster="video/shr-1.jpg" autoplay muted loop playsinline controls preload="metadata" aria-label="Sacred Hyper Race — flythrough"></video>
   </div>
 
   <section class="step" id="drawing">
     <div><span class="n">01</span><h3>Track and creatures</h3></div>
     <p>The route started from the plan of a real kart circuit. The creatures started as ink drawings in a notebook.</p>
   </section>
-  <div class="grid g3 pt">
-    <figure><img class="zoom" src="img/shrc-sketch1.jpg" alt="Sacred Hyper Race — notebook sketch" loading="lazy"></figure>
-    <figure><img class="zoom" src="img/shrc-sketch2.jpg" alt="Sacred Hyper Race — notebook sketch" loading="lazy"></figure>
-    <figure><img class="zoom" src="img/shrc-sketch3.jpg" alt="Sacred Hyper Race — notebook sketch" loading="lazy"></figure>
-    <figure><img class="zoom" src="img/shrc-sketch4.jpg" alt="Sacred Hyper Race — notebook sketch" loading="lazy"></figure>
-    <figure><img class="zoom" src="img/shrc-sketch5.jpg" alt="Sacred Hyper Race — notebook sketch" loading="lazy"></figure>
-    <figure><img class="zoom" src="img/shrc-sketch6.jpg" alt="Sacred Hyper Race — notebook sketch" loading="lazy"></figure>
+  <div class="pairs">
+    <div class="pair"><figure class="pair-sketch"><img class="zoom" src="img/shrc-sketch1.jpg" alt="Sacred Hyper Race — drawing"></figure><div class="models">
+    <figure><model-viewer src="models/shr-orchid.glb" poster="models/shr-orchid.jpg" alt="Sacred Hyper Race — Orchid, low-poly model" loading="lazy" camera-controls disable-zoom disable-pan touch-action="pan-y" min-camera-orbit="auto auto 20%" max-camera-orbit="auto auto 200%" interaction-prompt="none" auto-rotate auto-rotate-delay="0" rotation-per-second="18deg" environment-image="neutral" shadow-intensity="1" camera-orbit="20deg 78deg 105%"></model-viewer><figcaption>Orchid<span>28.5k tris</span></figcaption></figure>
+    </div></div>
+    <div class="pair"><figure class="pair-sketch"><img class="zoom" src="img/shrc-sketch4.jpg" alt="Sacred Hyper Race — drawing"></figure><div class="models">
+    <figure><model-viewer src="models/shr-waterfall-tree-1.glb" poster="models/shr-waterfall-tree-1.jpg" alt="Sacred Hyper Race — Waterfall Tree I, low-poly model" loading="lazy" camera-controls disable-zoom disable-pan touch-action="pan-y" min-camera-orbit="auto auto 20%" max-camera-orbit="auto auto 200%" interaction-prompt="none" auto-rotate auto-rotate-delay="0" rotation-per-second="18deg" environment-image="neutral" shadow-intensity="1" camera-orbit="20deg 78deg 105%"></model-viewer><figcaption>Waterfall Tree I<span>43k tris</span></figcaption></figure>
+    </div></div>
+    <div class="pair"><figure class="pair-sketch"><img class="zoom" src="img/shrc-sketch5.jpg" alt="Sacred Hyper Race — drawing"></figure><div class="models">
+    <figure><model-viewer src="models/shr-sun-man.glb" poster="models/shr-sun-man.jpg" alt="Sacred Hyper Race — Sun Man, low-poly model" loading="lazy" camera-controls disable-zoom disable-pan touch-action="pan-y" min-camera-orbit="auto auto 20%" max-camera-orbit="auto auto 200%" interaction-prompt="none" auto-rotate auto-rotate-delay="0" rotation-per-second="18deg" environment-image="neutral" shadow-intensity="1" camera-orbit="20deg 78deg 105%"></model-viewer><figcaption>Sun Man<span>23.5k tris</span></figcaption></figure>
+    </div></div>
+    <div class="pair"><figure class="pair-sketch"><img class="zoom" src="img/shrc-sketch6.jpg" alt="Sacred Hyper Race — drawing"></figure><div class="models">
+    <figure><model-viewer src="models/shr-mouth-arch.glb" poster="models/shr-mouth-arch.jpg" alt="Sacred Hyper Race — Mouth Arch, low-poly model" loading="lazy" camera-controls disable-zoom disable-pan touch-action="pan-y" min-camera-orbit="auto auto 20%" max-camera-orbit="auto auto 200%" interaction-prompt="none" auto-rotate auto-rotate-delay="0" rotation-per-second="18deg" environment-image="neutral" shadow-intensity="1" camera-orbit="20deg 78deg 105%"></model-viewer><figcaption>Mouth Arch<span>80k tris</span></figcaption></figure>
+    </div></div>
   </div>
 
   <section class="step" id="sculpting">
     <div><span class="n">02</span><h3>Sculpting</h3></div>
-    <p>The creatures were sculpted in Forger, then made game-ready in Cinema 4D: retopology and UVs, twelve models for the map.</p>
+    <p>The creatures were sculpted in Forger, then made game-ready in Cinema 4D: retopology and UVs, twelve models for the map. Drag to rotate.</p>
   </section>
-  <div class="grid g4 sq">
-    <figure><img class="zoom" src="models/shr-sun-man.jpg" alt="Sacred Hyper Race — Sun Man" loading="lazy"><figcaption>Sun Man</figcaption></figure>
-    <figure><img class="zoom" src="models/shr-mouth-arch.jpg" alt="Sacred Hyper Race — Mouth Arch" loading="lazy"><figcaption>Mouth Arch</figcaption></figure>
-    <figure><img class="zoom" src="models/shr-two-heads.jpg" alt="Sacred Hyper Race — Two Heads" loading="lazy"><figcaption>Two Heads</figcaption></figure>
-    <figure><img class="zoom" src="models/shr-frog.jpg" alt="Sacred Hyper Race — Frog" loading="lazy"><figcaption>Frog</figcaption></figure>
-    <figure><img class="zoom" src="models/shr-waterfall-tree-1.jpg" alt="Sacred Hyper Race — Waterfall Tree" loading="lazy"><figcaption>Waterfall Tree</figcaption></figure>
-    <figure><img class="zoom" src="models/shr-orchid.jpg" alt="Sacred Hyper Race — Orchid" loading="lazy"><figcaption>Orchid</figcaption></figure>
-    <figure><img class="zoom" src="models/shr-church.jpg" alt="Sacred Hyper Race — Church" loading="lazy"><figcaption>Church</figcaption></figure>
-    <figure><img class="zoom" src="models/shr-house.jpg" alt="Sacred Hyper Race — House" loading="lazy"><figcaption>House</figcaption></figure>
+  <div class="models sculpt">
+    <figure><model-viewer src="models/shr-two-heads.glb" poster="models/shr-two-heads.jpg" alt="Sacred Hyper Race — Two Heads, low-poly model" loading="lazy" camera-controls disable-zoom disable-pan touch-action="pan-y" min-camera-orbit="auto auto 20%" max-camera-orbit="auto auto 200%" interaction-prompt="none" auto-rotate auto-rotate-delay="0" rotation-per-second="18deg" environment-image="neutral" shadow-intensity="1" camera-orbit="20deg 78deg 105%"></model-viewer><figcaption>Two Heads<span>56k tris</span></figcaption></figure>
+    <figure><model-viewer src="models/shr-frog.glb" poster="models/shr-frog.jpg" alt="Sacred Hyper Race — Frog, low-poly model" loading="lazy" camera-controls disable-zoom disable-pan touch-action="pan-y" min-camera-orbit="auto auto 20%" max-camera-orbit="auto auto 200%" interaction-prompt="none" auto-rotate auto-rotate-delay="0" rotation-per-second="18deg" environment-image="neutral" shadow-intensity="1" camera-orbit="20deg 78deg 105%"></model-viewer><figcaption>Frog<span>43k tris</span></figcaption></figure>
+    <figure><model-viewer src="models/shr-waterfall-tree-2.glb" poster="models/shr-waterfall-tree-2.jpg" alt="Sacred Hyper Race — Waterfall Tree II, low-poly model" loading="lazy" camera-controls disable-zoom disable-pan touch-action="pan-y" min-camera-orbit="auto auto 20%" max-camera-orbit="auto auto 200%" interaction-prompt="none" auto-rotate auto-rotate-delay="0" rotation-per-second="18deg" environment-image="neutral" shadow-intensity="1" camera-orbit="20deg 78deg 105%"></model-viewer><figcaption>Waterfall Tree II<span>43k tris</span></figcaption></figure>
+    <figure><model-viewer src="models/shr-tree.glb" poster="models/shr-tree.jpg" alt="Sacred Hyper Race — Tree, low-poly model" loading="lazy" camera-controls disable-zoom disable-pan touch-action="pan-y" min-camera-orbit="auto auto 20%" max-camera-orbit="auto auto 200%" interaction-prompt="none" auto-rotate auto-rotate-delay="0" rotation-per-second="18deg" environment-image="neutral" shadow-intensity="1" camera-orbit="20deg 78deg 105%"></model-viewer><figcaption>Tree<span>33k tris</span></figcaption></figure>
+    <figure><model-viewer src="models/shr-church.glb" poster="models/shr-church.jpg" alt="Sacred Hyper Race — Church, low-poly model" loading="lazy" camera-controls disable-zoom disable-pan touch-action="pan-y" min-camera-orbit="auto auto 20%" max-camera-orbit="auto auto 200%" interaction-prompt="none" auto-rotate auto-rotate-delay="0" rotation-per-second="18deg" environment-image="neutral" shadow-intensity="1" camera-orbit="20deg 78deg 105%"></model-viewer><figcaption>Church<span>50.5k tris</span></figcaption></figure>
+    <figure><model-viewer src="models/shr-house.glb" poster="models/shr-house.jpg" alt="Sacred Hyper Race — House, low-poly model" loading="lazy" camera-controls disable-zoom disable-pan touch-action="pan-y" min-camera-orbit="auto auto 20%" max-camera-orbit="auto auto 200%" interaction-prompt="none" auto-rotate auto-rotate-delay="0" rotation-per-second="18deg" environment-image="neutral" shadow-intensity="1" camera-orbit="20deg 78deg 105%"></model-viewer><figcaption>House<span>31k tris</span></figcaption></figure>
+    <figure><model-viewer src="models/shr-fence.glb" poster="models/shr-fence.jpg" alt="Sacred Hyper Race — Fence, low-poly model" loading="lazy" camera-controls disable-zoom disable-pan touch-action="pan-y" min-camera-orbit="auto auto 20%" max-camera-orbit="auto auto 200%" interaction-prompt="none" auto-rotate auto-rotate-delay="0" rotation-per-second="18deg" environment-image="neutral" shadow-intensity="1" camera-orbit="20deg 78deg 105%"></model-viewer><figcaption>Fence<span>47k tris</span></figcaption></figure>
   </div>
 
   <section class="step" id="surfaces">
     <div><span class="n">03</span><h3>Surfaces</h3></div>
     <p>Hand-drawn symmetrical patterns became the textures and decals, painted onto the models in Substance Painter.</p>
   </section>
-  <div class="grid g3 sq">
-    <figure><img class="zoom" src="img/shrc-surface1.jpg" alt="Sacred Hyper Race — pattern" loading="lazy"></figure>
+  <div class="grid g4 sq">
     <figure><img class="zoom" src="img/shrc-surface2.jpg" alt="Sacred Hyper Race — mountain texture" loading="lazy"></figure>
     <figure><img class="zoom" src="img/shrc-surface4.jpg" alt="Sacred Hyper Race — painted texture" loading="lazy"></figure>
-    <figure><img class="zoom" src="img/shrc-surface5.jpg" alt="Sacred Hyper Race — decal" loading="lazy"></figure>
     <figure><img class="zoom" src="img/shrc-surface6.jpg" alt="Sacred Hyper Race — decal" loading="lazy"></figure>
     <figure><img class="zoom" src="img/shrc-poster.jpg" alt="Sacred Hyper Race — Two Heads, key art" loading="lazy"></figure>
   </div>
@@ -195,27 +211,8 @@
     <figure><video class="clip" src="video/shrc-race4.mp4" poster="video/shrc-race4.jpg" muted loop playsinline controls preload="none" aria-label="Sacred Hyper Race — playtest"></video></figure>
   </div>
 
-  <section class="step" id="models">
-    <div><span class="n">06</span><h3>The models</h3></div>
-    <p>All twelve low-poly models from the map. Drag to rotate.</p>
-  </section>
-  <div class="models">
-    <figure><model-viewer src="models/shr-sun-man.glb" poster="models/shr-sun-man.jpg" alt="Sacred Hyper Race — Sun Man, low-poly model" loading="lazy" camera-controls disable-zoom disable-pan touch-action="pan-y" min-camera-orbit="auto auto 20%" max-camera-orbit="auto auto 200%" interaction-prompt="none" auto-rotate auto-rotate-delay="0" rotation-per-second="18deg" environment-image="neutral" shadow-intensity="1" camera-orbit="20deg 78deg 105%"></model-viewer><figcaption>Sun Man<span>23.5k tris</span></figcaption></figure>
-    <figure><model-viewer src="models/shr-mouth-arch.glb" poster="models/shr-mouth-arch.jpg" alt="Sacred Hyper Race — Mouth Arch, low-poly model" loading="lazy" camera-controls disable-zoom disable-pan touch-action="pan-y" min-camera-orbit="auto auto 20%" max-camera-orbit="auto auto 200%" interaction-prompt="none" auto-rotate auto-rotate-delay="0" rotation-per-second="18deg" environment-image="neutral" shadow-intensity="1" camera-orbit="20deg 78deg 105%"></model-viewer><figcaption>Mouth Arch<span>80k tris</span></figcaption></figure>
-    <figure><model-viewer src="models/shr-two-heads.glb" poster="models/shr-two-heads.jpg" alt="Sacred Hyper Race — Two Heads, low-poly model" loading="lazy" camera-controls disable-zoom disable-pan touch-action="pan-y" min-camera-orbit="auto auto 20%" max-camera-orbit="auto auto 200%" interaction-prompt="none" auto-rotate auto-rotate-delay="0" rotation-per-second="18deg" environment-image="neutral" shadow-intensity="1" camera-orbit="20deg 78deg 105%"></model-viewer><figcaption>Two Heads<span>56k tris</span></figcaption></figure>
-    <figure><model-viewer src="models/shr-frog.glb" poster="models/shr-frog.jpg" alt="Sacred Hyper Race — Frog, low-poly model" loading="lazy" camera-controls disable-zoom disable-pan touch-action="pan-y" min-camera-orbit="auto auto 20%" max-camera-orbit="auto auto 200%" interaction-prompt="none" auto-rotate auto-rotate-delay="0" rotation-per-second="18deg" environment-image="neutral" shadow-intensity="1" camera-orbit="20deg 78deg 105%"></model-viewer><figcaption>Frog<span>43k tris</span></figcaption></figure>
-    <figure><model-viewer src="models/shr-squad-monster.glb" poster="models/shr-squad-monster.jpg" alt="Sacred Hyper Race — Squad Monster, low-poly model" loading="lazy" camera-controls disable-zoom disable-pan touch-action="pan-y" min-camera-orbit="auto auto 20%" max-camera-orbit="auto auto 200%" interaction-prompt="none" auto-rotate auto-rotate-delay="0" rotation-per-second="18deg" environment-image="neutral" shadow-intensity="1" camera-orbit="20deg 78deg 105%"></model-viewer><figcaption>Squad Monster<span>128k tris</span></figcaption></figure>
-    <figure><model-viewer src="models/shr-waterfall-tree-1.glb" poster="models/shr-waterfall-tree-1.jpg" alt="Sacred Hyper Race — Waterfall Tree I, low-poly model" loading="lazy" camera-controls disable-zoom disable-pan touch-action="pan-y" min-camera-orbit="auto auto 20%" max-camera-orbit="auto auto 200%" interaction-prompt="none" auto-rotate auto-rotate-delay="0" rotation-per-second="18deg" environment-image="neutral" shadow-intensity="1" camera-orbit="20deg 78deg 105%"></model-viewer><figcaption>Waterfall Tree I<span>43k tris</span></figcaption></figure>
-    <figure><model-viewer src="models/shr-waterfall-tree-2.glb" poster="models/shr-waterfall-tree-2.jpg" alt="Sacred Hyper Race — Waterfall Tree II, low-poly model" loading="lazy" camera-controls disable-zoom disable-pan touch-action="pan-y" min-camera-orbit="auto auto 20%" max-camera-orbit="auto auto 200%" interaction-prompt="none" auto-rotate auto-rotate-delay="0" rotation-per-second="18deg" environment-image="neutral" shadow-intensity="1" camera-orbit="20deg 78deg 105%"></model-viewer><figcaption>Waterfall Tree II<span>43k tris</span></figcaption></figure>
-    <figure><model-viewer src="models/shr-tree.glb" poster="models/shr-tree.jpg" alt="Sacred Hyper Race — Tree, low-poly model" loading="lazy" camera-controls disable-zoom disable-pan touch-action="pan-y" min-camera-orbit="auto auto 20%" max-camera-orbit="auto auto 200%" interaction-prompt="none" auto-rotate auto-rotate-delay="0" rotation-per-second="18deg" environment-image="neutral" shadow-intensity="1" camera-orbit="20deg 78deg 105%"></model-viewer><figcaption>Tree<span>33k tris</span></figcaption></figure>
-    <figure><model-viewer src="models/shr-orchid.glb" poster="models/shr-orchid.jpg" alt="Sacred Hyper Race — Orchid, low-poly model" loading="lazy" camera-controls disable-zoom disable-pan touch-action="pan-y" min-camera-orbit="auto auto 20%" max-camera-orbit="auto auto 200%" interaction-prompt="none" auto-rotate auto-rotate-delay="0" rotation-per-second="18deg" environment-image="neutral" shadow-intensity="1" camera-orbit="20deg 78deg 105%"></model-viewer><figcaption>Orchid<span>28.5k tris</span></figcaption></figure>
-    <figure><model-viewer src="models/shr-church.glb" poster="models/shr-church.jpg" alt="Sacred Hyper Race — Church, low-poly model" loading="lazy" camera-controls disable-zoom disable-pan touch-action="pan-y" min-camera-orbit="auto auto 20%" max-camera-orbit="auto auto 200%" interaction-prompt="none" auto-rotate auto-rotate-delay="0" rotation-per-second="18deg" environment-image="neutral" shadow-intensity="1" camera-orbit="20deg 78deg 105%"></model-viewer><figcaption>Church<span>50.5k tris</span></figcaption></figure>
-    <figure><model-viewer src="models/shr-house.glb" poster="models/shr-house.jpg" alt="Sacred Hyper Race — House, low-poly model" loading="lazy" camera-controls disable-zoom disable-pan touch-action="pan-y" min-camera-orbit="auto auto 20%" max-camera-orbit="auto auto 200%" interaction-prompt="none" auto-rotate auto-rotate-delay="0" rotation-per-second="18deg" environment-image="neutral" shadow-intensity="1" camera-orbit="20deg 78deg 105%"></model-viewer><figcaption>House<span>31k tris</span></figcaption></figure>
-    <figure><model-viewer src="models/shr-fence.glb" poster="models/shr-fence.jpg" alt="Sacred Hyper Race — Fence, low-poly model" loading="lazy" camera-controls disable-zoom disable-pan touch-action="pan-y" min-camera-orbit="auto auto 20%" max-camera-orbit="auto auto 200%" interaction-prompt="none" auto-rotate auto-rotate-delay="0" rotation-per-second="18deg" environment-image="neutral" shadow-intensity="1" camera-orbit="20deg 78deg 105%"></model-viewer><figcaption>Fence<span>47k tris</span></figcaption></figure>
-  </div>
-
   <section class="step" id="walk">
-    <div><span class="n">07</span><h3>Walk the map</h3></div>
+    <div><span class="n">06</span><h3>Walk the map</h3></div>
     <p>The sculptures from the map, set on water. Walk among them in the browser.</p>
   </section>
   <div class="walk-block"><div class="shr-world" id="shr-world" aria-label="Sacred Hyper Race — walk among the sculptures from the map">
