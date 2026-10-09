@@ -10,7 +10,7 @@
 <link href="https://fonts.googleapis.com/css2?family=Arimo:ital,wght@0,400;0,700;1,400&family=Tinos:ital,wght@0,400;0,700;1,400;1,700&display=swap" rel="stylesheet">
 <script src="../zoom.js?v=1"></script>
 <link href="https://fonts.googleapis.com/css2?family=Instrument+Sans:ital,wght@0,400..700;1,400..700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="../style.css?v=20261009c-lw">
+<link rel="stylesheet" href="../style.css?v=20261009d-lw">
 <script>
   // Arriving from the intro: start under a white cover that slowly turns transparent.
   (function () { var t; try { t = sessionStorage.getItem('cover'); sessionStorage.removeItem('cover'); } catch (e) {} if (!t) return;
@@ -55,7 +55,7 @@
 </div></nav>
 
 <div class="lw-sky lw-intro" id="lw-sky">
-  <iframe src="../sky/loewe.html?embed&amp;intro&amp;v=2" title="LOEWE SS22 — Live, Laugh, Loewe: the chrome words from the Sky animation, in the sky" allow="fullscreen"></iframe>
+  <iframe src="../sky/loewe.html?embed&amp;intro&amp;v=3" title="LOEWE SS22 — Live, Laugh, Loewe: the chrome words from the Sky animation, in the sky" allow="fullscreen"></iframe>
   <div class="lw-sky-help">
     <p class="desk">click on the text for animation · hold for rotation · zoom in to go further</p>
     <p class="tap">tap the text for animation · hold for rotation · pinch to go further</p>
@@ -196,7 +196,7 @@
       const st = document.querySelector('.fm-stage, section.slide');
       if (st) { st.scrollIntoView({ behavior: 'instant' }); st.classList.remove('fm-arrive'); void st.offsetWidth; st.classList.add('fm-arrive'); }
       setTimeout(() => { sky.classList.remove('lw-going'); going = false; }, 900);
-    }, 560);
+    }, 300);
   });
   let away = false;
   new IntersectionObserver(([en]) => {

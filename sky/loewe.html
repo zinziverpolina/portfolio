@@ -50,7 +50,7 @@ import * as THREE from 'three';
 import { RGBELoader } from 'three/addons/loaders/RGBELoader.js';
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 
-const SKIES = { sky6: 'pink clouds', sky7: 'sky 7' };
+const SKIES = { sky6: 'pink clouds' };   // sky 7 dropped 9 Oct: pink clouds only
 const params = new URLSearchParams(location.search);
 // ?embed: shown inside the LOEWE project page — no hint overlay (the controls are written under the block),
 // the wheel only flies after a click on the scene, and vertical swipes still scroll the page
@@ -59,7 +59,6 @@ if (EMBED) document.documentElement.classList.add('embed');
 // ?embed&intro: the opening screen of the LOEWE page — the wheel flies right away, and flying through the
 // name tells the page to move on to the projects (it sends 'lw-sky-through'; 'lw-sky-reset' flies back)
 const INTRO = EMBED && params.has('intro');
-const MAC = /Mac/i.test((navigator.userAgentData && navigator.userAgentData.platform) || navigator.platform || '');
 let skyId = SKIES[params.get('sky')] ? params.get('sky') : 'sky6';
 
 const CAM = {   // "Mirabela camera": 36 mm lens on a 36 mm film back → 53.1° horizontal field of view
@@ -226,8 +225,9 @@ addEventListener('wheel', e => {
   if (!active) return;
   e.preventDefault(); used();
   let step = e.deltaMode === 1 ? e.deltaY * 16 : e.deltaY;            // lines → pixels
-  if (MAC && !e.ctrlKey) step = -step;                                 // Mac (trackpad, natural scrolling): swiping up flies in; a pinch stays as is
-  fly.target = clampFly(fly.target - step * 0.006 * (1 + Math.abs(fly.target) * 0.08));
+  // the wheel turned down (a trackpad swipe up with natural scrolling) flies in; a pinch: spreading flies in
+  const dir = e.ctrlKey ? -1 : 1;
+  fly.target = clampFly(fly.target + dir * step * 0.006 * (1 + Math.abs(fly.target) * 0.08));
 }, { passive: false });
 
 // the name is an object you can take: press on the letters and drag to turn it any way (it keeps a little
@@ -315,8 +315,9 @@ renderer.setAnimationLoop(() => {
   fly.t += (fly.target - fly.t) * (1 - Math.pow(0.02, dt));
   camera.position.copy(CAM.pos).addScaledVector(CAM.dir, fly.t);
   if (INTRO) {   // through the name: on to the projects
-    if (!sentThrough && fly.t > FLY.max - 0.8) { sentThrough = true; parent.postMessage({ type: 'lw-sky-through' }, '*'); }
-    if (fly.t < FLY.max - 3) sentThrough = false;
+    // the name has left the frame: move on at once
+    if (!sentThrough && fly.t > FLY.max - 3.2) { sentThrough = true; parent.postMessage({ type: 'lw-sky-through' }, '*'); }
+    if (fly.t < FLY.max - 5.5) sentThrough = false;
   }
   // a breath of sway so the chrome never stands still
   dir.copy(CAM.dir).applyQuaternion(q.setFromAxisAngle(CAM.up, Math.sin(t * 0.17) * 0.01))
@@ -347,7 +348,7 @@ renderer.setAnimationLoop(() => {
 // ---------- sky switcher (temporary) ----------
 const proto = document.getElementById('proto');
 function syncButtons() { proto.querySelectorAll('button').forEach(b => b.classList.toggle('on', b.dataset.sky === skyId)); }
-Object.entries(SKIES).forEach(([id, label]) => {
+if (Object.keys(SKIES).length > 1) Object.entries(SKIES).forEach(([id, label]) => {   // no switcher with one sky
   const b = document.createElement('button'); b.textContent = label; b.dataset.sky = id;
   b.onclick = () => setSky(id); proto.append(b);
 });
