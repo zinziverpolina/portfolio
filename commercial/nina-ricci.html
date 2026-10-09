@@ -9,7 +9,8 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Arimo:ital,wght@0,400;0,700;1,400&family=Tinos:ital,wght@0,400;0,700;1,400;1,700&display=swap" rel="stylesheet">
 <script src="../zoom.js?v=1"></script>
-<link rel="stylesheet" href="../style.css?v=20261009a">
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Sans:ital,wght@0,400..700;1,400..700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../style.css?v=20261009c">
 <script>
   // Arriving from the intro: start under a white cover that slowly turns transparent.
   (function () { var t; try { t = sessionStorage.getItem('cover'); sessionStorage.removeItem('cover'); } catch (e) {} if (!t) return;
@@ -54,12 +55,34 @@
 </div></nav>
 
 <section class="slide" id="nina-ricci">
-  <h2>NINA RICCI</h2>
-  <div class="meta">animations for the Summer 22 collection<br>2022</div>
-  <div class="body">
-    <p>A logo animation and a series of animations about the brand’s symbols and summer items — doves, the apple and the Three Graces. 3D modelling, animation and render; shown on the brand’s website and social media.</p>
+  <div class="tw-head">
+    <div class="tw-title">
+      <h2>NINA RICCI</h2>
+      <p class="tw-tag">A summer of candy and chrome</p>
+    </div>
+    <div class="tw-grid">
+      <dl class="tw-meta">
+        <dt>Services</dt><dd>3D modelling<br>Animation<br>Render</dd>
+      </dl>
+      <dl class="tw-meta">
+        <dt>Project</dt><dd>Summer 22 collection<br>2022</dd>
+        <dt>Credits</dt><dd>Co-art direction with Javier Sola</dd>
+      </dl>
+      <div class="tw-text">
+        <p>For the Summer 22 collection: a logo animation and a series of short films built around the house’s symbols and the season’s pieces — the apple, the dove and the Three Graces.</p>
+        <p>Each film gives one symbol a material of its own — glossy, inflated, liquid. Shown on the brand’s website and social media, in vertical and horizontal versions.</p>
+        <details class="tw-more">
+          <summary><span>More</span><span aria-hidden="true">↓</span></summary>
+          <div class="tw-sections">
+            <section><h3>Apples, falling</h3><p>Candy-glossy apples, the house’s emblem, rain onto a field of lavender grass and bounce around the summer bag.</p></section>
+            <section><h3>The Graces</h3><p>The Three Graces print floats on a rippling violet surface.</p></section>
+            <section><h3>A chrome dove</h3><p>A dove in liquid chrome crosses a sunset sky.</p></section>
+            <section><h3>The logo, inflated</h3><p>Pink, puffy letters swell out of a melting psychedelic ground.</p></section>
+          </div>
+        </details>
+      </div>
+    </div>
   </div>
-  <div class="credit">co-art direction with Javier Sola</div>
   <p class="label">Vertical versions, 9:16</p>
   <div class="media c4">
     <video class="clip r916" src="video/nina-ricci-v1.mp4" poster="video/nina-ricci-v1.jpg" muted loop playsinline controls preload="none"></video>
@@ -109,8 +132,8 @@
 
 <script src="../site.js?v=20261005s"></script>
 <script type="module">
-  import { framedPage } from './framed-page.js?v=1';
-  framedPage();
+  import { twPage } from './tw-page.js?v=2';
+  twPage();
 </script>
 </body>
 </html>

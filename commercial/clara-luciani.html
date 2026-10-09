@@ -9,8 +9,8 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Arimo:ital,wght@0,400;0,700;1,400&family=Tinos:ital,wght@0,400;0,700;1,400;1,700&display=swap" rel="stylesheet">
 <script src="zoom.js?v=1"></script>
-<link rel="stylesheet" href="../style.css?v=20261009a">
-<script type="module" src="https://cdn.jsdelivr.net/npm/@google/model-viewer@4.1.0/dist/model-viewer.min.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Sans:ital,wght@0,400..700;1,400..700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../style.css?v=20261009c">
 <script>
   // Arriving from the intro: start under a white cover that slowly turns transparent.
   (function () { var t; try { t = sessionStorage.getItem('cover'); sessionStorage.removeItem('cover'); } catch (e) {} if (!t) return;
@@ -55,17 +55,35 @@
 </div></nav>
 
 <section class="slide" id="clara-luciani">
-  <h2>CLARA LUCIANI</h2>
-  <div class="meta">visuals for Clara Luciani Tour 2025<br>2025</div>
-  <div class="body"><p>3D modelling and animation for the French singer’s 2025 tour.</p></div>
+  <div class="tw-head">
+    <div class="tw-title">
+      <h2>CLARA LUCIANI</h2>
+      <p class="tw-tag">Pearls, a mirror and a lover’s eye</p>
+    </div>
+    <div class="tw-grid">
+      <dl class="tw-meta">
+        <dt>Services</dt><dd>3D modelling<br>Animation</dd>
+      </dl>
+      <dl class="tw-meta">
+        <dt>Project</dt><dd>Clara Luciani Tour 2025<br>2025</dd>
+      </dl>
+      <div class="tw-text">
+        <p>Visuals for the French singer’s 2025 tour, built from three motifs: pearls, a mirror and the lover’s eye.</p>
+        <details class="tw-more">
+          <summary><span>More</span><span aria-hidden="true">↓</span></summary>
+          <div class="tw-sections">
+            <section><h3>A cloud of pearls</h3><p>Pearls hang in a pale, silvery space and slowly drift.</p></section>
+            <section><h3>The mirror</h3><p>A mirror appears among the pearls.</p></section>
+            <section><h3>The lover’s eye</h3><p>An eye set in a pearl frame, after the lover’s-eye miniatures of the late 18th century.</p></section>
+          </div>
+        </details>
+      </div>
+    </div>
+  </div>
   <div class="media c3">
     <video class="clip r916" src="video/clara-1.mp4" poster="video/clara-1.jpg" muted loop playsinline controls preload="none"></video>
     <img class="zoom r916" src="img/clara-s3.jpg" alt="Clara Luciani Tour 2025 — the mirror appearing among pearls" loading="lazy">
     <img class="zoom r916" src="img/clara-s4.jpg" alt="Clara Luciani Tour 2025 — the eye in its pearl frame" loading="lazy">
-  </div>
-  <p class="label">The lover’s eye charm — drag to rotate</p>
-  <div class="models solo">
-    <figure><model-viewer src="models/cl-charm.glb" poster="models/cl-charm.jpg" alt="Clara Luciani — the lover’s eye charm, 3D model" loading="lazy" camera-controls disable-zoom disable-pan touch-action="pan-y" min-camera-orbit="auto auto 20%" max-camera-orbit="auto auto 200%" interaction-prompt="none" auto-rotate auto-rotate-delay="0" rotation-per-second="18deg" environment-image="neutral" shadow-intensity="1" camera-orbit="195deg 85deg 105%"></model-viewer><figcaption>Lover’s eye charm</figcaption></figure>
   </div>
 </section>
 
@@ -79,8 +97,8 @@
 
 <script src="../site.js?v=20261005l"></script>
 <script type="module">
-  import { floatMedia } from './float-media.js?v=12';
-  floatMedia({ models: false });
+  import { twPage } from './tw-page.js?v=2';
+  twPage();
 </script>
 </body>
 </html>

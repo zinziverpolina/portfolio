@@ -640,3 +640,23 @@ h1, h2, .cl-ui .tl, .topnav .in a[target] { font-family: var(--title-font); }
 .tw-page .slide { padding-top: 44px; }
 .tw-page .slide > .label { margin-top: 26px; }
 @media (max-width: 820px) { .tw-grid { grid-template-columns: 1fr 1fr; } .tw-text { grid-column: 1 / -1; margin-top: 6px; } }
+/* tw-page.js (9 Oct): no frames; strips of small pictures share one even line (same height, widths by ratio) */
+.tw-page .sf-strips { display: grid; grid-template-columns: 1fr 1fr; gap: 28px; margin-top: 34px; }
+.tw-page .sf-track { display: flex; gap: 12px; align-items: center; overflow-x: auto; padding: 0; scroll-snap-type: x proximity; scrollbar-width: none; }
+.tw-page .sf-th { flex: none; width: auto; scroll-snap-align: start; }
+.tw-page .sf-th img { height: clamp(86px, 8.6vw, 128px); width: auto; max-width: none; }
+.tw-page .sf-strip-h { font: 500 15px/1.2 "Instrument Sans", Arial, sans-serif; letter-spacing: 0; text-transform: none; }
+.tw-gap { min-width: 0; }
+.tw-text .subnav { margin: 4px 0 0; font: inherit; gap: 4px 18px; }
+@media (max-width: 820px) { .tw-page .sf-strips { grid-template-columns: 1fr; } }
+/* …on black pages */
+body.page-dark .tw-head { color: #ddd; }
+body.page-dark .tw-tag { color: #8a8a8a; }
+body.page-dark .tw-meta dt { color: #777; }
+body.page-dark .tw-grid, body.page-dark .tw-more { border-color: #333; }
+body.page-dark .tw-more summary, body.page-dark .tw-sections h3 { color: #eee; }
+body.page-dark .tw-more summary:hover { color: #fff; }
+body.page-dark.tw-page .sf-strip-h { color: #eee; }
+body.page-dark.tw-page .sf-strip-h i { color: #888; }
+body.page-dark .sf-arrow { color: #ddd; }
+body.page-dark .sf-arrow:hover { color: #fff; }
