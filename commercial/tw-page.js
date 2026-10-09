@@ -30,9 +30,12 @@ function buildHead(sec) {
   if (tag) title.appendChild(el('p', 'tw-tag', tag));   // the page's own subtitle, as written
   head.appendChild(title);
   const grid = el('div', 'tw-grid');
-  // first column: role / credits; second column: the year at its foot (as on every page)
+  // the same columns on every page: Role (as in the project menu) | Credits, Year
   const col = el('dl', 'tw-meta'), col2 = el('dl', 'tw-meta');
-  if (credit) col.innerHTML += `<dt>Credits</dt><dd>${credit.innerHTML.charAt(0).toUpperCase() + credit.innerHTML.slice(1)}</dd>`;
+  const role = document.querySelector('.dd-panel .projects li.on .w');
+  const cap = (s) => s.charAt(0).toUpperCase() + s.slice(1);
+  if (role) col.innerHTML += `<dt>Role</dt><dd>${role.textContent.split(/,\s*/).map(cap).join('<br>')}</dd>`;
+  if (credit) col2.innerHTML += `<dt>Credits</dt><dd>${cap(credit.innerHTML)}</dd>`;
   if (year) col2.innerHTML += `<dt>Year</dt><dd>${year}</dd>`;
   grid.appendChild(col);
   grid.appendChild(col2);
@@ -50,7 +53,7 @@ function fold(name, media) {
   const nodes = [...media.querySelectorAll('video.clip, img.zoom')];
   const kind = nodes.every((n) => n.tagName === 'VIDEO') ? 'videos' : 'images';
   const d = el('details', 'tw-fold');
-  d.innerHTML = '<summary><span></span><i></i><b aria-hidden="true">↓</b></summary>';
+  d.innerHTML = '<summary><span></span><b aria-hidden="true">↓</b><i></i></summary>';
   d.querySelector('summary span').textContent = name;
   d.querySelector('summary i').textContent = `${nodes.length} ${nodes.length === 1 ? kind.slice(0, -1) : kind}`;
   media.hidden = false;

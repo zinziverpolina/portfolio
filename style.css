@@ -704,3 +704,11 @@ body.page-dark .tw-fold summary i { color: #888; }
 @media (max-width: 820px) { .cl-logo { width: 44%; } }
 /* the longer "Sacred Hyper Race (Fortnite)" tab: a little less room between the tabs keeps them on one line */
 @media (min-width: 821px) { .topnav .tabs { column-gap: 18px; } }
+
+/* 9 Oct, round 3: "More videos" / "Stills" titled like the Fortnite steps, a little smaller, the arrow after the title */
+.tw-fold summary { align-items: baseline; gap: 12px; padding: 14px 0 12px; }
+.tw-fold summary span { font: 500 clamp(20px, 2.2vw, 30px)/1 var(--title-font); letter-spacing: -.02em; text-transform: uppercase; }
+.tw-fold summary b { font-size: clamp(14px, 1.3vw, 18px); color: var(--sky, #5d8ab6); }
+.tw-fold summary i { font-size: 13px; }
+body.page-dark .tw-fold summary b { color: #888; }
+.tw-page .slide + .slide .tw-head { margin-top: 0; }

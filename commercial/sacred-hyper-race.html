@@ -9,7 +9,7 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Arimo:ital,wght@0,400;0,700;1,400&family=Tinos:ital,wght@0,400;0,700;1,400;1,700&display=swap" rel="stylesheet">
 <script src="../zoom.js?v=1"></script>
-<link rel="stylesheet" href="../style.css?v=20261009i">
+<link rel="stylesheet" href="../style.css?v=20261009j">
 <script type="importmap">{"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.169.0/build/three.module.js","three/addons/":"https://cdn.jsdelivr.net/npm/three@0.169.0/examples/jsm/","cannon-es":"https://cdn.jsdelivr.net/npm/cannon-es@0.20.0/dist/cannon-es.js"}}</script>
 <script type="module" src="https://cdn.jsdelivr.net/npm/@google/model-viewer@4.1.0/dist/model-viewer.min.js"></script>
 <script>
@@ -27,7 +27,7 @@
   <a class="name" href="../commercial.html">POLINA ZINZIVER</a>
   <a class="lk" href="mailto:whatever.beclever@gmail.com">contact</a>
   <a class="lk" href="https://zinziverpolina.github.io/Polina-CV/" target="_blank" rel="noopener">cv</a>
-  <a class="lk" href="../index.html">artistic portfolio</a>
+  <a class="lk" href="../index.html" target="_blank" rel="noopener">artistic portfolio</a>
   <a class="lk" href="https://www.instagram.com/polina_zinziver_/" target="_blank" rel="noopener">instagram</a>
 </div>
 <div class="tabs">
@@ -35,7 +35,7 @@
     <button class="dd-btn" type="button" aria-expanded="false" aria-controls="dd-panel">all projects <span aria-hidden="true">▾</span></button>
     <div class="dd-panel" id="dd-panel">
     <ol class="projects">
-      <li class="on"><a href="sacred-hyper-race.html"><img src="img/shr-1.jpg" alt="" loading="lazy" decoding="async"><span class="t">Sacred Hyper Race (Fortnite)</span><span class="y">2024</span><span class="w">art direction, level design, Unreal assembly</span></a></li>
+      <li class="on"><a href="sacred-hyper-race.html"><img src="img/shr-1.jpg" alt="" loading="lazy" decoding="async"><span class="t">Fortnite</span><span class="y">2024</span><span class="w">art direction, level design, Unreal assembly</span></a></li>
       <li><a href="nina-ricci.html"><img src="video/nina-ricci-1.jpg" alt="" loading="lazy" decoding="async"><span class="t">Nina Ricci</span><span class="y">2022</span><span class="w">3D modelling, animation, render</span></a></li>
       <li><a href="loewe.html"><img src="video/loewe-ww-1.jpg" alt="" loading="lazy" decoding="async"><span class="t">LOEWE</span><span class="y">2021–2022</span><span class="w">3D animation</span></a></li>
       <li><a href="clara-luciani.html"><img src="img/clara-s4.jpg" alt="" loading="lazy" decoding="async"><span class="t">Clara Luciani</span><span class="y">2025</span><span class="w">3D modelling, animation</span></a></li>
@@ -46,7 +46,7 @@
     </ol>
     </div>
   </div>
-  <a href="sacred-hyper-race.html" class="on" aria-current="page">Sacred Hyper Race (Fortnite)</a>
+  <a href="sacred-hyper-race.html" class="on" aria-current="page">Fortnite</a>
   <a href="nina-ricci.html">Nina Ricci</a>
   <a href="loewe.html">LOEWE</a>
   <a href="clara-luciani.html">Clara Luciani</a>
@@ -178,9 +178,18 @@
     <figure><model-viewer src="models/shr-fence.glb" poster="models/shr-fence.jpg" alt="Sacred Hyper Race — Fence, low-poly model" loading="lazy" camera-controls disable-zoom disable-pan touch-action="pan-y" min-camera-orbit="auto auto 20%" max-camera-orbit="auto auto 200%" interaction-prompt="none" auto-rotate auto-rotate-delay="0" rotation-per-second="18deg" environment-image="neutral" shadow-intensity="1" camera-orbit="20deg 78deg 105%"></model-viewer><figcaption>Fence<span>47k tris</span></figcaption></figure>
   </div>
 
-  <details class="step-fold" id="assembly">
-    <summary class="step"><div><span class="n">02</span><h3>Assembly <b class="fa" aria-hidden="true">↓</b></h3></div>
-    <p>Everything was placed, lit and tuned along the track in Unreal Editor for Fortnite.</p></summary>
+  <details class="step-fold" id="videos">
+    <summary class="step"><div><span class="n">02</span><h3>Videos <b class="fa" aria-hidden="true">↓</b></h3></div></summary>
+    <div class="grid g2 wd">
+      <figure><video class="clip" src="video/shrc-race1.mp4" poster="video/shrc-race1.jpg" muted loop playsinline controls preload="none" aria-label="Sacred Hyper Race — race"></video></figure>
+      <figure><video class="clip" src="video/shrc-race2.mp4" poster="video/shrc-race2.jpg" muted loop playsinline controls preload="none" aria-label="Sacred Hyper Race — race"></video></figure>
+      <figure><video class="clip" src="video/shrc-race3.mp4" poster="video/shrc-race3.jpg" muted loop playsinline controls preload="none" aria-label="Sacred Hyper Race — race"></video></figure>
+      <figure><video class="clip" src="video/shrc-race4.mp4" poster="video/shrc-race4.jpg" muted loop playsinline controls preload="none" aria-label="Sacred Hyper Race — playtest"></video></figure>
+    </div>
+  </details>
+
+  <details class="step-fold" id="stills">
+    <summary class="step"><div><span class="n">03</span><h3>Stills <b class="fa" aria-hidden="true">↓</b></h3></div></summary>
     <div class="grid g1 wd">
       <figure><img class="zoom" src="img/shrc-ue6.jpg" alt="Sacred Hyper Race — Sun Man and the temple" loading="lazy"></figure>
     </div>
@@ -191,17 +200,6 @@
       <figure><img class="zoom" src="img/shrc-ue4.jpg" alt="Sacred Hyper Race — forest of tentacles" loading="lazy"></figure>
       <figure><img class="zoom" src="img/shrc-ue5.jpg" alt="Sacred Hyper Race — the big face" loading="lazy"></figure>
       <figure><img class="zoom" src="img/shrc-ue7.jpg" alt="Sacred Hyper Race — temple at the finish" loading="lazy"></figure>
-    </div>
-  </details>
-
-  <details class="step-fold" id="result">
-    <summary class="step"><div><span class="n">03</span><h3>Result <b class="fa" aria-hidden="true">↓</b></h3></div>
-    <p>Published in Rocket Racing: a three-lap race of about three and a half minutes. Recorded in live races, June 2024.</p></summary>
-    <div class="grid g2 wd">
-      <figure><video class="clip" src="video/shrc-race1.mp4" poster="video/shrc-race1.jpg" muted loop playsinline controls preload="none" aria-label="Sacred Hyper Race — race"></video></figure>
-      <figure><video class="clip" src="video/shrc-race2.mp4" poster="video/shrc-race2.jpg" muted loop playsinline controls preload="none" aria-label="Sacred Hyper Race — race"></video></figure>
-      <figure><video class="clip" src="video/shrc-race3.mp4" poster="video/shrc-race3.jpg" muted loop playsinline controls preload="none" aria-label="Sacred Hyper Race — race"></video></figure>
-      <figure><video class="clip" src="video/shrc-race4.mp4" poster="video/shrc-race4.jpg" muted loop playsinline controls preload="none" aria-label="Sacred Hyper Race — playtest"></video></figure>
     </div>
   </details>
 
@@ -244,7 +242,7 @@
   <a class="next" href="nina-ricci.html">Nina Ricci →</a>
 </nav>
 
-<footer>© Polina Zinziver · <a href="../index.html">artistic practice →</a></footer>
+<footer>© Polina Zinziver · <a href="../index.html" target="_blank" rel="noopener">artistic practice →</a></footer>
 
 <script src="../site.js?v=20261005l"></script>
 <script type="module">
