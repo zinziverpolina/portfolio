@@ -716,9 +716,9 @@ body .case, .tw-page .sf-strip-h { font-family: var(--sans); }
 /* 9 Oct, round 4 */
 /* a dark wrapper inside a light page (the long projects page): the plain colours back */
 .page-dark { --title: #434343; --text: #595959; --ink: #000; --link: #5d8ab6; }
-/* no serif italic on the commercial site: the header's sans, bold */
+/* no serif on the commercial site: the header's sans, in italic */
 body:has(.tabs) { --serif: Arial, Arimo, Helvetica, sans-serif; }
-body:has(.tabs) :is(.tw-tag, .pager, footer, .meta, .credit, .caption, .fm-card-c, .projects .y, .projects .w, .models figcaption span, .subnav, .case-head .sub) { font-style: normal; font-weight: 700; }
+body:has(.tabs) :is(.tw-tag, .pager, footer, .meta, .credit, .caption, .fm-card-c, .projects .y, .projects .w, .models figcaption span, .subnav, .case-head .sub) { font-style: italic; font-weight: 400; }
 /* folds: a small picture / film icon next to the title instead of the count */
 .fold-ic { display: inline-block; width: clamp(15px, 1.25vw, 19px); line-height: 0; color: var(--sky, #5d8ab6); vertical-align: baseline; font-style: normal; }
 .fold-ic svg { display: block; width: 100%; height: auto; }
