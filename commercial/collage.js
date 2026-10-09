@@ -2,15 +2,18 @@
 // Whole posters (never cropped) are layered over each other until they fill the stage. Each one
 // drifts smoothly around its own place on a slow circle; now and then a poster glides over to its
 // place in the next layout and lands on top, so the collage keeps rebuilding itself in a loop.
-// Posters near the cursor are carried along its path, can be dragged around, and a click scrolls to that poster in
-// the gallery below.
+// Posters near the cursor are carried along its path, can be dragged around, and a click dives through the tunnel
+// and then lands on that poster in the gallery below.
 // Scrolling dives in: the stage stays pinned while the posters fold into a round tunnel — small, like particles,
 // on a spiral that streams off into the distance — and the camera travels through it, the tunnel slowly
 // turning; at its far end the page carries on to the gallery below.
+// A logo on the stage (.cl-logo, HYPERTRASH) sits over the collage, stays in the middle of the tunnel all the way
+// in, and at the far end the camera goes through it into the page.
 // collage(stageElement, galleryImages)
 export function collage(stage, sources) {
   const LAYOUTS = 4;       // layouts the base layer loops through
   const SWAP_MS = 700;     // one poster moves to the next layout this often
+  const DIVE_MS = 1800;    // a click: the trip through the tunnel before landing on the picture
 
   const rnd = (a, b) => a + Math.random() * (b - a);
   const pool = [];
@@ -18,6 +21,7 @@ export function collage(stage, sources) {
   // ----- dive-in corridor (scroll-driven) -----
   const deep = !matchMedia('(prefers-reduced-motion: reduce)').matches;
   const ui = stage.querySelector('.cl-ui');
+  const logo = stage.querySelector('.cl-logo');
   let wrap = null, depthM = 0, slots = false, corridorLen = 1;
   if (deep) {
     wrap = document.createElement('div');
@@ -103,18 +107,23 @@ export function collage(stage, sources) {
     ];
     return { css: `matrix3d(${m.join(',')})`, near, depth: 1 - (C[2] + (uz * w + vz * h) / 2) / P };
   }
-  const total = Math.min(sources.length, 64);   // posters this page will have once loaded
+  // every picture of the project takes part, each once (the gallery repeats a few)
+  sources = [...new Map([...sources].map((n) => [n.getAttribute('src'), n])).values()];
+  const total = sources.length;
   let ready = false;
 
-  // Originals at full quality; a random selection is enough for the stage.
-  // Originals at full quality; a random selection is enough for the stage. Videos join as muted
-  // loops (their poster frame gives the size); only a few play on stage at once.
+  // Originals at full quality, all of them. Videos join as muted loops (their poster frame gives the size);
+  // only a few play on stage at once.
   const MAX_VIDEOS = 4;
-  [...sources].sort(() => Math.random() - 0.5).slice(0, 64).forEach((node) => {
+  [...sources].sort(() => Math.random() - 0.5).forEach((node) => {
     const video = node.tagName === 'VIDEO';
     const thumb = node.getAttribute('src');
     const pre = new Image();
-    pre.onload = () => { pool.push({ thumb, video, ar: pre.naturalWidth / pre.naturalHeight, target: node }); if (!ready && pool.length >= Math.min(total, 28)) start(); };
+    pre.onload = () => {
+      pool.push({ thumb, video, ar: pre.naturalWidth / pre.naturalHeight, target: node });
+      if (!ready && pool.length >= Math.min(total, 28)) start();
+      else if (ready && pool.length === total) buildLayouts();   // the last one in: everything on stage
+    };
     pre.src = video ? node.getAttribute('poster') : thumb;
   });
   const playing = () => tiles.filter((t) => t.p && t.p.video).length;
@@ -152,24 +161,18 @@ export function collage(stage, sources) {
   let tiles = [], layouts = [];
   function buildLayouts() {
     const W = stage.clientWidth, H = stage.clientHeight;
-    // Every poster gets about the same area, medium-sized, and always fits whole inside the stage.
-    let S = Math.min(H * 0.55, W * 0.42) * 0.5;
-    // Few images on the page: fewer, larger posters instead of the same ones repeating.
-    const want = Math.max(2, Math.round(W / (S * 0.75))) * Math.max(2, Math.round(H / (S * 0.75)));
-    if (total < want) S *= Math.sqrt(want / Math.max(total, 4));
+    // Every picture of the project on stage at once, each a different one (videos: a few at a time): a grid
+    // with a cell per picture, every poster about the same area, a little larger than its cell so they overlap
+    // like a paper collage, and always whole inside the stage.
+    const distinct = pool.filter((q) => !q.video).length + Math.min(MAX_VIDEOS, pool.filter((q) => q.video).length);
+    const cols = Math.max(1, Math.round(Math.sqrt(distinct * W / H))), rows = Math.max(1, Math.ceil(distinct / cols));
+    const S = Math.min(W / cols, H / rows) / 0.75;
     const size = (p) => {
       let w = S * Math.sqrt(p.ar) * rnd(0.94, 1.06), h = w / p.ar;
       const k = Math.min(1, (H * 0.9) / h, (W * 0.7) / w);
       return w * k;
     };
-    let cols = Math.max(2, Math.round(W / (S * 0.75))), rows = Math.max(2, Math.round(H / (S * 0.75)));
-    // Every tile a different image: with fewer images than grid cells, a smaller grid of larger tiles.
-    const distinct = pool.filter((q) => !q.video).length + Math.min(MAX_VIDEOS, pool.filter((q) => q.video).length);
-    if (cols * rows > distinct) {
-      cols = Math.max(1, Math.round(Math.sqrt(distinct * W / H))); rows = Math.max(1, Math.ceil(distinct / cols));
-      S = Math.min(W / cols, H / rows) / 0.75;
-    }
-    const n = Math.min(cols * rows, distinct);
+    const n = distinct;
     layouts = [];
     for (let l = 0; l < LAYOUTS; l++) {
       // Each layout: shuffled images with at most a few videos mixed in.
@@ -188,12 +191,17 @@ export function collage(stage, sources) {
         };
       }));
     }
-    // First time: put posters straight into the first layout. Later rebuilds (more posters loaded,
-    // window resized) only change the targets, so the posters glide there instead of jumping.
+    // First time: put posters straight into the first layout. Later rebuilds (more posters loaded, window
+    // resized): the posters on stage glide to their places in the new grid, resized; the newly loaded ones join
+    // where they are missing — every picture once.
     if (!tiles.length) { tiles = layouts[0].map((s) => make(s.p, s.x, s.y, s.w, s.z)); return; }
-    while (tiles.length < n) { const s = layouts[0][tiles.length]; tiles.push(make(s.p, s.x, s.y, s.w, s.z)); }
+    for (const s of layouts[0]) {
+      const t = tiles.find((x) => x.p === s.p);
+      if (t) { if (t !== dragged) { t.tx = s.x; t.ty = s.y; t.tw = s.w; } }
+      else if (tiles.length < n && usable(s.p)) tiles.push(make(s.p, s.x, s.y, s.w, s.z));
+    }
     while (tiles.length > n) tiles.pop().el.remove();
-    queue = [];
+    layout = 0; queue = [];
   }
 
   // The loop through layouts: one poster at a time glides to its place in the next layout.
@@ -201,8 +209,11 @@ export function collage(stage, sources) {
   function swap() {
     if (depthM > 0 || slots) return;   // the collage stays put while you are inside the corridor
     if (!queue.length) { layout = (layout + 1) % LAYOUTS; queue = tiles.map((_, i) => i).sort(() => Math.random() - 0.5); }
-    const i = queue.pop(), s = layouts[layout][i], t = tiles[i];
-    if (!s || !t) return;
+    const i = queue.pop(), s = layouts[layout][i];
+    if (!s) return;
+    // every picture is on stage once: the one already showing this poster moves (no doubles)
+    const t = tiles.find((x) => x.p === s.p) || tiles[i];
+    if (!t) return;
     if (t === dragged) return;
     if (!usable(s.p, t)) return;   // too many loops playing: this one waits for its next turn
     setPoster(t, s.p); t.tx = s.x; t.ty = s.y; t.tw = s.w; t.zi = ++zTop; t.el.style.zIndex = t.zi;   // a poster that changes always lands on top
@@ -247,12 +258,30 @@ export function collage(stage, sources) {
     if (!dragged) return;
     const it = dragged, click = !grab.moved;
     dragged = null; stage.style.cursor = '';
-    if (click) {
-      const t = it.p.target;
-      t.loading = 'eager';
+    if (click) diveTo(it.p.target);
+  }
+  // A click flies through the whole tunnel (the page scrolls through the pinned stretch), then glides on to the
+  // picture in the gallery. Wheel or touch during the trip hands control back.
+  let diving = 0;
+  function diveTo(t) {
+    t.loading = 'eager';
+    const land = () => {
       t.scrollIntoView({ behavior: 'smooth', block: 'center' });
       setTimeout(() => t.scrollIntoView({ behavior: 'smooth', block: 'center' }), 900);
-    }
+    };
+    if (!wrap || diving) return land();
+    const nav = document.querySelector('.topnav'), navH = nav ? nav.getBoundingClientRect().height : 0;
+    const y0 = scrollY, y1 = y0 + wrap.getBoundingClientRect().bottom - navH - stage.getBoundingClientRect().height;
+    if (y1 <= y0 + 4) return land();
+    const t0 = performance.now();
+    const stop = () => { cancelAnimationFrame(diving); diving = 0; removeEventListener('wheel', stop); removeEventListener('touchstart', stop); };
+    addEventListener('wheel', stop, { passive: true }); addEventListener('touchstart', stop, { passive: true });
+    const step = (now) => {
+      const k = Math.min(1, (now - t0) / DIVE_MS), e = k < 0.5 ? 2 * k * k : 1 - (2 - 2 * k) ** 2 / 2;
+      scrollTo({ top: y0 + (y1 - y0) * e, behavior: 'instant' });
+      if (k < 1) diving = requestAnimationFrame(step); else { stop(); land(); }
+    };
+    diving = requestAnimationFrame(step);
   }
   stage.addEventListener('pointerup', release);
   stage.addEventListener('pointercancel', release);
@@ -271,6 +300,13 @@ export function collage(stage, sources) {
     const W = stage.clientWidth, H = stage.clientHeight, P = H * 1.05, O = [W / 2, H / 2];
     const cam = travel * (corridorLen + P * 0.7);
     if (ui) ui.style.opacity = (1 - depthM).toFixed(3);
+    if (logo) {
+      // over the collage; smaller in the middle of the tunnel, slowly nearing; at the end the camera passes through
+      const through = smooth(0.8, 1, travel);
+      const sc = (1 - 0.42 * depthM) * (1 + 0.35 * travel) * (1 + 6 * through * through);
+      logo.style.transform = `translate(-50%, -50%) scale(${sc.toFixed(3)})`;
+      logo.style.opacity = (1 - smooth(0.86, 1, travel)).toFixed(3);
+    }
     tiles.forEach((it, i) => {
       const ease = it === dragged ? 0.35 : 0.035;   // a grabbed poster keeps up with the hand
       it.x += (it.tx - it.x) * ease; it.y += (it.ty - it.y) * ease; it.w += (it.tw - it.w) * ease;

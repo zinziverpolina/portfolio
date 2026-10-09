@@ -28,7 +28,7 @@ function buildHead(sec) {
   const head = el('div', 'tw-head');
   const title = el('div', 'tw-title');
   title.appendChild(h2);
-  if (tag) title.appendChild(el('p', 'tw-tag', tag.charAt(0).toUpperCase() + tag.slice(1)));
+  if (tag) title.appendChild(el('p', 'tw-tag', tag));   // the page's own subtitle, as written
   head.appendChild(title);
   const grid = el('div', 'tw-grid');
   // first column: role / credits; second column: the year at its foot (as on every page)

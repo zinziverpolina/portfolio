@@ -13,7 +13,7 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Arimo:ital,wght@0,400;0,700;1,400&family=Tinos:ital,wght@0,400;0,700;1,400;1,700&display=swap" rel="stylesheet">
 <script src="zoom.js?v=1"></script>
-<link rel="stylesheet" href="style.css?v=20261009e">
+<link rel="stylesheet" href="style.css?v=20261009g">
 <script type="importmap">{"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.169.0/build/three.module.js","three/addons/":"https://cdn.jsdelivr.net/npm/three@0.169.0/examples/jsm/","cannon-es":"https://cdn.jsdelivr.net/npm/cannon-es@0.20.0/dist/cannon-es.js"}}</script>
 </head>
 <body class="intro-page no-header">
@@ -30,14 +30,14 @@
     <button class="dd-btn" type="button" aria-expanded="false" aria-controls="dd-panel">all projects <span aria-hidden="true">▾</span></button>
     <div class="dd-panel" id="dd-panel">
     <ol class="projects">
-      <li><a href="commercial/nina-ricci.html"><img src="commercial/video/nina-ricci-1.jpg" alt="" loading="lazy" decoding="async"><span class="t">Nina Ricci</span><span class="y">2022</span><span class="w">animations for the Summer 22 collection</span></a></li>
-      <li><a href="commercial/loewe.html"><img src="commercial/video/loewe-ww-1.jpg" alt="" loading="lazy" decoding="async"><span class="t">LOEWE</span><span class="y">2021–2022</span><span class="w">SS22 shows, Christmas and perfumes</span></a></li>
-      <li><a href="commercial/sacred-hyper-race.html"><img src="commercial/img/shr-1.jpg" alt="" loading="lazy" decoding="async"><span class="t">Sacred Hyper Race</span><span class="y">2024</span><span class="w">art direction, level design</span></a></li>
-      <li><a href="commercial/clara-luciani.html"><img src="commercial/img/clara-s4.jpg" alt="" loading="lazy" decoding="async"><span class="t">Clara Luciani</span><span class="y">2025</span><span class="w">tour visuals</span></a></li>
-      <li><a href="commercial/horosoaps.html"><img src="commercial/video/horosoaps-3.jpg" alt="" loading="lazy" decoding="async"><span class="t">HOROSOAPS</span><span class="y">2023</span><span class="w">promo animations</span></a></li>
-      <li><a href="commercial/carolina-sarria.html"><img src="commercial/img/carolina-1.jpg" alt="" loading="lazy" decoding="async"><span class="t">CAROLINA SARRIA</span><span class="y">2020</span><span class="w">mixed media portraits</span></a></li>
-      <li><a href="commercial/posters.html"><img src="commercial/img/posters-1.jpg" alt="" loading="lazy" decoding="async"><span class="t">Posters &amp; covers</span><span class="y">2021–2025</span><span class="w">for parties, labels and musicians</span></a></li>
-      <li><a href="commercial/hypertrash.html"><img src="commercial/img/hypertrash-1.jpg" alt="" loading="lazy" decoding="async"><span class="t">HYPERTRASH</span><span class="y">2024–2026</span><span class="w">covers, singles and posters</span></a></li>
+      <li><a href="commercial/nina-ricci.html"><img src="commercial/video/nina-ricci-1.jpg" alt="" loading="lazy" decoding="async"><span class="t">Nina Ricci</span><span class="y">2022</span><span class="w">3D modelling, animation, render</span></a></li>
+      <li><a href="commercial/loewe.html"><img src="commercial/video/loewe-ww-1.jpg" alt="" loading="lazy" decoding="async"><span class="t">LOEWE</span><span class="y">2021–2022</span><span class="w">3D animation</span></a></li>
+      <li><a href="commercial/sacred-hyper-race.html"><img src="commercial/img/shr-1.jpg" alt="" loading="lazy" decoding="async"><span class="t">Sacred Hyper Race</span><span class="y">2024</span><span class="w">art direction, level design, Unreal assembly</span></a></li>
+      <li><a href="commercial/clara-luciani.html"><img src="commercial/img/clara-s4.jpg" alt="" loading="lazy" decoding="async"><span class="t">Clara Luciani</span><span class="y">2025</span><span class="w">3D modelling, animation</span></a></li>
+      <li><a href="commercial/horosoaps.html"><img src="commercial/video/horosoaps-3.jpg" alt="" loading="lazy" decoding="async"><span class="t">HOROSOAPS</span><span class="y">2023</span><span class="w">3D animation</span></a></li>
+      <li><a href="commercial/carolina-sarria.html"><img src="commercial/img/carolina-1.jpg" alt="" loading="lazy" decoding="async"><span class="t">CAROLINA SARRIA</span><span class="y">2020</span><span class="w">co-direction, 3D modelling, render</span></a></li>
+      <li><a href="commercial/posters.html"><img src="commercial/img/posters-1.jpg" alt="" loading="lazy" decoding="async"><span class="t">Posters &amp; covers</span><span class="y">2021–2025</span><span class="w">posters, covers</span></a></li>
+      <li><a href="commercial/hypertrash.html"><img src="commercial/img/hypertrash-1.jpg" alt="" loading="lazy" decoding="async"><span class="t">HYPERTRASH</span><span class="y">2024–2026</span><span class="w">covers, posters</span></a></li>
     </ol>
     </div>
   </div>
@@ -46,7 +46,7 @@
   </div>
   <div class="shr-frames"></div>
   <div class="shr-ui">
-    <span class="br">drag · click to open</span>
+    <span class="br">drag the objects · click one to open its project · click the logo to pull them in</span>
   </div>
 </div>
 
@@ -82,12 +82,13 @@
     { url: 'commercial/models/hero/shr-mouth-arch.glb', name: 'Mouth Arch', tag: 'Sacred Hyper Race', href: 'commercial/sacred-hyper-race.html', weight: 0.75 },
     { url: 'commercial/models/hero/nr-apple-1.glb', name: 'Apple', tag: 'Nina Ricci', href: 'commercial/nina-ricci.html', weight: 0.55 },
     { url: 'commercial/models/hero/shr-two-heads.glb', name: 'Two Heads', tag: 'Sacred Hyper Race', href: 'commercial/sacred-hyper-race.html', weight: 1.5 },
-    { url: 'commercial/models/hero/nr-slippers.glb', name: 'Slippers', tag: 'Nina Ricci', href: 'commercial/nina-ricci.html' },
+    { url: 'commercial/models/hero/nr-slipper-a.glb', name: 'Slipper', tag: 'Nina Ricci', href: 'commercial/nina-ricci.html', weight: 0.8 },
     { url: 'commercial/models/hero/shr-frog.glb', name: 'Frog', tag: 'Sacred Hyper Race', href: 'commercial/sacred-hyper-race.html', weight: 1.5 },
     { url: 'commercial/models/hero/nr-apple-2.glb', name: 'Apple', tag: 'Nina Ricci', href: 'commercial/nina-ricci.html', weight: 0.55 },
     { url: 'commercial/models/hero/nr-apple-3.glb', name: 'Apple', tag: 'Nina Ricci', href: 'commercial/nina-ricci.html', weight: 0.55 },
     { url: 'commercial/models/hero/shr-waterfall-tree-1.glb', name: 'Waterfall Tree I', tag: 'Sacred Hyper Race', href: 'commercial/sacred-hyper-race.html', weight: 1.5 },
     { url: 'commercial/models/hero/nr-dove.glb', name: 'Dove', tag: 'Nina Ricci', href: 'commercial/nina-ricci.html' },
+    { url: 'commercial/models/hero/nr-slipper-b.glb', name: 'Slipper', tag: 'Nina Ricci', href: 'commercial/nina-ricci.html', weight: 0.8 },
     { url: 'commercial/models/hero/shr-waterfall-tree-2.glb', name: 'Waterfall Tree II', tag: 'Sacred Hyper Race', href: 'commercial/sacred-hyper-race.html', weight: 1.5 },
     { url: 'commercial/models/hero/nr-apple-4.glb', name: 'Apple', tag: 'Nina Ricci', href: 'commercial/nina-ricci.html', weight: 0.55 },
     { url: 'commercial/models/hero/shr-tree.glb', name: 'Tree', tag: 'Sacred Hyper Race', href: 'commercial/sacred-hyper-race.html', weight: 1.5 },
