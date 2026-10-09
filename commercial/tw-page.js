@@ -31,11 +31,12 @@ function buildHead(sec) {
   if (tag) title.appendChild(el('p', 'tw-tag', tag.charAt(0).toUpperCase() + tag.slice(1)));
   head.appendChild(title);
   const grid = el('div', 'tw-grid');
-  const col = el('dl', 'tw-meta');
-  if (year) col.innerHTML += `<dt>Year</dt><dd>${year}</dd>`;
+  // first column: role / credits; second column: the year at its foot (as on every page)
+  const col = el('dl', 'tw-meta'), col2 = el('dl', 'tw-meta');
   if (credit) col.innerHTML += `<dt>Credits</dt><dd>${credit.innerHTML.charAt(0).toUpperCase() + credit.innerHTML.slice(1)}</dd>`;
+  if (year) col2.innerHTML += `<dt>Year</dt><dd>${year}</dd>`;
   grid.appendChild(col);
-  grid.appendChild(el('div', 'tw-gap'));
+  grid.appendChild(col2);
   const text = el('div', 'tw-text');
   if (body) text.append(...body.childNodes);
   if (subnav) text.appendChild(subnav);
