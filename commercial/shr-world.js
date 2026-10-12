@@ -4,6 +4,7 @@
 // Touch: left thumb walks, right thumb looks, × leaves.
 import * as THREE from 'three';
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
+import { MeshoptDecoder } from 'three/addons/libs/meshopt_decoder.module.js';   // models are meshopt-compressed
 import { RoomEnvironment } from 'three/addons/environments/RoomEnvironment.js';
 import { SimplexNoise } from 'three/addons/math/SimplexNoise.js';
 import { Reflector } from 'three/addons/objects/Reflector.js';
@@ -169,7 +170,7 @@ export function shrWorld(root, base) {
     ...OUTSIDE.map(([k, t, h, yaw]) => [k, (r) => { const { p, nrm } = frame(t); const off = HALF + 1.2 + r; return [p.x - nrm.x * off, p.z - nrm.z * off]; }, null, h, yaw]),
     ...INSIDE,
   ];
-  const loader = new GLTFLoader();
+  const loader = new GLTFLoader().setMeshoptDecoder(MeshoptDecoder);
   const cache = {};
   const ids = Object.keys(MODELS);
   let loaded = 0;

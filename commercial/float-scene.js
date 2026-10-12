@@ -9,6 +9,7 @@
 //   shine: roughness for every material of this copy (0.1 = glossy like the apples)
 import * as THREE from 'three';
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
+import { MeshoptDecoder } from 'three/addons/libs/meshopt_decoder.module.js';   // models are meshopt-compressed
 import { RoomEnvironment } from 'three/addons/environments/RoomEnvironment.js';
 import * as CANNON from 'cannon-es';
 
@@ -141,7 +142,7 @@ export function floatScene(hero, MODELS, opts = {}) {
     return el;
   }
 
-  const loader = new GLTFLoader();
+  const loader = new GLTFLoader().setMeshoptDecoder(MeshoptDecoder);
   MODELS.forEach((m, i) => {
     loader.load(m.url, (gltf) => {
       const model = gltf.scene;

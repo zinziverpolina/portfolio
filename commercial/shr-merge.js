@@ -5,6 +5,7 @@
 // (RoomEnvironment + NeutralToneMapping on a transparent canvas over white). Frames are DOM, like .shr-frame.
 import * as THREE from 'three';
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
+import { MeshoptDecoder } from 'three/addons/libs/meshopt_decoder.module.js';   // models are meshopt-compressed
 import { RoomEnvironment } from 'three/addons/environments/RoomEnvironment.js';
 
 const M = window.Matter;
@@ -136,7 +137,7 @@ soundBtn.addEventListener('click', () => {
 
 // ----- models: normalised so the silhouette fits a unit circle -----
 const tpl = [];   // tpl[level] = THREE.Group (unit radius) once loaded
-const loader = new GLTFLoader();
+const loader = new GLTFLoader().setMeshoptDecoder(MeshoptDecoder);
 const FIRST = [1, 2, 3, 4], REST = [5, 6, 7, JOKER];
 let firstDone = 0, firstOk = 0;
 
