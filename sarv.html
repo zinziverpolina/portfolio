@@ -1,0 +1,66 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Contrapoint for Contradiction (Drone/Ison) — Polina Zinziver</title>
+<meta name="description" content="Contrapoint for Contradiction (Drone/Ison) — spatial sound work in progress by Polina Zinziver (they/them). Interactive version in the browser, listen with headphones.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Arimo:ital,wght@0,400;0,700;1,400&family=Tinos:ital,wght@0,400;0,700;1,400;1,700&display=swap" rel="stylesheet">
+<script src="zoom.js?v=1"></script>
+<link rel="stylesheet" href="style.css?v=20261015b">
+<style>
+  .body.wide { max-width: none; font-size: clamp(20px, 2.2vw, 28px); line-height: 1.4; }
+  #sarv + #sarv-live { border-top: 0; padding-top: 0; }
+  .wip { font-family: var(--serif); font-style: italic; }
+  #sarv-room { width: 100%; aspect-ratio: 1 / 1; display: block; cursor: pointer; border-radius: 2px; }
+  .live-ctl { margin-top: 0; }
+  .live-btn { font: inherit; font-size: 18px; padding: 12px 20px; border: 1px solid #000; background: #fff; color: #000; cursor: pointer; }
+  .live-btn:hover { background: #000; color: #fff; }
+  .live-btn.small { font-size: 15px; padding: 6px 12px; }
+  .live-count { font-family: var(--serif); font-size: clamp(22px, 2.4vw, 28px); margin-top: 18px; }
+  .note { font-family: var(--serif); font-style: italic; }
+  .live-text { margin-top: 26px; }
+</style>
+</head>
+<body>
+
+<nav class="topnav"><div class="in">
+  <a class="name" href="index.html">POLINA ZINZIVER</a>
+  <a href="index.html">artistic</a>
+  <a href="cv.html">cv</a>
+  <a href="mailto:whatever.beclever@gmail.com">email</a>
+  <a href="https://www.instagram.com/polina_zinziver_/" target="_blank" rel="noopener">instagram</a>
+</div></nav>
+
+<section class="slide" id="sarv">
+  <h2>Contrapoint for Contradiction</h2>
+  <div class="meta">(Drone/Ison)</div>
+  <div class="meta">spatial sound, SuperCollider, binaural<br><span class="wip">work in progress, 2026</span></div>
+  <div class="body">
+    <p>In music, counterpoint is two independent melodies sounding at once: each follows its own logic and does not dissolve into the other, and together they make one fabric with tension inside. Here the two lines are the body in the space of control — the state, platforms, moderation, borders (part 1) — and the body in the space of ritual — resonance, community, shelter (part 2). The work neither chooses between them nor reconciles them: the contradiction is not resolved, it becomes form.</p>
+  </div>
+</section>
+
+<section class="slide" id="sarv-live">
+  <div class="grid">
+    <div>
+      <canvas id="sarv-room" aria-label="The circle seen from above. Click to add or remove a person."></canvas>
+    </div>
+    <div class="body live-ctl">
+      <p><button id="sarv-play" class="live-btn">▶ listen with headphones</button></p>
+      <p id="sarv-count" class="live-count">0 people in the circle</p>
+      <p id="sarv-info" class="note"></p>
+      <p><button id="sarv-add" class="live-btn small">+ person</button> <button id="sarv-remove" class="live-btn small">− person</button></p>
+      <p class="live-text">The more people stand in its circle, the lower the drone and the faster the pulse.</p>
+    </div>
+  </div>
+</section>
+
+<footer>© Polina Zinziver</footer>
+<script src="sarv-live.js?v=1"></script>
+
+<script src="site.js"></script>
+</body>
+</html>
