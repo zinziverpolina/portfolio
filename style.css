@@ -454,17 +454,17 @@ html { scroll-padding-top: 100px; }
    project subtitles (.meta) are --sky. The 3D frames keep their own logic (sky, navy when hovered).
    Black pages (.page-dark) keep white and grey. */
 :root{ --navy: #2a27a6; --sky: #5d8ab6; --sky-line: rgba(93,138,182,.55); --hover: #000; }
-body:not(.page-dark){ --title: var(--navy); --text: var(--navy); --ink: var(--navy); --link: var(--navy); --hover: var(--sky); }
+body:not(.page-dark){ --title: #000; --text: #000; --ink: #000; --link: #000; --hover: var(--sky); } /* black text, her request 2026-10-15 (was navy) */
 .page-dark{ --hover: #fff; }
 .meta:not(.page-dark *), footer:not(.page-dark *), .index span:not(.page-dark *), .models figcaption span:not(.page-dark *),
 .projects .y:not(.page-dark *), .pager .all:not(.page-dark *), .shr-ui .br:not(.page-dark *), .world-loading:not(.page-dark *),
 .cl-ui .br:not(.page-dark *), .picks figcaption:not(.page-dark *), .label .src:not(.page-dark *){ color: var(--sky); }
 .shr-ui span:not(.br):not(.page-dark *), .world-ui:not(.page-dark *), .cl-ui span:not(.br):not(.page-dark *),
-footer a:not(.page-dark *), .body a:not(.page-dark *){ color: var(--navy); }
+footer a:not(.page-dark *), .body a:not(.page-dark *){ color: var(--text); }
 footer a:hover:not(.page-dark *), .body a:hover:not(.page-dark *), .video-note a:hover:not(.page-dark *), .pick-links a:hover:not(.page-dark *){ color: var(--sky); }
 .topnav:not(.page-dark *){ border-bottom-color: var(--sky-line); }
 .topnav .name:not(.page-dark *), .topnav a:not(.page-dark *), .topnav .tabs a:not(.page-dark *), .topnav .dd-btn:not(.page-dark *),
-.topnav .dd-panel .projects .t:not(.page-dark *){ color: var(--navy); }
+.topnav .dd-panel .projects .t:not(.page-dark *){ color: var(--text); }
 .topnav a:hover:not(.page-dark *), .topnav .tabs a:hover:not(.page-dark *), .topnav .dd:hover .dd-btn:not(.page-dark *),
 .topnav .dd.open .dd-btn:not(.page-dark *), .topnav .dd-panel .projects a:hover .t:not(.page-dark *){ color: var(--sky); }
 .topnav .dd-panel:not(.page-dark *){ border-bottom-color: var(--sky-line); }
